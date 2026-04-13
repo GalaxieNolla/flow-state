@@ -46,18 +46,21 @@ class ActivityMonitor:
 def get_active_info(self):
         try:
             workspace = NSWorkspace.sharedWorkspace()
+            # This forces the workspace to re-examine the front app
+            active_app = workspace.frontmostApplication()
             
-            # activeApplication() instead of frontmostApplication() 4 reliability?
-            active_info = workspace.activeApplication()
-            app_name = active_info.get('NSApplicationName', 'Unknown')
-            pid = active_info.get('NSApplicationProcessIdentifier')
+            if not active_app:
+                return "Unknown", ""
 
-            # Window Title Check
+            app_name = active_app.localizedName()
+            pid = active_app.processIdentifier()
+
+            # Window Title logic
             from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
             window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
             
             window_title = ""
-            if window_list and pid:
+            if window_list:
                 for window in window_list:
                     if window.get('kCGWindowOwnerPID') == pid:
                         window_title = window.get('kCGWindowName', '')
@@ -66,4 +69,4 @@ def get_active_info(self):
             
             return app_name, window_title
         except Exception as e:
-            return "Unknown", ""
+            return "Error", str(e)
