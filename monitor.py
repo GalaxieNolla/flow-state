@@ -1,11 +1,12 @@
 import time
 from pynput import mouse, keyboard
-import threading
 from AppKit import NSWorkspace
 
 class ActivityMonitor:
     def __init__(self):
         self.last_activity = time.time()
+        
+        # Background listeners
         self.mouse_listener = mouse.Listener(on_move=self.update_activity, on_click=self.update_activity)
         self.key_listener = keyboard.Listener(on_press=self.update_activity)
         self.mouse_listener.start()
@@ -18,6 +19,10 @@ class ActivityMonitor:
         return time.time() - self.last_activity
 
     def get_active_app(self):
-        # This talks to macOS to find the frontmost app
-        active_app = NSWorkspace.sharedWorkspace().frontmostApplication()
-        return active_app.localizedName()
+        try:
+            active_app = NSWorkspace.sharedWorkspace().frontmostApplication()
+            if active_app:
+                return active_app.localizedName()
+            return "Unknown"
+        except:
+            return "Searching..."
