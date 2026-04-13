@@ -21,7 +21,7 @@ class FlowApp:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
         
         # BUTTON -------
-        header_label = tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#1a0b2e", fg="#c37aff") #Give users a choice on what to use
+        self.header_label = tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#120921", fg="#c37aff") #Give users a choice on what to use
         self.canvas.create_window(256, 40, window=header_label)
         
         btn_frame = tk.Frame(root, bg="#1a0b2e")
@@ -31,7 +31,7 @@ class FlowApp:
         self.task_btn.pack(side="left", padx=5)
         self.canvas.create_window(256, 80, window=btn_frame)
 
-        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold"), bg="#1a0b2e", fg="#c37aff")
+        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff")
         self.canvas.create_window(256, 256, window=self.status_label)
 
         # switch modes
