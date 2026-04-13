@@ -12,21 +12,15 @@ class FlowApp:
         
         self.status_label = tk.Label(root, text="Entering flow state...", font=("Helvetica", 24))
         self.status_label.pack(pady=10)
-
-        self.app_label = tk.Label(root, text="Detecting app: ", font=("Helvetica", 12), fg="gray")
-        self.app_label.pack(pady=5)
-
-        self.timer_label = tk.Label(root, text="Idle: 0s", font=("Helvetica", 12), fg="gray")
-        self.timer_label.pack(pady=5)
-
+        
         self.update_ui()
 
     def update_ui(self):
-        idle_time = self.monitor.get_idle_time()
+        idle_time = round(self.monitor.get_idle_time())
         current_app, window_title = self.monitor.get_active_info() #from monitor.py
 
         lecture_apps = ["Google Chrome", "Safari", "Preview", "Zoom"] # Ones that get an exception if studying 
-        is_distraction = "YouTube" in window_title or "Netflix" in window_title
+        is_distraction = any(word in window_title for word in ["YouTube", "Netflix", "Twitter", "Instagram"])
         
         self.app_label.config(text=f"Current App: {current_app}")
         self.timer_label.config(text=f"Idle: {idle_time}s")
@@ -36,11 +30,11 @@ class FlowApp:
             threshold = 1800 # 30 mins
             self.status_label.config(text="Lecture Mode 🎓", fg="blue")
         else:
-            threshold = 10
+            threshold = 300 # 5 min
             self.status_label.config(text="Flowing... 🌊", fg="green")
 
         if idle_time > threshold:
-            self.status_label.config(text="Focus! ⚡️", fg="red")
+            self.status_label.config(text="Lock in gamers!", fg="red")
             
         self.root.after(500, self.update_ui) # Update afterwards
 
