@@ -1,7 +1,7 @@
 import time
 from pynput import mouse, keyboard
 from AppKit import NSWorkspace
-from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
+import Quartz.CoreGraphics as CG
 
 class ActivityMonitor:
     def __init__(self):
@@ -46,13 +46,14 @@ class ActivityMonitor:
 
 def get_active_info(self):
         try:
-            window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
+            options = CG.kCGWindowListOptionOnScreenOnly | 16 # val 4 ExcludeDesktopElements
+            window_list = CG.CGWindowListCopyWindowInfo(options, CG.kCGNullWindowID)
 
             if not window_list:
                 return "Unknown", ""
             
             for window in window_list:
-                # Layer 0 is usually the active application
+                # Layer 0 is active app layer (?)
                 if window.get('kCGWindowLayer') == 0:
                     app_name = window.get('kCGWindowOwnerName', '')
                     window_title = window.get('kCGWindowName', '')
