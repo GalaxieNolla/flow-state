@@ -27,9 +27,6 @@ class FlowApp:
                         ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci"])
         
         is_distraction = any(site in window_title for site in distraction_sites) and not exception
-        
-        self.app_label.config(text=f"Current App: {current_app}")
-        self.timer_label.config(text=f"Idle: {idle_time}s")
 
         # Update if idle, UNLESS user is actively studying
         if current_app in lecture_apps and not is_distraction:
