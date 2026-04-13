@@ -1,6 +1,7 @@
 import time
 from pynput import mouse, keyboard
 from AppKit import NSWorkspace
+from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
 
 class ActivityMonitor:
     def __init__(self):
@@ -45,23 +46,17 @@ class ActivityMonitor:
 
 def get_active_info(self):
         try:
-            from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
-            # 1. Get every window currently on your screen
             window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
-            
+
             if not window_list:
                 return "Unknown", ""
-
-            # 2. The first window in this list is almost always the one you are looking at
-            # We skip 'Window Server', 'Dock', and 'Terminal' to find the REAL active app
+            
             for window in window_list:
-                app_name = window.get('kCGWindowOwnerName', '')
-                window_title = window.get('kCGWindowName', '')
-                
-                # Skip the background stuff and the terminal itself
-                if app_name not in ["Window Server", "Dock", "Terminal", "Finder"]:
+                # Layer 0 is usually the active application
+                if window.get('kCGWindowLayer') == 0:
+                    app_name = window.get('kCGWindowOwnerName', '')
+                    window_title = window.get('kCGWindowName', '')
                     return app_name, window_title
-
-            return "Finder", ""
+            return "Unknown", ""
         except Exception as e:
             return "Error", str(e)
