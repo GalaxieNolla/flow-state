@@ -22,6 +22,11 @@ class ActivityMonitor:
         try:
             workspace = NSWorkspace.sharedWorkspace()
             active_app = workspace.frontmostApplication()
+
+            # Safety check if app is unknown
+            if not active_app:
+                return "Finder", "" # Default to Finder if it's confused
+            
             app_name = active_app.localizedName()
             
             # Grabs the specific title of the window from UI (e.g., "YouTube")
@@ -36,4 +41,4 @@ class ActivityMonitor:
                     
             return app_name, window_title
         except:
-            return "Unknown", ""
+            return "Finder", ""
