@@ -24,7 +24,7 @@ class FlowApp:
         
         # BUTTON -------
         self.header_label = tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#120921", fg="#c37aff") #Give users a choice on what to use
-        self.canvas.create_window(256, 40, window=header_label)
+        self.canvas.create_window(256, 40, window=self.header_label)
         
         btn_frame = tk.Frame(root, bg="#1a0b2e")
         self.time_btn = tk.Button(btn_frame, text="Time-Based", width=15, command=lambda: self.set_mode(False)) #time
