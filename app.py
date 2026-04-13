@@ -20,7 +20,13 @@ class FlowApp:
         current_app, window_title = self.monitor.get_active_info() #from monitor.py
 
         lecture_apps = ["Google Chrome", "Safari", "Preview", "Zoom"] # Ones that get an exception if studying 
-        is_distraction = any(word in window_title for word in ["YouTube", "Netflix", "Twitter", "Instagram"])
+        distraction_sites = ["YouTube", "Netflix", "Twitter", "Instagram", "TikTok", "eBay", "Esty", "Reddit"]
+
+        # Exceptions check -- berkeley, school, lecture, etc.
+        exception = any(word in window_title.lower() for word in 
+                        ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci"])
+        
+        is_distraction = any(site in window_title for distraction in distraction_sites) and is not exception
         
         self.app_label.config(text=f"Current App: {current_app}")
         self.timer_label.config(text=f"Idle: {idle_time}s")
