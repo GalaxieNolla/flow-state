@@ -21,7 +21,7 @@ class FlowApp:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
         
         # BUTTON -------
-        tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#1a0b2e", fg="#c37aff")) #Give users a choice on what to use
+        tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#1a0b2e", fg="#c37aff") #Give users a choice on what to use
         self.canvas.create_window(256, 40, window=header)
         
         btn_frame = tk.Frame(root, bg="#1a0b2e")
