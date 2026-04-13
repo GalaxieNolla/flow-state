@@ -18,11 +18,22 @@ class ActivityMonitor:
     def get_idle_time(self):
         return time.time() - self.last_activity
 
-    def get_active_app(self):
+    def get_active_info(self):
         try:
-            active_app = NSWorkspace.sharedWorkspace().frontmostApplication()
-            if active_app:
-                return active_app.localizedName()
-            return "Unknown"
+            workspace = NSWorkspace.sharedWorkspace()
+            active_app = workspace.frontmostApplication()
+            app_name = active_app.localizedName()
+            
+            # Grabs the specific title of the window from UI (e.g., "YouTube")
+            from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
+            window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
+            
+            window_title = ""
+            for window in window_list:
+                if window.get('kCGWindowOwnerPID') == active_app.processIdentifier():
+                    window_title = window.get('kCGWindowName', '')
+                    break
+                    
+            return app_name, window_title
         except:
-            return "Searching..."
+            return "Unknown", ""
