@@ -13,7 +13,7 @@ class FlowApp:
         self.is_task_mode = False
 
         # Image --------
-        img = Image.open("background.jpg").resize((512, 512))
+        img = Image.open("arcane background.webp").resize((512, 512))
         self.bg_image = ImageTk.PhotoImage(img)
 
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
