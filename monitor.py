@@ -18,7 +18,7 @@ class ActivityMonitor:
     def get_idle_time(self):
         return time.time() - self.last_activity
 
-    def get_active_info(self):
+    """def get_active_info(self):
         try:
             workspace = NSWorkspace.sharedWorkspace()
             active_app = workspace.frontmostApplication()
@@ -41,4 +41,31 @@ class ActivityMonitor:
                     
             return app_name, window_title
         except:
-            return "Finder", ""
+            return "Finder", "" """
+
+def get_active_info(self):
+        try:
+            from AppKit import NSWorkspace
+            workspace = NSWorkspace.sharedWorkspace()
+            
+            # HIGHLIGHT: Using activeApplication() instead of frontmostApplication()
+            # This is an older but sometimes more reliable method
+            active_info = workspace.activeApplication()
+            app_name = active_info.get('NSApplicationName', 'Unknown')
+            pid = active_info.get('NSApplicationProcessIdentifier')
+
+            # Window Title Check
+            from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
+            window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
+            
+            window_title = ""
+            if window_list and pid:
+                for window in window_list:
+                    if window.get('kCGWindowOwnerPID') == pid:
+                        window_title = window.get('kCGWindowName', '')
+                        if window_title:
+                            break
+            
+            return app_name, window_title
+        except Exception as e:
+            return "Unknown", ""
