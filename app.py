@@ -22,9 +22,10 @@ class FlowApp:
         lecture_apps = ["Google Chrome", "Safari", "Preview", "Zoom", "Spotify", "Music", "bCourses"] # Ones that get an exception if studying 
         distraction_sites = ["YouTube", "Netflix", "Twitter", "Instagram", "TikTok", "eBay", "Esty", "Reddit", "Messages"]
 
-        # Exceptions check -- berkeley, school, lecture, etc.
+        # Exceptions check -- berkeley, school, lecture, etc. or music
         exception = any(word in window_title.lower() for word in 
-                        ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci"])
+                        ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
+                         "classical", "music", "lofi", "instrumental"])
         
         is_distraction = any(site in window_title for site in distraction_sites) and not exception
 
