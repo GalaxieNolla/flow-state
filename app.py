@@ -44,14 +44,15 @@ class FlowApp:
             if current_app in lecture_apps and not is_distraction:
                 threshold = 1800 # 30 mins
                 self.status_label.config(text="Lecture Mode 🎓", fg="blue")
-            else:
-                threshold = 300 # 5 min
-                self.status_label.config(text="Flowing... 🌊", fg="green")
-    
-            if idle_time > threshold:
-                self.status_label.config(text="Lock in gamers!", fg="red")
+            elif is_distraction or idle_time > threshold:
+                threshold = 10 # 10 seconds, trigger immediately
+                self.status_label.config(text="Lock in gamers!! 💪", fg="red")
+            else: 
+                threshold = 300 
+                self.status_label.config(text="We in the flow state 💃 ", fg="green")
                 
             self.root.after(500, self.update_ui) # Update afterwards
+                
         except (tk.TclError, Exception):
                 # If the window is closed, exit loop
                 return
