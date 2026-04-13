@@ -1,0 +1,6 @@
+try:
+    from AppKit import NSWorkspace
+    active_app = NSWorkspace.sharedWorkspace().frontmostApplication()
+    print(f"I see: {active_app.localizedName()}")
+except Exception as e:
+    print(f"Error: {e}")
