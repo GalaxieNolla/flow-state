@@ -51,9 +51,9 @@ class FlowApp:
                 self.status_label.config(text="Lock in gamers!", fg="red")
                 
             self.root.after(500, self.update_ui) # Update afterwards
-    except (tk.TclError, Exception):
-            # If the window is closed, exit loop
-            return
+        except (tk.TclError, Exception):
+                # If the window is closed, exit loop
+                return
 
 if __name__ == "__main__":
     root = tk.Tk()
