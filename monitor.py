@@ -45,11 +45,9 @@ class ActivityMonitor:
 
 def get_active_info(self):
         try:
-            from AppKit import NSWorkspace
             workspace = NSWorkspace.sharedWorkspace()
             
-            # HIGHLIGHT: Using activeApplication() instead of frontmostApplication()
-            # This is an older but sometimes more reliable method
+            # activeApplication() instead of frontmostApplication() 4 reliability?
             active_info = workspace.activeApplication()
             app_name = active_info.get('NSApplicationName', 'Unknown')
             pid = active_info.get('NSApplicationProcessIdentifier')
