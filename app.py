@@ -23,7 +23,7 @@ class FlowApp:
                 
             idle_time = round(self.monitor.get_idle_time())
             current_app, window_title = self.monitor.get_active_info() #from monitor.py
-            curent_app = current_app.lower() # update both to be lowercase, case sensitive
+            current_app = current_app.lower() # update both to be lowercase, case sensitive
             window_title = window_title.lower()
     
             # ADD THIS LINE TO DEBUG:
@@ -37,8 +37,8 @@ class FlowApp:
                             ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
                              "classical", "music", "lofi", "instrumental"])
             
-            is_distraction = any(site in current_app for site in distraction_list) and not exception or \
-                 any(site in window_title for site in distraction_list) and not exception
+            is_distraction = any(site in current_app for site in distraction_sites) and not exception or \
+                 any(site in window_title for site in distraction_sites) and not exception
     
             # Update if idle, UNLESS user is actively studying
             if current_app in lecture_apps and not is_distraction:
