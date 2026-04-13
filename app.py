@@ -5,16 +5,52 @@ class FlowApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Flow State")
-        self.root.geometry("400x200")
+        self.root.geometry("400x250")
         self.root.attributes("-topmost", True)
 
         self.monitor = ActivityMonitor()
-        
-        self.status_label = tk.Label(root, text="Entering flow state...", font=("Helvetica", 24))
-        self.status_label.pack(pady=10)
-        
+        self.is_task_mode = False
+
+        # BUTTON -------
+        tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14)).pack(pady=10) #Give users a choice on what to use
+        btn_frame = tk.Frame(root)
+        btn_frame.pack(pady=5)
+
+        self.time_btn = tk.Button(btn_frame, text="Time-Based", width=15, command=lambda: self.set_mode(False)) #time
+        self.time_btn.pack(side="left", padx=5)
+        self.task_btn = tk.Button(btn_frame, text="Task-Based", width=15, command=lambda: self.set_mode(True)) # task button
+        self.task_btn.pack(side="left", padx=5)
+
+        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 20))
+        self.status_label.pack(pady=20)
+
+        # switch modes
+        self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=self.toggle_logic, bd=0, fg="gray")
+        self.mode_toggle.pack(side="bottom", pady=10)
+
+        # Update
+        self.update_button_colors()
         self.update_ui()
 
+    def set_mode(self, mode_bool):
+        self.is_task_mode = mode_bool
+        self.update_button_colors()
+
+        # Update the footer text to show current status
+        current = "task-based" if self.is_task_mode else "time-based"
+        self.mode_toggle.config(text=f"switch mode (current: {current})")
+
+    def update_button_colors(self):
+        if self.is_task_mode:
+            self.task_btn.config(bg="gray", relief="sunken")
+            self.time_btn.config(bg="systemButtonFace", relief="raised")
+        else:
+            self.time_btn.config(bg="gray", relief="sunken")
+            self.task_btn.config(bg="systemButtonFace", relief="raised")
+
+    def toggle_logic(self):
+        self.set_mode(not self.is_task_mode)
+            
     def update_ui(self):
         self.root.after(500, self.update_ui) # Update afterwards
         try: 
@@ -42,7 +78,7 @@ class FlowApp:
     
             # Update if idle, UNLESS user is actively studying
             if is_distraction and not exception:
-                threshold = 10 # 10 seconds, trigger immediately
+                threshold = 0 if self.is_task_mode else 10 # 10 seconds
                 status_text, status_color = "Lock in gamers!! 💪", "red"
             elif current_app in lecture_apps or exception:
                 threshold = 1800 # 30 mins
