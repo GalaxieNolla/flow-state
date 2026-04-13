@@ -23,7 +23,7 @@ class FlowApp:
 
     def update_ui(self):
         idle_time = self.monitor.get_idle_time()
-        current_app = self.monitor.get_active_info() #from monitor.py
+        current_app, window_title = self.monitor.get_active_info() #from monitor.py
 
         lecture_apps = ["Google Chrome", "Safari", "Preview", "Zoom"] # Ones that get an exception if studying 
         is_distraction = "YouTube" in window_title or "Netflix" in window_title
