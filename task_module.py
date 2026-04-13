@@ -5,29 +5,44 @@ class TaskSticky:
         self.root = parent_root
 
     def open(self):
-        # Semi-transparent window
         self.win = tk.Toplevel(self.root)
         self.win.title("Tasks")
-        self.win.geometry("220x300+50+100")
-        self.win.attributes("-alpha", 0.85, "-topmost", True)
+        self.win.geometry("250x400")
+        self.win.attributes("-alpha", 0.9, "-topmost", True)
         self.win.config(bg="#1a0b2e")
+        
+        # Container for the list
+        self.list_frame = tk.Frame(self.win, bg="#1a0b2e")
+        self.list_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        self.render_input_row()
 
-        # Entry for new tasks
-        self.entry = tk.Entry(self.win, bg="#c37aff", fg="white", 
-                              insertbackground="white", bd=0)
-        self.entry.pack(pady=10, padx=10, fill="x")
+    def render_input_row(self):
+        # Create a row with [+] and an Entry
+        self.input_frame = tk.Frame(self.list_frame, bg="#1a0b2e")
+        self.input_frame.pack(fill="x", pady=2)
+        
+        tk.Label(self.input_frame, text="＋", fg="#c37aff", bg="#1a0b2e").pack(side="left")
+        
+        self.entry = tk.Entry(self.input_frame, bg="#1a0b2e", fg="white", 
+                              insertbackground="white", bd=0, highlightthickness=0)
+        self.entry.pack(side="left", fill="x", expand=True, padx=5)
+        self.entry.focus_set()
         self.entry.bind("<Return>", lambda e: self.add_task())
 
-        tk.Button(self.win, text="＋", command=self.add_task, 
-                  bg="#1a0b2e", fg="#c37aff", bd=0).pack()
-
     def add_task(self):
-        task_text = self.entry.get()
-        if task_text:
-            btn = tk.Button(self.win, text=task_text, bg="#1a0b2e", fg="#c37aff", 
-                            font=("Helvetica", 11), anchor="w", bd=0, padx=10)
-            # Strike-through logic
-            btn.config(command=lambda b=btn: b.config(text=f"✓ {b['text']}", 
-                                                      fg="#7a7a7a", state="disabled"))
-            btn.pack(fill="x")
-            self.entry.delete(0, 'end')
+        txt = self.entry.get()
+        if not txt: return
+        
+        # Remove the current input row to put the task there
+        self.input_frame.destroy()
+        
+        # Add the completed task line
+        task_row = tk.Button(self.list_frame, text=f"  {txt}", fg="#c37aff", bg="#1a0b2e",
+                             activeforeground="gray", activebackground="#1a0b2e",
+                             font=("Helvetica", 11), anchor="w", bd=0, highlightthickness=0)
+        task_row.config(command=lambda b=task_row: b.config(text=f"  ✓ {txt}", fg="#444", state="disabled"))
+        task_row.pack(fill="x")
+        
+        # Re-render input row at the bottom
+        self.render_input_row()
