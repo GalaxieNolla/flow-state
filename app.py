@@ -1,6 +1,8 @@
 import tkinter as tk
 from monitor import ActivityMonitor
 from PIL import Image, ImageTk  # for images
+from task_module import TaskSticky
+from timer_module import StudyTimer
 import os 
 
 class FlowApp:
@@ -11,6 +13,8 @@ class FlowApp:
         self.root.attributes("-topmost", True)
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
+        self.task_manager = TaskSticky(self.root)
+        self.timer_manager = StudyTimer(self.root, self.status_label)
 
         # Image --------
         img = Image.open("arcane background.webp").resize((512, 512))
@@ -31,7 +35,8 @@ class FlowApp:
         self.task_btn.pack(side="left", padx=5)
         self.canvas.create_window(256, 80, window=btn_frame)
 
-        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff")
+        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
+        # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
         self.canvas.create_window(256, 256, window=self.status_label)
 
         # switch modes
@@ -46,10 +51,14 @@ class FlowApp:
     def set_mode(self, mode_bool):
         self.is_task_mode = mode_bool
         self.update_button_colors()
-
-        # Update the footer text to show current status
+        
+        if self.is_task_mode:
+            self.task_manager.open()
+        else:
+            self.timer_manager.start(25, 5) # Default 25/5
+            
         current = "task-based" if self.is_task_mode else "time-based"
-        self.mode_toggle.config(text=f"switch mode (current: {current})")
+        self.mode_toggle.config(text=f"switch mode (current: {current})", fg="#7a7a7a")
 
     def update_button_colors(self):
         purple, blue, grey = "#c37aff", "#4069c9", "#7a7a7a"
