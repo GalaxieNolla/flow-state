@@ -1,32 +1,43 @@
 import tkinter as tk
 from monitor import ActivityMonitor
+from PIL import Image, ImageTk  # for images
+import os 
 
 class FlowApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Flow State")
-        self.root.geometry("400x250")
+        self.root.geometry("512x512")
         self.root.attributes("-topmost", True)
-
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
 
-        # BUTTON -------
-        tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14)).pack(pady=10) #Give users a choice on what to use
-        btn_frame = tk.Frame(root)
-        btn_frame.pack(pady=5)
+        # Image --------
+        img = Image.open("background.jpg").resize((512, 512))
+        self.bg_image = ImageTk.PhotoImage(img)
 
+        self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
+        self.canvas.pack(fill="both", expand=True)
+        self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+        
+        # BUTTON -------
+        tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#1a0b2e", fg="#c37aff")) #Give users a choice on what to use
+        self.canvas.create_window(256, 40, window=header)
+        
+        btn_frame = tk.Frame(root, bg="#1a0b2e")
         self.time_btn = tk.Button(btn_frame, text="Time-Based", width=15, command=lambda: self.set_mode(False)) #time
         self.time_btn.pack(side="left", padx=5)
         self.task_btn = tk.Button(btn_frame, text="Task-Based", width=15, command=lambda: self.set_mode(True)) # task button
         self.task_btn.pack(side="left", padx=5)
+        self.canvas.create_window(256, 80, window=btn_frame)
 
-        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 20))
-        self.status_label.pack(pady=20)
+        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold"), bg="#1a0b2e", fg="#c37aff")
+        self.canvas.create_window(256, 256, window=self.status_label)
 
         # switch modes
-        self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=self.toggle_logic, bd=0, fg="gray")
-        self.mode_toggle.pack(side="bottom", pady=10)
+        self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
+                                     bd=0, bg="#1a0b2e", fg="gray")
+        self.canvas.create_window(256, 480, window=self.mode_toggle)
 
         # Update
         self.update_button_colors()
@@ -41,13 +52,14 @@ class FlowApp:
         self.mode_toggle.config(text=f"switch mode (current: {current})")
 
     def update_button_colors(self):
+        purple, blue, grey = "#c37aff", "#4069c9", "#7a7a7a"
         if self.is_task_mode:
-            self.task_btn.config(bg="gray", relief="sunken")
-            self.time_btn.config(bg="systemButtonFace", relief="raised")
+            self.task_btn.config(highlightbackground=purple, highlightthickness=3)
+            self.time_btn.config(highlightbackground=grey, highlightthickness=1)
         else:
-            self.time_btn.config(bg="gray", relief="sunken")
-            self.task_btn.config(bg="systemButtonFace", relief="raised")
-
+            self.time_btn.config(highlightbackground=blue, highlightthickness=3)
+            self.task_btn.config(highlightbackground=grey, highlightthickness=1)
+            
     def toggle_logic(self):
         self.set_mode(not self.is_task_mode)
             
@@ -79,13 +91,13 @@ class FlowApp:
             # Update if idle, UNLESS user is actively studying
             if is_distraction and not exception:
                 threshold = 0 if self.is_task_mode else 10 # 10 seconds
-                status_text, status_color = "Lock in gamers!! 💪", "red"
+                status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b" # Vivid Red
             elif current_app in lecture_apps or exception:
                 threshold = 1800 # 30 mins
-                status_text, status_color = "We love an academic queen 💎", "blue"
+                status_text, status_color = "We love an academic queen 💎", "#40c9c9" # Cyan fog
             else:
                 threshold = 300 # 5 min
-                status_text, status_color = "We in the flow state 💃", "blue"
+                status_text, status_color = "We in the flow state 💃", "#c37aff" # Neon Purple
 
             # If idle time too long
             if idle_time > threshold:
