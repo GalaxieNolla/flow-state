@@ -16,14 +16,20 @@ class FlowApp:
         self.update_ui()
 
     def update_ui(self):
+        # stop loop if window is closed
+        if not self.root.winfo_exists():
+            return
+            
         idle_time = round(self.monitor.get_idle_time())
         current_app, window_title = self.monitor.get_active_info() #from monitor.py
+        curent_app = current_app.lower() # update both to be lowercase, case sensitive
+        window_title = window_title.lower()
 
         # ADD THIS LINE TO DEBUG:
         print(f"I see you are using: {current_app}")
         
-        lecture_apps = ["Google Chrome", "Safari", "Preview", "Zoom", "Spotify", "Music", "bCourses"] # Ones that get an exception if studying 
-        distraction_sites = ["YouTube", "Netflix", "Twitter", "Instagram", "TikTok", "eBay", "Esty", "Reddit", "Messages"]
+        lecture_apps = ["chrome", "safari", "preview", "zoom", "spotify", "music", "bcourses"] # Ones that get an exception if studying 
+        distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages"]
 
         # Exceptions check -- berkeley, school, lecture, etc. or music
         exception = any(word in window_title.lower() for word in 
