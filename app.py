@@ -43,7 +43,8 @@ class FlowApp:
 
         # switch modes
         self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
-                                     bd=0, bg="#1a0b2e", fg="gray")
+                                     bd=0, bg="#1a0b2e", fg="gray", activebackground="#110820", activeforeground="#c37aff",
+                                     highlightthickness=0)
         self.canvas.create_window(256, 480, window=self.mode_toggle)
 
         # Update
