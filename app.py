@@ -26,7 +26,7 @@ class FlowApp:
         exception = any(word in window_title.lower() for word in 
                         ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci"])
         
-        is_distraction = any(site in window_title for distraction in distraction_sites) and not exception
+        is_distraction = any(word in window_title for distraction in distraction_sites) and not exception
         
         self.app_label.config(text=f"Current App: {current_app}")
         self.timer_label.config(text=f"Idle: {idle_time}s")
