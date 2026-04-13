@@ -38,8 +38,7 @@ class FlowApp:
                             ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
                              "classical", "music", "lofi", "instrumental"])
             
-            is_distraction = any(site in current_app for site in distraction_sites) and not exception or \
-                 any(site in window_title for site in distraction_sites) and not exception
+            is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
     
             # Update if idle, UNLESS user is actively studying
             if is_distraction and not exception:
