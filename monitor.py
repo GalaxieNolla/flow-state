@@ -44,20 +44,20 @@ class ActivityMonitor:
         except:
             return "Finder", "" """
 
-def get_active_info(self):
-        try:
-            options = CG.kCGWindowListOptionOnScreenOnly | 16 # val 4 ExcludeDesktopElements
-            window_list = CG.CGWindowListCopyWindowInfo(options, CG.kCGNullWindowID)
-
-            if not window_list:
+    def get_active_info(self):
+            try:
+                options = CG.kCGWindowListOptionOnScreenOnly | 16 # val 4 ExcludeDesktopElements
+                window_list = CG.CGWindowListCopyWindowInfo(options, CG.kCGNullWindowID)
+    
+                if not window_list:
+                    return "Unknown", ""
+                
+                for window in window_list:
+                    # Layer 0 is active app layer (?)
+                    if window.get('kCGWindowLayer') == 0:
+                        app_name = window.get('kCGWindowOwnerName', '')
+                        window_title = window.get('kCGWindowName', '')
+                        return app_name, window_title
                 return "Unknown", ""
-            
-            for window in window_list:
-                # Layer 0 is active app layer (?)
-                if window.get('kCGWindowLayer') == 0:
-                    app_name = window.get('kCGWindowOwnerName', '')
-                    window_title = window.get('kCGWindowName', '')
-                    return app_name, window_title
-            return "Unknown", ""
-        except Exception as e:
-            return "Error", str(e)
+            except Exception as e:
+                return "Error", str(e)
