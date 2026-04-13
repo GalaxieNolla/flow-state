@@ -5,25 +5,30 @@ class FlowApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Flow State")
-        self.root.geometry("300x150")
-        self.root.attributes("-topmost", True) # Keeps window on top
+        self.root.geometry("400x200")
+        self.root.attributes("-topmost", True)
 
         self.monitor = ActivityMonitor()
         
-        self.label = tk.Label(root, text="Flowing...", font=("Helvetica", 24))
-        self.label.pack(expand=True)
+        self.status_label = tk.Label(root, text="Flowing...", font=("Helvetica", 24))
+        self.status_label.pack(pady=10)
+
+        self.app_label = tk.Label(root, text="Detecting app...", font=("Helvetica", 12), fg="gray")
+        self.app_label.pack(pady=5)
 
         self.update_ui()
 
     def update_ui(self):
         idle_time = self.monitor.get_idle_time()
+        current_app = self.monitor.get_active_app()
+        
+        self.app_label.config(text=f"Current App: {current_app}")
         
         if idle_time > 10:
-            self.label.config(text="Focus! ⚡️", fg="red")
+            self.status_label.config(text="Focus! ⚡️", fg="red")
         else:
-            self.label.config(text="Flowing... 🌊", fg="green")
+            self.status_label.config(text="Flowing... 🌊", fg="green")
             
-        # Refresh the UI every 1 second
         self.root.after(1000, self.update_ui)
 
 if __name__ == "__main__":
