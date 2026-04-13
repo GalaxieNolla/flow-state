@@ -44,7 +44,7 @@ class FlowApp:
             # Update if idle, UNLESS user is actively studying
             if is_distraction and not exception:
                 threshold = 10 # 10 seconds, trigger immediately
-                self.status_label.config(text="Lock in gamers!! 💪", fg="red")
+                status_text, status_color = "Lock in gamers!! 💪", "red"
             elif current_app in lecture_apps or exception:
                 threshold = 1800 # 30 mins
                 status_text, status_color = "We love an academic queen 💎", "blue"
