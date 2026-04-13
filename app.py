@@ -13,8 +13,6 @@ class FlowApp:
         self.root.attributes("-topmost", True)
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
-        self.task_manager = TaskSticky(self.root)
-        self.timer_manager = StudyTimer(self.root, self.status_label)
 
         # Image --------
         img = Image.open("arcane background.webp").resize((512, 512))
@@ -38,6 +36,10 @@ class FlowApp:
         self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
         self.canvas.create_window(256, 256, window=self.status_label)
+
+        # Refer to modules
+        self.task_manager = TaskSticky(self.root)
+        self.timer_manager = StudyTimer(self.root, self.status_label)
 
         # switch modes
         self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
