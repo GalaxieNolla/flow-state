@@ -45,28 +45,23 @@ class ActivityMonitor:
 
 def get_active_info(self):
         try:
-            workspace = NSWorkspace.sharedWorkspace()
-            # This forces the workspace to re-examine the front app
-            active_app = workspace.frontmostApplication()
-            
-            if not active_app:
-                return "Unknown", ""
-
-            app_name = active_app.localizedName()
-            pid = active_app.processIdentifier()
-
-            # Window Title logic
             from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
+            # 1. Get every window currently on your screen
             window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
             
-            window_title = ""
-            if window_list:
-                for window in window_list:
-                    if window.get('kCGWindowOwnerPID') == pid:
-                        window_title = window.get('kCGWindowName', '')
-                        if window_title:
-                            break
-            
-            return app_name, window_title
+            if not window_list:
+                return "Unknown", ""
+
+            # 2. The first window in this list is almost always the one you are looking at
+            # We skip 'Window Server', 'Dock', and 'Terminal' to find the REAL active app
+            for window in window_list:
+                app_name = window.get('kCGWindowOwnerName', '')
+                window_title = window.get('kCGWindowName', '')
+                
+                # Skip the background stuff and the terminal itself
+                if app_name not in ["Window Server", "Dock", "Terminal", "Finder"]:
+                    return app_name, window_title
+
+            return "Finder", ""
         except Exception as e:
             return "Error", str(e)
