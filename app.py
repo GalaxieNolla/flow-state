@@ -16,6 +16,7 @@ class FlowApp:
         self.update_ui()
 
     def update_ui(self):
+        self.root.after(500, self.update_ui) # Update afterwards
         try: 
             # stop loop if window is closed
             if not self.root.winfo_exists():
@@ -41,21 +42,25 @@ class FlowApp:
                  any(site in window_title for site in distraction_sites) and not exception
     
             # Update if idle, UNLESS user is actively studying
-            if is_distraction and not is_exception:
+            if is_distraction and not exception:
                 threshold = 10 # 10 seconds, trigger immediately
                 self.status_label.config(text="Lock in gamers!! 💪", fg="red")
-            elif current_app in lecture_apps or is_exception:
+            elif current_app in lecture_apps or exception:
                 threshold = 1800 # 30 mins
                 status_text, status_color = "We love an academic queen 💎", "blue"
             else:
                 threshold = 300 # 5 min
                 status_text, status_color = "We in the flow state 💃", "blue"
+
+            # If idle time too long
+            if idle_time > threshold:
+                self.status_label.config(text="Lock in gamers!! 💪", fg="red")
+            else:
+                self.status_label.config(text=status_text, fg=status_color)
                 
-            self.root.after(500, self.update_ui) # Update afterwards
-                
-        except (tk.TclError, Exception):
-                # If the window is closed, exit loop
-                return
+        except Exception as e:
+            print(f"Internal Error: {e}") # This lets you see the error in terminal instead of freezing
+            return
 
 if __name__ == "__main__":
     root = tk.Tk()
