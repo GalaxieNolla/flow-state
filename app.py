@@ -19,6 +19,9 @@ class FlowApp:
         idle_time = round(self.monitor.get_idle_time())
         current_app, window_title = self.monitor.get_active_info() #from monitor.py
 
+        # ADD THIS LINE TO DEBUG:
+        print(f"I see you are using: {current_app}")
+        
         lecture_apps = ["Google Chrome", "Safari", "Preview", "Zoom", "Spotify", "Music", "bCourses"] # Ones that get an exception if studying 
         distraction_sites = ["YouTube", "Netflix", "Twitter", "Instagram", "TikTok", "eBay", "Esty", "Reddit", "Messages"]
 
