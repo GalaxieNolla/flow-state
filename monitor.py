@@ -21,19 +21,21 @@ class ActivityMonitor:
 
     def get_active_info(self):
             try:
+                workspace = NSWorkspace.sharedWorkspace()
+                active_app = workspace.frontmostApplication()
+                app_name = active_app.localizedName()
                 options = CG.kCGWindowListOptionOnScreenOnly | CG.kCGWindowListExcludeDesktopElements
                 window_list = CG.CGWindowListCopyWindowInfo(options, CG.kCGNullWindowID)
     
                 if not window_list:
-                    return "Unknown", ""
+                    return app_name, "" # prev: "Unknown", ""
                 
                 for window in window_list:
-                    # Layer 0 is active app layer (?)
-                    if window.get('kCGWindowLayer') == 0:
-                        app_name = window.get('kCGWindowOwnerName', '')
+                    if window.get('kCGWindowLayer', '') == app_name:
                         window_title = window.get('kCGWindowName', '')
-                        return app_name, window_title
+                        if title and title.strip():
                 return "Unknown", ""
+                        
             except Exception as e:
                 print(f"Monitor Error: {e}") #for debugging purposes
                 return "Error", str(e)
