@@ -129,7 +129,25 @@ class Nudge:
         )
 
         # row 5: distracted badge  (y=10)
-        self.root.after(0, lambda: self._create_button_overlay())
+        # (1) stressed button
+        self.stressed_view = NSView.alloc().initWithFrame_(NSMakeRect(14, 8, 72, 20))
+        self.stressed_view.setWantsLayer_(True)
+        self.stressed_view.layer().setBackgroundColor_(
+            NSColor.colorWithRed_green_blue_alpha_(0.18, 0.1, 0.3, 1.0).CGColor()
+        )
+        self.stressed_view.layer().setCornerRadius_(4)
+        cv.addSubview_(self.stressed_view)
+        self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=9, color=(0.6, 0.4, 1.0))
+        
+        # (2) break button  
+        self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(92, 8, 90, 20))
+        self.break_view.setWantsLayer_(True)
+        self.break_view.layer().setBackgroundColor_(
+            NSColor.colorWithRed_green_blue_alpha_(0.05, 0.25, 0.18, 1.0).CGColor()
+        )
+        self.break_view.layer().setCornerRadius_(4)
+        cv.addSubview_(self.break_view)
+        self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=9, color=(0.2, 0.8, 0.55))
 
         self._tick()
 
