@@ -84,7 +84,7 @@ class TaskSticky:
         self.create_task_row(text) # Add row to the container
         self.setup_input_line()    # New + dir under row
 
-    def create_task_row(self, text):
+    def create_task_row(self, text, done=False):
         row = tk.Frame(self.main_container, bg="#120921")
         row.pack(fill="x", side="top", pady=2)
 
