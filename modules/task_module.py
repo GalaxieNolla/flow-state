@@ -1,4 +1,8 @@
 import tkinter as tk
+import json
+import os
+
+saved_sticky = os.path.join(os.path.dirname(__file__), "tasks.json")
 
 class TaskSticky:
     def __init__(self, root):
@@ -22,8 +26,38 @@ class TaskSticky:
         self.main_container = tk.Frame(self.window, bg="#120921")
         self.main_container.pack(fill="both", expand=True, padx=5, pady=15)
 
+        # Load when open
+        self.load_tasks()
         self.setup_input_line()
+        self.window.protocol("WM_DELETE_WINDOW", self.on_close)  # save when closed
 
+    def save_tasks(self):
+        tasks = []
+        for row in self.main_container.winfo_children():
+            if row == self.input_frame:
+                continue
+            # find the Entry widget in the row
+            for widget in row.winfo_children():
+                if isinstance(widget, tk.Entry):
+                    text = widget.get().strip()
+                    done = "overstrike" in str(widget.cget("font"))
+                    if text:
+                        tasks.append({"text": text, "done": done})
+        with open(saved_sticky, "w") as f:
+            json.dump(tasks, f)
+
+    def load_tasks(self):
+        if not os.path.exists(saved_sticky):
+            return
+        with open(saved_sticky, "r") as f:
+            tasks = json.load(f)
+        for task in tasks:
+            self.create_task_row(task["text"], done=task.get("done", False))
+
+    def on_close(self):
+        self.save_tasks()
+        self.window.destroy()
+        
     def setup_input_line(self):
         # Pack to main_container so it stays relative to the tasks
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
@@ -65,6 +99,10 @@ class TaskSticky:
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 15))
 
+        if done:
+            task_edit.config(font=self.font_done, fg="#2d1b4d")
+            bullet_btn.config(text="●", fg="#2d1b4d")
+        
         # Strike through
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn))
 
