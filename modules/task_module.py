@@ -53,27 +53,31 @@ class TaskSticky:
         row = tk.Frame(self.main_container, bg="#120921")
         row.pack(fill="x", side="top", pady=2)
 
-        # 'padding' so it's easier to delete
-        delete_btn = tk.Label(row, text="○", font=("Helvetica", 22), 
+        # "hit box"
+        bullet_btn = tk.Label(row, text="○", font=("Helvetica", 22), 
                               fg="#c37aff", bg="#120921", cursor="hand2",
-                              padx=15, pady=10) # "hit-box"
-        delete_btn.pack(side="left")
+                              padx=10, pady=5) 
+        bullet_btn.pack(side="left")
 
-        # allow user to edit
         task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="#c37aff", 
                              bd=0, insertbackground="white", highlightthickness=1, 
                              highlightbackground="#120921")
         task_edit.insert(0, text)
-        task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
+        task_edit.pack(side="left", fill="x", expand=True)
 
-        # delete task
-        delete_btn.bind("<Button-1>", lambda e: row.destroy())
+        # strike through w/ click
+        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn))
 
-        # Hover logic
+        # Right-click to delete if want it gone
+        for btn in ["<Button-2>", "<Button-3>"]:
+            row.bind(btn, lambda e: row.destroy())
+            bullet_btn.bind(btn, lambda e: row.destroy())
+            task_edit.bind(btn, lambda e: row.destroy())
+
+        # Hover 
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
         task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
-
     def toggle_strike(self, entry_widget, circle_widget):
         current_font = entry_widget.cget("font")
         if "overstrike" in str(current_font):
