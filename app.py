@@ -1,10 +1,10 @@
 import tkinter as tk
 from monitor import ActivityMonitor
 from PIL import Image, ImageTk  # for images
-import styles
-from task_module import TaskSticky
-from timer_module import StudyTimer
-import os 
+from visuals import styles
+from modules.tasks import TaskSticky
+from modules.timer import StudyTimer
+from modules.custom_buttons import create_mode_button
 
 class FlowApp:
     def __init__(self, root):
@@ -16,14 +16,26 @@ class FlowApp:
         self.is_task_mode = False
 
         # Image --------
-        img = Image.open("arcane background.webp").resize((512, 512))
+        img = Image.open("visuals/arcane background.webp").resize((512, 512))
         self.bg_image = ImageTk.PhotoImage(img)
 
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+
+        # BUTTON SECTION -------
+        btn_frame = tk.Frame(root, bg=styles.BG_DARK)
         
-        # BUTTON -------
+        # Use the helper instead of writing out tk.Button(...) every time
+        self.time_btn = create_mode_button(btn_frame, "Time-Based", lambda: self.set_mode(False))
+        self.time_btn.pack(side="left", padx=5)
+        
+        self.task_btn = create_mode_button(btn_frame, "Task-Based", lambda: self.set_mode(True))
+        self.task_btn.pack(side="left", padx=5)
+        
+        self.canvas.create_window(256, 85, window=btn_frame)
+        
+        '''# OLD BUTTON -------
         self.header_label = tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#120921", fg="#c37aff") #Give users a choice on what to use
         self.canvas.create_window(256, 40, window=self.header_label)
         
@@ -32,7 +44,7 @@ class FlowApp:
         self.time_btn.pack(side="left", padx=5)
         self.task_btn = tk.Button(btn_frame, text="Task-Based", width=15, command=lambda: self.set_mode(True)) # task button
         self.task_btn.pack(side="left", padx=5)
-        self.canvas.create_window(256, 80, window=btn_frame)
+        self.canvas.create_window(256, 80, window=btn_frame)'''
 
         self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
@@ -116,8 +128,8 @@ class FlowApp:
                 status_text, status_color = "We in the flow state 💃", "#c37aff" # Neon Purple
 
             # If idle time too long
-            if idle_time > threshold:
-                self.status_label.config(text="Lock in gamers!! 💪", fg="red")
+            iif idle_time > threshold:
+                self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
             else:
                 self.status_label.config(text=status_text, fg=status_color)
                 
