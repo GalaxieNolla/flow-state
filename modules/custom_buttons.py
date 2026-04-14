@@ -5,7 +5,7 @@ import os
 
 def create_mode_button(canvas, x, y, text, command):
     visuals_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "visuals")
-    size = (260, 90)
+    size = (320, 100)
     
     active_path = os.path.join(visuals_dir, "active.png")
     inactive_path = os.path.join(visuals_dir, "inactive.png")
@@ -18,7 +18,7 @@ def create_mode_button(canvas, x, y, text, command):
     
     # create label 2nd
     text_label = tk.Label(canvas.master, text=text, fg="white", 
-                          font=("Helvetica", 11, "bold"), bd=0, cursor="hand2")
+                          font=("Helvetica", 25, "bold"), bd=0, cursor="hand2")
     
     canvas.create_window(x, y, window=text_label)
 
