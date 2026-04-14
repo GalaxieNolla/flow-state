@@ -80,13 +80,12 @@ class FlowApp:
         self.mode_toggle.config(text=f"switch mode (current: {current})", fg="#7a7a7a")
 
     def update_button_colors(self):
-        purple, blue, grey = "#c37aff", "#4069c9", "#7a7a7a"
         if self.is_task_mode:
-            self.task_btn.config(highlightbackground=purple, highlightthickness=3)
-            self.time_btn.config(highlightbackground=grey, highlightthickness=1)
+            self.task_btn.config(highlightbackground=styles.PURPLE_GLOW, highlightthickness=3)
+            self.time_btn.config(highlightbackground=styles.GREY_MUTED, highlightthickness=1)
         else:
-            self.time_btn.config(highlightbackground=blue, highlightthickness=3)
-            self.task_btn.config(highlightbackground=grey, highlightthickness=1)
+            self.time_btn.config(highlightbackground=styles.CYAN_FOG, highlightthickness=3)
+            self.task_btn.config(highlightbackground=styles.GREY_MUTED, highlightthickness=1)
             
     def toggle_logic(self):
         self.set_mode(not self.is_task_mode)
@@ -128,7 +127,7 @@ class FlowApp:
                 status_text, status_color = "We in the flow state 💃", "#c37aff" # Neon Purple
 
             # If idle time too long
-            iif idle_time > threshold:
+            if idle_time > threshold:
                 self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
             else:
                 self.status_label.config(text=status_text, fg=status_color)
