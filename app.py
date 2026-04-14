@@ -80,12 +80,13 @@ class FlowApp:
         self.mode_toggle.config(text=f"switch mode (current: {current})", fg="#7a7a7a")
 
     def update_button_colors(self):
+        active_purple = "#2A1440" 
         if self.is_task_mode:
-            self.task_btn.config(bg="#2A1440", fg=styles.PURPLE_GLOW) # Active look
-            self.time_btn.config(bg=styles.BG_DARK, fg="white")      # Inactive look
+            self.task_btn.config(bg=active_purple, fg=styles.PURPLE_GLOW)
+            self.time_btn.config(bg=styles.BG_DARK, fg="white")
         else:
-            self.time_btn.config(bg="#2A1440", fg=styles.CYAN_FOG)   # Active look
-            self.task_btn.config(bg=styles.BG_DARK, fg="white")      # Inactive look
+            self.time_btn.config(bg=active_purple, fg=styles.CYAN_FOG)
+            self.task_btn.config(bg=styles.BG_DARK, fg="white")
             
     def toggle_logic(self):
         self.set_mode(not self.is_task_mode)
