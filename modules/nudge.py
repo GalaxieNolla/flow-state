@@ -162,7 +162,7 @@ class Nudge:
         )
         self.stressed_view.layer().setCornerRadius_(4)
         cv.addSubview_(self.stressed_view)
-        self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=9, color=(0.7, 0.6, 0.9))
+        self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=10, color=(0.7, 0.6, 0.9))
 
         # (2) break button
         self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(92, 8, 90, 20))
@@ -172,7 +172,7 @@ class Nudge:
         )
         self.break_view.layer().setCornerRadius_(4)
         cv.addSubview_(self.break_view)
-        self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=9, color=(0.8, 0.6, 1.0))
+        self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=10, color=(0.8, 0.6, 1.0))
 
         self._tick()
         self._start_click_polling()
@@ -192,6 +192,7 @@ class Nudge:
         field.setDrawsBackground_(False)
         field.setEditable_(False)
         field.setSelectable_(False)
+        field.setAlignment_(AppKit.NSTextAlignmentCenter)  # add this line
         field.setFont_(self._make_italic_font(size) if italic else NSFont.systemFontOfSize_(size))
         field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color, 1.0))
         parent.addSubview_(field)
