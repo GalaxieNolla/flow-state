@@ -13,11 +13,9 @@ class StudyTimer:
         self.running = False
         self.input_frame = None
         self.is_break = False
-        
-        # Create persistent clock text on the canvas
-        self.clock_display = self.canvas.create_text(256, 256, text="", 
-                                                     font=("Helvetica", 48, "bold"), 
-                                                     fill=styles.PURPLE_GLOW, state="hidden")
+
+        # create clock
+        self.clock_display = self.canvas.create_text(256, 256, text="", font=("Helvetica", 48, "bold"), fill=styles.PURPLE_GLOW, state="hidden")
 
     def show_setup(self):
         """Displays centered input for minutes."""
@@ -85,7 +83,10 @@ class StudyTimer:
         if self.seconds_left >= 0:
             mins, secs = divmod(self.seconds_left, 60)
             self.canvas.itemconfig(self.clock_display, text=f"{mins:02d}:{secs:02d}")
-            self.draw_ring()
+            
+            # To fix choppiness: Only redraw the ring, don't re-process the image
+            self.draw_ring_only() 
+            
             self.seconds_left -= 1
             self.root.after(1000, lambda: self.tick(break_mins))
         else:
@@ -109,8 +110,18 @@ class StudyTimer:
                                style="arc", tags="timer_ring")
         self.canvas.tag_raise(self.clock_display)
 
-    def handle_break(self, break_mins):
-        self.canvas.itemconfig(self.clock_display, fill=styles.CYAN_FOG)
-        self.seconds_left = break_mins * 60
-        self.total_seconds = break_mins * 60
-        self.root.after(3000, lambda: self.tick(break_mins))
+   def handle_break(self, break_mins):
+       # is break is switch to determine if it's study/break time
+        if not self.is_break:
+            self.is_break = True
+            self.canvas.itemconfig(self.clock_display, fill="#00ffff") # Cyan for break
+            self.seconds_left = break_mins * 60
+            self.total_seconds = break_mins * 60
+            self.root.after(1000, lambda: self.tick(break_mins))
+        else:
+            self.is_break = False
+            self.canvas.itemconfig(self.clock_display, fill=styles.PURPLE_GLOW)
+            # revert to OG time
+            self.seconds_left = self.original_study_mins * 60
+            self.total_seconds = self.seconds_left
+            self.root.after(1000, lambda: self.tick(break_mins))
