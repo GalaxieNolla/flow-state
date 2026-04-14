@@ -40,6 +40,8 @@ class FlowApp:
         self.mode_toggle = tk.Label(root, text="switch mode", font=styles.FONT_FOOTER)
         styles.apply_ghost_style(self.mode_toggle, command=lambda: self.set_mode(not self.is_task_mode))
         self.canvas.create_window(256, 490, window=self.mode_toggle)
+        self.time_btn = create_mode_button(self.canvas, 140, 128, "Time-Based", lambda: self.set_mode(False))
+        self.task_btn = create_mode_button(self.canvas, 372, 128, "Task-Based", lambda: self.set_mode(True))
 
         # Update
         self.update_button_colors()
