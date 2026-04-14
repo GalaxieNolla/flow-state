@@ -2,9 +2,9 @@ import tkinter as tk
 from monitor import ActivityMonitor
 from PIL import Image, ImageTk  # for images
 from visuals import styles
-from modules.tasks import TaskSticky
-from modules.timer import StudyTimer
-from modules.custom_buttons import create_mode_button
+from modules.task_module.py import TaskSticky
+from modules.timer_modeule.py import StudyTimer
+from modules.custom_buttons.py import create_mode_button
 
 class FlowApp:
     def __init__(self, root):
