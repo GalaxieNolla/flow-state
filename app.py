@@ -21,12 +21,8 @@ class FlowApp:
         self.canvas.pack(fill="both", expand=True)
 
         # load & display image
-        self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp")).resize((512, 512))
+        self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp").resize((512, 512)))
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
-
-        # Image --------
-        '''img = Image.open("visuals/arcane background.webp").resize((512, 512))
-        self.bg_image = ImageTk.PhotoImage(img)'''
 
         # BUTTON SECTION -------
         self.time_btn = create_mode_button(self.canvas, 150, 200, "Time-Based", lambda: self.set_mode(False))
