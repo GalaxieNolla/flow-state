@@ -14,18 +14,20 @@ class TaskSticky:
 
         self.window = tk.Toplevel(self.root)
         self.window.title("Tasks")
-        self.window.geometry("350x350")
+        self.window.geometry("350x450")
         self.window.configure(bg="#120921")
         self.window.attributes("-topmost", True)
 
+        # Main container that holds the growing list
         self.main_container = tk.Frame(self.window, bg="#120921")
         self.main_container.pack(fill="both", expand=True, padx=15, pady=15)
 
         self.setup_input_line()
 
     def setup_input_line(self):
-        self.input_frame = tk.Frame(self.window, bg="#120921")
-        self.input_frame.pack(fill="x", side="top", padx=15, pady=15)
+        # Pack to main_container so it stays relative to the tasks
+        self.input_frame = tk.Frame(self.main_container, bg="#120921")
+        self.input_frame.pack(fill="x", side="top", pady=5)
 
         plus_label = tk.Label(self.input_frame, text="+", font=self.font_normal, fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(0, 10))
@@ -44,11 +46,12 @@ class TaskSticky:
             return
 
         self.input_frame.destroy() # Remove old +
-        self.create_task_row(text) # Add the row to top frame
-        self.setup_input_line()    # New + at bottom
+        self.create_task_row(text) # Add the row to the container
+        self.setup_input_line()    # New + appears directly under the new row
 
     def create_task_row(self, text):
-        row = tk.Frame(self.task_list_frame, bg="#120921")
+        # Changed to main_container to match open()
+        row = tk.Frame(self.main_container, bg="#120921")
         row.pack(fill="x", side="top", pady=2)
 
         # bullet pt
@@ -61,7 +64,7 @@ class TaskSticky:
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True)
 
-        # Hover outlines
+        # Interactivity
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
         task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
         circle_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, circle_btn))
