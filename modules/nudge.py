@@ -219,8 +219,8 @@ class Nudge:
         self.overlay = tk.Toplevel(self.root)
         self.overlay.overrideredirect(True)
         self.overlay.attributes("-topmost", True)
-        self.overlay.attributes("-transparent", "#000001")
-        self.overlay.configure(bg="#000001")
+        self.overlay.attributes("-transparent", True)
+        self.overlay.configure(bg="systemTransparent")
         self.overlay.geometry(f"{W}x30+{win_x}+{tkinter_y}")  # sits at bottom of nudge
         print(f"overlay at: {win_x}, {tkinter_y}, screen height: {sh}")
     
