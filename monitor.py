@@ -31,7 +31,7 @@ class ActivityMonitor:
                     return app_name, "" # prev: "Unknown", ""
                 
                 for window in window_list:
-                    if window.get('kCGWindowLayer', '') == app_name:
+                    if window.get('kCGWindowOwnerName', '') == app_name:
                         window_title = window.get('kCGWindowName', '')
                         if title and title.strip():
                             return app_name, title
