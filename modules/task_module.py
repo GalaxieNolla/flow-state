@@ -33,7 +33,7 @@ class TaskSticky:
         plus_label.pack(side="left", padx=(0, 10))
 
         self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921", 
-                                  fg="white", bd=0, insertbackground="white",
+                                  fg="#c37aff", bd=0, insertbackground="white",
                                   highlightthickness=1, highlightbackground="#3d2b56")
         self.new_entry.pack(side="left", fill="x", expand=True)
         self.new_entry.focus_set()
@@ -59,7 +59,7 @@ class TaskSticky:
         circle_btn.pack(side="left", padx=(0, 10))
 
         # Editable Entry
-        task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="white", 
+        task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="#c37aff", 
                              bd=0, insertbackground="white", highlightthickness=1, highlightbackground="#120921")
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True)
