@@ -23,7 +23,7 @@ class FlowApp:
         # load image
         img_path = os.path.join("visuals", "arcane background.webp")
         self.bg_raw = Image.open(img_path)
-        self.bg_image = ImageTk.PhotoImage(self.bg_raw)
+        self.bg_image = ImageTk.PhotoImage(self.bg_raw).resize((512, 512))
         '''self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp")).resize((512, 512))'''
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
