@@ -42,10 +42,15 @@ class FlowApp:
         self.timer_manager = StudyTimer(self.root, self.status_label)
 
         # switch modes
-        self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
+        '''self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
                                      bd=0, bg="#1a0b2e", fg="gray", activebackground="#110820", activeforeground="#c37aff",
                                      highlightthickness=0)
-        self.canvas.create_window(256, 480, window=self.mode_toggle)
+        self.canvas.create_window(256, 480, window=self.mode_toggle)'''
+
+        self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
+                                     bd=0, bg="#110820", fg="#7a7a7a",
+                                     activebackground="#110820", activeforeground="#c37aff", highlightthickness=0)
+        self.canvas.create_window(256, 490, window=self.mode_toggle)
 
         # Update
         self.update_button_colors()
