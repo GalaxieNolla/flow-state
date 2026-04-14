@@ -41,4 +41,22 @@ class ActivityMonitor:
             app_name = workspace.frontmostApplication().localizedName()
 
             if app_name in BROWSER_APPS:
-                title = sel
+                title = self.get_browser_title(app_name)
+                return app_name, title
+
+            options = CG.kCGWindowListOptionOnScreenOnly | CG.kCGWindowListExcludeDesktopElements
+            window_list = CG.CGWindowListCopyWindowInfo(options, CG.kCGNullWindowID)
+
+            if not window_list:
+                return app_name, ""
+
+            for window in window_list:
+                owner = window.get('kCGWindowOwnerName', '')
+                title = window.get('kCGWindowName', '')
+                if owner == app_name and title and title.strip():
+                    return app_name, title
+
+            return app_name, ""
+        except Exception as e:
+            print(f"Monitor Error: {e}")
+            return "Error", str(e)
