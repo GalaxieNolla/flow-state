@@ -126,7 +126,7 @@ class Nudge:
         # row 2: distraction message  (y=68)
         self.msg_label = self._add_label(
             cv, f"hey, {site_name} isn't it...", 14, 68, W - 28, 18,
-            size=10, color=(1.0, 0.42, 0.42), italic=True
+            size=10, color=(0.9, 0.45, 0.45), italic=True
         )
 
         # row 3: progress bar track + fill  (y=54)
@@ -154,23 +154,25 @@ class Nudge:
         )
 
         # row 5: stressed + break buttons  (y=8)
+        # (1) stressed buton
         self.stressed_view = NSView.alloc().initWithFrame_(NSMakeRect(14, 8, 72, 20))
         self.stressed_view.setWantsLayer_(True)
         self.stressed_view.layer().setBackgroundColor_(
-            NSColor.colorWithRed_green_blue_alpha_(0.18, 0.1, 0.3, 1.0).CGColor()
+            NSColor.colorWithRed_green_blue_alpha_(0.15, 0.1, 0.25, 1.0).CGColor()
         )
         self.stressed_view.layer().setCornerRadius_(4)
         cv.addSubview_(self.stressed_view)
-        self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=9, color=(0.6, 0.4, 1.0))
+        self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=9, color=(0.7, 0.6, 0.9))
 
+        # (2) break button
         self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(92, 8, 90, 20))
         self.break_view.setWantsLayer_(True)
         self.break_view.layer().setBackgroundColor_(
-            NSColor.colorWithRed_green_blue_alpha_(0.05, 0.25, 0.18, 1.0).CGColor()
+            NSColor.colorWithRed_green_blue_alpha_(0.2, 0.1, 0.25, 1.0).CGColor()
         )
         self.break_view.layer().setCornerRadius_(4)
         cv.addSubview_(self.break_view)
-        self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=9, color=(0.2, 0.8, 0.55))
+        self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=9, color=(0.8, 0.6, 1.0))
 
         self._tick()
         self._start_click_polling()
@@ -213,7 +215,7 @@ class Nudge:
         g = 0.35 + (0.29 - 0.35) * (1 - progress)
         b = 0.85 + (0.29 - 0.85) * (1 - progress)
         self.bar_fill.layer().setBackgroundColor_(
-            NSColor.colorWithRed_green_blue_alpha_(r, g, b, 1.0).CGColor()
+            NSColor.colorWithRed_green_blue_alpha_(0.45, 0.28, 0.75, 1.0).CGColor()
         )
 
     def _streak_text(self):
