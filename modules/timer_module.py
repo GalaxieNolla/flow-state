@@ -76,4 +76,68 @@ class StudyTimer:
             self.canvas.itemconfig(self.clock_display, state="normal")
             self.start(study_mins=mins)
         except ValueError:
-            self.time_entry.
+            self.time_entry.config(fg="red")
+
+    def start(self, study_mins=25, break_mins=5):
+        self.total_seconds = study_mins * 60
+        self.seconds_left = self.total_seconds
+        self.tick(break_mins)
+
+    def tick(self, break_mins):
+        if self.seconds_left >= 0:
+            mins, secs = divmod(self.seconds_left, 60)
+            self.canvas.itemconfig(self.clock_display, text=f"{mins:02d}:{secs:02d}")
+            
+            # Draw ring and background elements
+            self.draw_ring() 
+            
+            self.seconds_left -= 1
+            self.root.after(1000, lambda: self.tick(break_mins))
+        else:
+            self.handle_break(break_mins)
+
+    def draw_ring(self):
+        """Draws the static background box/image once, then the dynamic ring."""
+        # Create shadow box and monkey once to stop choppiness
+        if not self.canvas.find_withtag("timer_static"):
+            # Transparent backing box
+            self.canvas.create_oval(
+                150, 150, 362, 362, 
+                fill="#0f071a", outline="", 
+                tags="timer_static"
+            )
+            
+            if not hasattr(self, 'center_image'):
+                self.create_center_graphic()
+            
+            if hasattr(self, 'center_image'):
+                self.canvas.create_image(
+                    256, 256, image=self.center_image, 
+                    tags="timer_static"
+                )
+
+        # Update the animated ring
+        extent = (self.seconds_left / self.total_seconds) * 359.9
+        self.canvas.delete("timer_ring")
+        self.canvas.create_arc(
+            156, 156, 356, 356, 
+            start=90, extent=extent, 
+            outline=styles.PURPLE_GLOW, width=8, 
+            style="arc", tags="timer_ring"
+        )
+        self.canvas.tag_raise(self.clock_display)
+
+    def handle_break(self, break_mins):
+        if not self.is_break:
+            self.is_break = True
+            self.canvas.itemconfig(self.clock_display, fill="#00ffff") 
+            self.seconds_left = break_mins * 60
+            self.total_seconds = break_mins * 60
+            self.root.after(1000, lambda: self.tick(break_mins))
+        else:
+            self.is_break = False
+            self.canvas.itemconfig(self.clock_display, fill=styles.PURPLE_GLOW)
+            # Use original study time to repeat the cycle
+            self.seconds_left = self.original_study_seconds
+            self.total_seconds = self.original_study_seconds
+            self.root.after(1000, lambda: self.tick(break_mins))
