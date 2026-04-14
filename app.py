@@ -58,11 +58,19 @@ class FlowApp:
         if self.is_task_mode:
             self.task_manager.open()
         else:
-            self.timer_manager.start(25, 5) # Default 25/5
+            self.setup_time_mode() 
             
         current = "task-based" if self.is_task_mode else "time-based"
         self.mode_toggle.config(text=f"switch mode (current: {current})", fg="#7a7a7a")
 
+    def setup_time_mode(self):
+        # move status to bottom
+        self.status_label.pack_forget() 
+        self.status_label.config(font=("Helvetica", 14, "italic")) # Slightly smaller for the bottom
+        self.status_label.pack(side="bottom", pady=20)
+
+        self.timer_manager.show_setup()
+    
     def update_button_colors(self):
         pass
             
