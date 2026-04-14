@@ -55,6 +55,7 @@ class TaskSticky:
             self.create_task_row(task["text"], done=task.get("done", False))
 
     def on_close(self):
+        print("Saving tasks...") #TO DEBUG
         self.save_tasks()
         self.window.destroy()
         
