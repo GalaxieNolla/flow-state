@@ -15,13 +15,17 @@ class FlowApp:
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
 
-        # Image --------
-        img = Image.open("visuals/arcane background.webp").resize((512, 512))
-        self.bg_image = ImageTk.PhotoImage(img)
-
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+        
+        # Ensure the image is centered
+        self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp")).resize((512, 512))
+        self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+
+        # Image --------
+        '''img = Image.open("visuals/arcane background.webp").resize((512, 512))
+        self.bg_image = ImageTk.PhotoImage(img)'''
 
         # BUTTON SECTION -------
         # Place "Time-Based" button at x=170, y=100, these = hard-coded
