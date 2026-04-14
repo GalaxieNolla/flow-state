@@ -3,7 +3,7 @@ from monitor import ActivityMonitor
 from PIL import Image, ImageTk  # for images
 from visuals import styles
 from modules.task_module import TaskSticky
-from modules.timer_modeule import StudyTimer
+from modules.timer_module import StudyTimer
 from modules.custom_buttons import create_mode_button
 
 class FlowApp:
