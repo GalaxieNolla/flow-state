@@ -9,9 +9,23 @@ from AppKit import (
     NSNonactivatingPanelMask, NSPanel, NSView,
     NSFontManager, NSItalicFontMask
 )
+import objc
+import random
+import webbrowser
 
 W = 240
 H = 120
+
+class ClickableView(NSView):
+    def initWithFrame_callback_(self, frame, callback):
+        self = objc.super(ClickableView, self).initWithFrame_(frame)
+        if self is None: return None
+        self._callback = callback
+        return self
+    
+    def mouseDown_(self, event):
+        if self._callback:
+            self._callback()
 
 class Nudge:
     COUNTDOWN_SECS = 30
@@ -129,8 +143,10 @@ class Nudge:
         )
 
         # row 5: distracted badge  (y=10)
-        # (1) stressed button
-        self.stressed_view = NSView.alloc().initWithFrame_(NSMakeRect(14, 8, 72, 20))
+        # (1) stress button
+        self.stressed_view = ClickableView.alloc().initWithFrame_callback_(
+            NSMakeRect(14, 8, 72, 20), self._on_stressed
+        )
         self.stressed_view.setWantsLayer_(True)
         self.stressed_view.layer().setBackgroundColor_(
             NSColor.colorWithRed_green_blue_alpha_(0.18, 0.1, 0.3, 1.0).CGColor()
@@ -138,9 +154,11 @@ class Nudge:
         self.stressed_view.layer().setCornerRadius_(4)
         cv.addSubview_(self.stressed_view)
         self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=9, color=(0.6, 0.4, 1.0))
-        
-        # (2) break button  
-        self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(92, 8, 90, 20))
+
+        # (2) break button
+        self.break_view = ClickableView.alloc().initWithFrame_callback_(
+            NSMakeRect(92, 8, 90, 20), self._on_break
+        )
         self.break_view.setWantsLayer_(True)
         self.break_view.layer().setBackgroundColor_(
             NSColor.colorWithRed_green_blue_alpha_(0.05, 0.25, 0.18, 1.0).CGColor()
@@ -276,12 +294,28 @@ class Nudge:
     ]
     
     def _on_stressed(self):
-        import random
-        self._show_message_popup(random.choice(self.STRESSED_MESSAGES), color=(0.6, 0.4, 1.0))
-    
+        webbrowser.open("https://www.calm.com/breathe")
+        self._show_message_popup(
+            random.choice(self.STRESSED_MESSAGES), color=(0.6, 0.4, 1.0)
+        )
+
     def _on_break(self):
-        import random
-        self._show_message_popup(random.choice(self.BREAK_MESSAGES), color=(0.2, 0.8, 0.55))
+        # pause the nudge for 5 minutes
+        if self.countdown_job:
+            self.root.after_cancel(self.countdown_job)
+            self.countdown_job = None
+        if self.window is not None:
+            self.window.orderOut_(None)
+            self.window = None
+        self.countdown = 0
+        self._show_message_popup(
+            random.choice(self.BREAK_MESSAGES), color=(0.2, 0.8, 0.55)
+        )
+        # re-enable nudging after 5 minutes
+        self.root.after(300_000, self._end_break)
+    
+    def _end_break(self):
+        self._last_shown = 0  # reset cooldown so nudge can show again
     
     def _show_message_popup(self, message, color=(1,1,1)):
         screen = AppKit.NSScreen.mainScreen()
