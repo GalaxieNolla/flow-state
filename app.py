@@ -28,15 +28,8 @@ class FlowApp:
         self.bg_image = ImageTk.PhotoImage(img)'''
 
         # BUTTON SECTION -------
-        # Place "Time-Based" button at x=170, y=100, these = hard-coded
-        self.time_btn = create_mode_button(
-            self.canvas, 170, 100, "Time-Based", lambda: self.set_mode(False)
-        )
-        
-        # Place "Task-Based" button at x=342, y=100
-        self.task_btn = create_mode_button(
-            self.canvas, 342, 100, "Task-Based", lambda: self.set_mode(True)
-        )
+        self.time_btn = create_mode_button(self.canvas, 150, 200, "Time-Based", lambda: self.set_mode(False))
+        self.task_btn = create_mode_button(self.canvas, 360, 200, "Task-Based", lambda: self.set_mode(True))
 
         self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
