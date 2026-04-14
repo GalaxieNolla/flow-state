@@ -92,8 +92,8 @@ class FlowApp:
                 
             idle_time = round(self.monitor.get_idle_time())
             current_app, window_title = self.monitor.get_active_info() #from monitor.py
-            current_app = current_app.lower() # update both to be lowercase, case sensitive
-            window_title = window_title.lower()
+            current_app = str(current_app).lower() # update both to be lowercase str, case sensitive
+            window_title = str(window_title).lower()
     
             # ADD THIS LINE TO DEBUG:
             print(f"I see you are using: {current_app}")
