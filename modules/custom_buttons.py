@@ -5,12 +5,12 @@ import os
 
 def create_mode_button(canvas, x, y, text, command):
     visuals_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "visuals")
-    size = (120, 35)
+    size = (180, 60)
     
     active_path = os.path.join(visuals_dir, "active.png")
     inactive_path = os.path.join(visuals_dir, "inactive.png")
     
-    inactive_i = ImageTk.PhotoImage(Image.open(inactive_path).convert("RGBA").resize(size))
+    inactive_i = ImageTk.PhotoImage(Image.open(inactive_path).convert("RGBA").resize(size, Image.Resampling.LANCZOS))
     active_i = ImageTk.PhotoImage(Image.open(active_path).convert("RGBA").resize(size))
 
     # create image, below text
