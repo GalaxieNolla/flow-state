@@ -64,6 +64,17 @@ class TaskSticky:
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True)
 
+        # Delete appear
+        delete_btn = tk.Label(row, text="✕", font=("Helvetica", 14), fg="#120921", bg="#120921", cursor="hand2")
+        delete_btn.pack(side="right", padx=5)
+        def on_enter(e):
+            task_edit.config(highlightbackground="#3d2b56")
+            delete_btn.config(fg="#c37aff") # reveal when hover over row
+
+        def on_leave(e):
+            task_edit.config(highlightbackground="#120921")
+            delete_btn.config(fg="#120921")
+        
         # Interactivity
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
         task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
@@ -73,11 +84,11 @@ class TaskSticky:
     def toggle_strike(self, entry_widget, circle_widget):
         current_font = entry_widget.cget("font")
         if "overstrike" in str(current_font):
-            entry_widget.config(font=self.font_normal, fg="white")
+            entry_widget.config(font=self.font_normal, fg="#c37aff")
             circle_widget.config(text="○", fg="#c37aff")
         else:
-            entry_widget.config(font=self.font_done, fg="#7a7a7a")
-            circle_widget.config(text="●", fg="#7a7a7a")
+            entry_widget.config(font=self.font_done, fg="#2d1b4d")
+            circle_widget.config(text="●", fg="#2d1b4d")
 
     def on_edit_finish(self, widget):
         if not widget.get().strip():
