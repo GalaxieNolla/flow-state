@@ -34,8 +34,8 @@ class ActivityMonitor:
                     if window.get('kCGWindowLayer', '') == app_name:
                         window_title = window.get('kCGWindowName', '')
                         if title and title.strip():
-                return "Unknown", ""
-                        
+                            return app_name, title
+                return app_name, ""
             except Exception as e:
                 print(f"Monitor Error: {e}") #for debugging purposes
                 return "Error", str(e)
