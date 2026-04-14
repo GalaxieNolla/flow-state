@@ -30,7 +30,7 @@ class FlowApp:
 
         # Refer to modules
         self.task_manager = TaskSticky(self.root)
-        self.timer_manager = StudyTimer(self.root, self.status_label)
+        self.timer_manager = StudyTimer(self.root, self.status_label, self.main_container)
 
         # switch modes
         '''self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
