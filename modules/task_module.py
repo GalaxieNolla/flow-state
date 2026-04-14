@@ -18,14 +18,14 @@ class TaskSticky:
         self.window.configure(bg="#120921")
         self.window.attributes("-topmost", True)
 
-        self.task_list_frame = tk.Frame(self.window, bg="#120921")
-        self.task_list_frame.pack(fill="both", expand=True, padx=15, pady=(15, 0))
+        self.main_container = tk.Frame(self.window, bg="#120921")
+        self.main_container.pack(fill="both", expand=True, padx=15, pady=15)
 
         self.setup_input_line()
 
     def setup_input_line(self):
         self.input_frame = tk.Frame(self.window, bg="#120921")
-        self.input_frame.pack(fill="x", side="bottom", padx=15, pady=15)
+        self.input_frame.pack(fill="x", side="top", padx=15, pady=15)
 
         plus_label = tk.Label(self.input_frame, text="+", font=self.font_normal, fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(0, 10))
