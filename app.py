@@ -66,6 +66,9 @@ class FlowApp:
         self.mode_toggle.config(text=f"switch mode (current: {current})", fg="#7a7a7a")
 
     def setup_time_mode(self):
+        # clear main container
+        for widget in self.main_container.winfo_children():
+            widget.destroy()
         # move status to bottom
         self.status_label.pack_forget() 
         self.status_label.config(font=("Helvetica", 14, "italic")) # Slightly smaller for the bottom
