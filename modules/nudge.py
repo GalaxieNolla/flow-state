@@ -47,7 +47,9 @@ class Nudge:
         if self.window is not None:
             self.window.orderOut_(None)
             self.window = None
-        # streak NOT reset here — only on full timeout
+        if hasattr(self, 'overlay') and self.overlay:
+            self.overlay.destroy()
+            self.overlay = None
 
     def reset_streak(self):
         self.streak_start = time.time()
@@ -79,7 +81,11 @@ class Nudge:
         cv = self.window.contentView()
         cv.setWantsLayer_(True)
         cv.layer().setCornerRadius_(12)
+        self.window.setBackgroundColor_(NSColor.clearColor())
         cv.layer().setMasksToBounds_(True)
+        cv.layer().setBackgroundColor_(
+            NSColor.colorWithRed_green_blue_alpha_(0.071, 0.035, 0.129, 0.95).CGColor()
+        )
 
         self.window.makeKeyAndOrderFront_(None)
         self.window.resignKeyWindow()
@@ -122,14 +128,7 @@ class Nudge:
         )
 
         # row 5: distracted badge  (y=10)
-        self.badge_label = self._add_label(
-            cv, "  distracted  ", 14, 10, 88, 18,
-            size=9, color=(0.9, 0.55, 0.25)
-        )
-        self.badge_label.setDrawsBackground_(True)
-        self.badge_label.setBackgroundColor_(
-            NSColor.colorWithRed_green_blue_alpha_(0.3, 0.14, 0.04, 1.0)
-        )
+        self.root.after(0, lambda: self._create_button_overlay())
 
         self._tick()
 
@@ -168,6 +167,13 @@ class Nudge:
             return
         filled_w = max(2, int((W - 28) * progress))
         self.bar_fill.setFrame_(NSMakeRect(14, 54, filled_w, 5))
+        # interpolate purple (0.53, 0.35, 0.85) → red (1.0, 0.29, 0.29)
+        r = 0.53 + (1.0 - 0.53) * (1 - progress)
+        g = 0.35 + (0.29 - 0.35) * (1 - progress)
+        b = 0.85 + (0.29 - 0.85) * (1 - progress)
+        self.bar_fill.layer().setBackgroundColor_(
+            NSColor.colorWithRed_green_blue_alpha_(r, g, b, 1.0).CGColor()
+        )
 
     def _tick(self):
         if self.window is None:
@@ -194,3 +200,91 @@ class Nudge:
     def _streak_text(self):
         mins = int((time.time() - self.streak_start) / 60)
         return f"{mins} min focus streak"
+
+    def _create_button_overlay(self):
+        if self.window is None:
+            return
+        screen = AppKit.NSScreen.mainScreen()
+        sw = screen.frame().size.width
+        sh = screen.frame().size.height
+    
+        # match position of the AppKit window (remember: AppKit y is from bottom, tkinter from top)
+        win_x = int(sw - W - 20)
+        win_y = int(sh - (sh - (sh - H - 20)) - H)  # flips coordinate system
+    
+        self.overlay = tk.Toplevel(self.root)
+        self.overlay.overrideredirect(True)
+        self.overlay.attributes("-topmost", True)
+        self.overlay.attributes("-transparentcolor", "#000001")
+        self.overlay.configure(bg="#000001")
+        self.overlay.geometry(f"{W}x30+{win_x}+{win_y + H - 28}")  # sits at bottom of nudge
+    
+        stressed_btn = tk.Button(
+            self.overlay, text="stressed", font=("Helvetica", 9),
+            bg="#2e1a4d", fg="#a066ff", relief="flat", padx=6, pady=2,
+            activebackground="#3d2060", activeforeground="#c39fff",
+            command=self._on_stressed
+        )
+        stressed_btn.pack(side="left", padx=(8, 4), pady=4)
+    
+        break_btn = tk.Button(
+            self.overlay, text="take a break", font=("Helvetica", 9),
+            bg="#0d3d2a", fg="#33cc99", relief="flat", padx=6, pady=2,
+            activebackground="#0f4f36", activeforeground="#55ffbb",
+            command=self._on_break
+        )
+        break_btn.pack(side="left", padx=(0, 4), pady=4)
+
+    STRESSED_MESSAGES = [
+    "you're doing better than you think 💜",
+    "one thing at a time. breathe.",
+    "it's okay to not have it all figured out.",
+    "rest is part of the work too.",
+    "you've gotten through hard things before.",
+    ]
+    
+    BREAK_MESSAGES = [
+        "stand up and stretch for 2 mins 🧘",
+        "go drink a full glass of water 💧",
+        "look out a window for 20 seconds 👀",
+        "roll your shoulders back. unclench your jaw.",
+        "step outside for 5 mins if you can ☀️",
+    ]
+    
+    def _on_stressed(self):
+        import random
+        self._show_message_popup(random.choice(self.STRESSED_MESSAGES), color=(0.6, 0.4, 1.0))
+    
+    def _on_break(self):
+        import random
+        self._show_message_popup(random.choice(self.BREAK_MESSAGES), color=(0.2, 0.8, 0.55))
+    
+    def _show_message_popup(self, message, color=(1,1,1)):
+        screen = AppKit.NSScreen.mainScreen()
+        sw = screen.frame().size.width
+        sh = screen.frame().size.height
+        PW, PH = 260, 50
+        popup = NSPanel.alloc().initWithContentRect_styleMask_backing_defer_(
+            NSMakeRect(sw - PW - 20, sh - H - PH - 30, PW, PH),
+            NSNonactivatingPanelMask | NSWindowStyleMaskBorderless,
+            NSBackingStoreBuffered,
+            False
+        )
+        popup.setLevel_(NSFloatingWindowLevel)
+        popup.setOpaque_(False)
+        popup.setAlphaValue_(0.95)
+        popup.setBackgroundColor_(NSColor.clearColor())
+    
+        cv = popup.contentView()
+        cv.setWantsLayer_(True)
+        cv.layer().setCornerRadius_(10)
+        cv.layer().setMasksToBounds_(True)
+        cv.layer().setBackgroundColor_(
+            NSColor.colorWithRed_green_blue_alpha_(0.071, 0.035, 0.129, 0.95).CGColor()
+        )
+        self._add_label(cv, message, 12, 15, PW - 24, 22, size=10, color=color)
+        popup.makeKeyAndOrderFront_(None)
+        popup.resignKeyWindow()
+    
+        # auto-dismiss after 4 seconds
+        self.root.after(4000, lambda: popup.orderOut_(None))
