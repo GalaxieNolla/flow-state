@@ -24,10 +24,6 @@ class FlowApp:
         self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp").resize((512, 512)))
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        # BUTTON SECTION -------
-        self.time_btn = create_mode_button(self.canvas, 140, 128, "Time-Based", lambda: self.set_mode(False))
-        self.task_btn = create_mode_button(self.canvas, 372, 128, "Task-Based", lambda: self.set_mode(True))
-
         self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
         self.canvas.create_window(256, 256, window=self.status_label)
