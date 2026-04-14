@@ -5,6 +5,7 @@ from visuals import styles
 from modules.task_module import TaskSticky
 from modules.timer_module import StudyTimer
 from modules.custom_buttons import create_mode_button
+from modules.nudge import Nudge
 import os
 
 class FlowApp:
@@ -15,6 +16,7 @@ class FlowApp:
         self.root.attributes("-topmost", True)
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
+        self.nudge = Nudge(self.root)
 
         # create canvas
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
@@ -106,7 +108,24 @@ class FlowApp:
                              "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
             
             is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
-    
+
+            if is_distraction and not exception:
+                site_name = next((s for s in distraction_sites if s in window_title), "this site")
+                self.nudge.show(site_name)
+                threshold = 0 if self.is_task_mode else 10
+                status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b"
+            else:
+                self.nudge.hide()
+                threshold = 1800 if (current_app in lecture_apps or exception) else 300
+                status_text = "We love an academic queen 💎" if (current_app in lecture_apps or exception) else "We in the flow state 💃"
+                status_color = "#40c9c9" if (current_app in lecture_apps or exception) else "#c37aff"
+            
+            if idle_time > threshold:
+                self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
+            else:
+                self.status_label.config(text=status_text, fg=status_color)
+            
+            '''OLD V 1 
             if is_distraction and not exception:
                 threshold = 0 if self.is_task_mode else 10 # 10 seconds
                 status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b" # Vivid Red
@@ -121,7 +140,7 @@ class FlowApp:
             if idle_time > threshold:
                 self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
             else:
-                self.status_label.config(text=status_text, fg=status_color)
+                self.status_label.config(text=status_text, fg=status_color)'''
                 
         except Exception as e:
             print(f"Internal Error: {e}") # This lets you see the error in terminal instead of freezing
