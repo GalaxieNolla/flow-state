@@ -11,7 +11,7 @@ def create_mode_button(canvas, x, y, text, command):
     inactive_path = os.path.join(visuals_dir, "inactive.png")
     
     inactive_i = ImageTk.PhotoImage(Image.open(inactive_path).convert("RGBA").resize(size, Image.Resampling.LANCZOS))
-    active_i = ImageTk.PhotoImage(Image.open(active_path).convert("RGBA").resize(size))
+    active_i = ImageTk.PhotoImage(Image.open(active_path).convert("RGBA").resize(size, Image.Resampling.LANCZOS))
 
     # create image, below text
     bg_id = canvas.create_image(x, y, image=inactive_i, anchor="center")
