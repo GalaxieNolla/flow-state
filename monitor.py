@@ -39,14 +39,10 @@ class ActivityMonitor:
         try:
             workspace = NSWorkspace.sharedWorkspace()
             app_name = workspace.frontmostApplication().localizedName()
-
-            if app_name in BROWSER_APPS:
-            title = self.get_browser_title(app_name)
-            print(f"Browser title: '{title}'")  # add this
-            return app_name, title
             
             if app_name in BROWSER_APPS:
                 title = self.get_browser_title(app_name)
+                print(f"Browser title: '{title}'")
                 return app_name, title
 
             options = CG.kCGWindowListOptionOnScreenOnly | CG.kCGWindowListExcludeDesktopElements
