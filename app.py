@@ -24,27 +24,15 @@ class FlowApp:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # BUTTON SECTION -------
-        btn_frame = tk.Frame(root, bg=styles.BG_DARK)
+        # Place "Time-Based" button at x=170, y=100, these = hard-coded
+        self.time_btn = create_mode_button(
+            self.canvas, 170, 100, "Time-Based", lambda: self.set_mode(False)
+        )
         
-        # Use the helper instead of writing out tk.Button(...) every time
-        self.time_btn = create_mode_button(btn_frame, "Time-Based", lambda: self.set_mode(False))
-        self.time_btn.pack(side="left", padx=5)
-        
-        self.task_btn = create_mode_button(btn_frame, "Task-Based", lambda: self.set_mode(True))
-        self.task_btn.pack(side="left", padx=5)
-        
-        self.canvas.create_window(256, 85, window=btn_frame)
-        
-        '''# OLD BUTTON -------
-        self.header_label = tk.Label(root, text="Choose your studying method today:", font=("Helvetica", 14), bg="#120921", fg="#c37aff") #Give users a choice on what to use
-        self.canvas.create_window(256, 40, window=self.header_label)
-        
-        btn_frame = tk.Frame(root, bg="#1a0b2e")
-        self.time_btn = tk.Button(btn_frame, text="Time-Based", width=15, command=lambda: self.set_mode(False)) #time
-        self.time_btn.pack(side="left", padx=5)
-        self.task_btn = tk.Button(btn_frame, text="Task-Based", width=15, command=lambda: self.set_mode(True)) # task button
-        self.task_btn.pack(side="left", padx=5)
-        self.canvas.create_window(256, 80, window=btn_frame)'''
+        # Place "Task-Based" button at x=342, y=100
+        self.task_btn = create_mode_button(
+            self.canvas, 342, 100, "Task-Based", lambda: self.set_mode(True)
+        )
 
         self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
