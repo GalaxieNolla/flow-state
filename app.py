@@ -103,11 +103,10 @@ class FlowApp:
             # Exceptions check -- berkeley, school, lecture, etc. or music
             exception = any(word in window_title.lower() for word in 
                             ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
-                             "classical", "music", "lofi", "instrumental", "spotify", "music", "bcourses", "zoom"])
+                             "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
             
             is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
     
-            # Update if idle, UNLESS user is actively studying
             if is_distraction and not exception:
                 threshold = 0 if self.is_task_mode else 10 # 10 seconds
                 status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b" # Vivid Red
