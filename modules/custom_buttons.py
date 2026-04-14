@@ -18,8 +18,7 @@ def create_mode_button(canvas, x, y, text, command):
     
     # create label 2nd
     text_label = tk.Label(canvas.master, text=text, fg="white", 
-                          font=("Helvetica", 11, "bold"), 
-                          bg="#47236b", bd=0, cursor="hand2")
+                          font=("Helvetica", 11, "bold"), , bd=0, cursor="hand2")
     
     canvas.create_window(x, y, window=text_label)
 
