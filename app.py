@@ -1,6 +1,7 @@
 import tkinter as tk
 from monitor import ActivityMonitor
 from PIL import Image, ImageTk  # for images
+import styles
 from task_module import TaskSticky
 from timer_module import StudyTimer
 import os 
@@ -43,13 +44,11 @@ class FlowApp:
 
         # switch modes
         '''self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
-                                     bd=0, bg="#1a0b2e", fg="gray", activebackground="#110820", activeforeground="#c37aff",
-                                     highlightthickness=0)
-        self.canvas.create_window(256, 480, window=self.mode_toggle)'''
-
-        self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
                                      bd=0, bg="#110820", fg="#7a7a7a",
                                      activebackground="#110820", activeforeground="#c37aff", highlightthickness=0)
+        self.canvas.create_window(256, 490, window=self.mode_toggle)'''
+        self.mode_toggle = tk.Label(root, text="switch mode", font=styles.FONT_FOOTER)
+        styles.apply_ghost_style(self.mode_toggle, command=lambda: self.set_mode(not self.is_task_mode))
         self.canvas.create_window(256, 490, window=self.mode_toggle)
 
         # Update
