@@ -19,34 +19,9 @@ class ActivityMonitor:
     def get_idle_time(self):
         return time.time() - self.last_activity
 
-    """def get_active_info(self):
-        try:
-            workspace = NSWorkspace.sharedWorkspace()
-            active_app = workspace.frontmostApplication()
-
-            # Safety check if app is unknown
-            if not active_app:
-                return "Finder", "" # Default to Finder if it's confused
-            
-            app_name = active_app.localizedName()
-            
-            # Grabs the specific title of the window from UI (e.g., "YouTube")
-            from Quartz import CGWindowListCopyWindowInfo, kCGWindowListOptionOnScreenOnly, kCGExcludeDesktopElements
-            window_list = CGWindowListCopyWindowInfo(kCGWindowListOptionOnScreenOnly | kCGExcludeDesktopElements, 0)
-            
-            window_title = ""
-            for window in window_list:
-                if window.get('kCGWindowOwnerPID') == active_app.processIdentifier():
-                    window_title = window.get('kCGWindowName', '')
-                    break
-                    
-            return app_name, window_title
-        except:
-            return "Finder", "" """
-
     def get_active_info(self):
             try:
-                options = CG.kCGWindowListOptionOnScreenOnly | 16 # val 4 ExcludeDesktopElements
+                options = CG.kCGWindowListOptionOnScreenOnly | CG.kCGWindowListExcludeDesktopElements
                 window_list = CG.CGWindowListCopyWindowInfo(options, CG.kCGNullWindowID)
     
                 if not window_list:
@@ -60,4 +35,5 @@ class ActivityMonitor:
                         return app_name, window_title
                 return "Unknown", ""
             except Exception as e:
+                print(f"Monitor Error: {e}") #for debugging purposes
                 return "Error", str(e)
