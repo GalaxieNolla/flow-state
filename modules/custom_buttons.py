@@ -5,7 +5,7 @@ from visuals import styles
 
 def create_mode_button(canvas, x, y, text, command):
     visuals_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "visuals")
-    size = (220, 110)
+    size = (220, 150)
     
     active_path = os.path.join(visuals_dir, "active.png")
     inactive_path = os.path.join(visuals_dir, "inactive.png")
@@ -15,7 +15,7 @@ def create_mode_button(canvas, x, y, text, command):
 
     bg_id = canvas.create_image(x, y, image=inactive_i, anchor="center")
     
-    text_id = canvas.create_text(x, y, text=text, fill="white", font=("Helvetica", 20, "bold"), justify="center")
+    text_id = canvas.create_text(x, y, text=text, fill="white", font=("Helvetica", 24, "bold"), justify="center")
 
     def on_hover(e):
         canvas.itemconfig(bg_id, image=active_i)
