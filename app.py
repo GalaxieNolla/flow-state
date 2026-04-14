@@ -16,7 +16,7 @@ class FlowApp:
         self.root.attributes("-topmost", True)
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
-        self.nudge = Nudge(self.root)
+        self.nudge = Nudge(self.root, self.monitor)
 
         # create canvas
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
