@@ -1,5 +1,5 @@
 import os
-mport tkinter as tk
+import tkinter as tk
 from PIL import Image, ImageTk
 from visuals import styles
 
