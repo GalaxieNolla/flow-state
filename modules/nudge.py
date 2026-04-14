@@ -205,10 +205,12 @@ class Nudge:
     def _create_button_overlay(self):
         if self.window is None:
             return
+        elif hasattr(self, 'overlay') and self.overlay:
+            return
         screen = AppKit.NSScreen.mainScreen()
         sw = screen.frame().size.width
         sh = screen.frame().size.height
-    
+        
         # AppKit y is from bottom, tkinter from top
         win_x = int(sw - W - 20)
         appkit_y = sh - H - 20
@@ -217,9 +219,9 @@ class Nudge:
         self.overlay = tk.Toplevel(self.root)
         self.overlay.overrideredirect(True)
         self.overlay.attributes("-topmost", True)
-        self.overlay.attributes("-transparentcolor", "#000001")
+        self.overlay.attributes("-transparent", "#000001")
         self.overlay.configure(bg="#000001")
-        self.overlay.geometry(f"{W}x30+{win_x}+{win_y + H - 28}")  # sits at bottom of nudge
+        self.overlay.geometry(f"{W}x30+{win_x}+{tkinter_y}")  # sits at bottom of nudge
         print(f"overlay at: {win_x}, {tkinter_y}, screen height: {sh}")
     
         stressed_btn = tk.Button(
