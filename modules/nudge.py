@@ -16,17 +16,6 @@ import webbrowser
 W = 240
 H = 120
 
-class ClickableView(NSView):
-    def initWithFrame_callback_(self, frame, callback):
-        self = objc.super(ClickableView, self).initWithFrame_(frame)
-        if self is None: return None
-        self._callback = callback
-        return self
-    
-    def mouseDown_(self, event):
-        if self._callback:
-            self._callback()
-
 class Nudge:
     COUNTDOWN_SECS = 30
 
@@ -39,6 +28,7 @@ class Nudge:
         self.is_distracted = False
         self._last_shown = 0
         self._COOLDOWN = 3.0
+        self.monitor = monitor
 
     def show(self, site_name=""):
         self.is_distracted = True
@@ -65,6 +55,9 @@ class Nudge:
         if hasattr(self, 'overlay') and self.overlay:
             self.overlay.destroy()
             self.overlay = None
+        if hasattr(self, 'countdown_job_click'):
+            self.root.after_cancel(self.countdown_job_click)
+            self.countdown_job_click = None
 
     def reset_streak(self):
         self.streak_start = time.time()
@@ -168,6 +161,7 @@ class Nudge:
         self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=9, color=(0.2, 0.8, 0.55))
 
         self._tick()
+        self._start_click_polling()
 
     def _make_italic_font(self, size):
         base = NSFont.systemFontOfSize_(size)
@@ -298,6 +292,30 @@ class Nudge:
         self._show_message_popup(
             random.choice(self.STRESSED_MESSAGES), color=(0.6, 0.4, 1.0)
         )
+        self._breathing_mode = True
+        self._last_breathe_remind = time.time()
+        self._poll_breathing()
+
+    def _poll_breathing(self):
+        if not getattr(self, '_breathing_mode', False):
+            return
+        idle = self.root.master.monitor.get_idle_time() if hasattr(self.root, 'master') else None
+        idle = self._get_idle()
+        if idle is not None and idle < 2:  # mouse moved
+            now = time.time()
+            if now - self._last_breathe_remind > 10:  # don't spam
+                self._show_message_popup("hey, try to stay still and breathe 🫶", color=(0.6, 0.4, 1.0))
+                self._last_breathe_remind = now
+        self.root.after(1000, self._poll_breathing)
+
+    def _stop_breathing_mode(self):
+        self._breathing_mode = False
+
+    def _get_idle(self):
+        try:
+            return self.monitor.get_idle_time()
+        except:
+            return None
 
     def _on_break(self):
         # pause the nudge for 5 minutes
@@ -346,3 +364,28 @@ class Nudge:
     
         # auto-dismiss after 4 seconds
         self.root.after(4000, lambda: popup.orderOut_(None))
+
+    def _start_click_polling(self):
+        if self.window is None:
+            return
+        try:
+            pos = AppKit.NSEvent.mouseLocation()
+            frame = self.window.frame()
+            # translate to window-local coords
+            local_x = pos.x - frame.origin.x
+            local_y = pos.y - frame.origin.y
+            # check if mouse is down
+            pressed = AppKit.NSEvent.pressedMouseButtons() & 1
+    
+            if pressed:
+                # stressed button rect: x=14-86, y=8-28
+                if 14 <= local_x <= 86 and 8 <= local_y <= 28:
+                    self._on_stressed()
+                    return
+                # break button rect: x=92-182, y=8-28
+                if 92 <= local_x <= 182 and 8 <= local_y <= 28:
+                    self._on_break()
+                    return
+        except Exception as e:
+            print(f"click poll error: {e}")
+        self.countdown_job_click = self.root.after(100, self._start_click_polling)
