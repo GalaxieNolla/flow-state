@@ -213,8 +213,9 @@ class Nudge:
         
         # AppKit y is from bottom, tkinter from top
         win_x = int(sw - W - 20)
-        appkit_y = sh - H - 20
-        tkinter_y = int(sh - appkit_y - H) + 10
+        tkinter_y = int(sh - (sh - H - 20) - 28)
+        self.overlay.geometry(f"{W}x50+{win_x}+{tkinter_y}")
+        print(f"overlay at: {win_x}, {tkinter_y}, sh={sh}") #debug
     
         self.overlay = tk.Toplevel(self.root)
         self.overlay.overrideredirect(True)
