@@ -61,6 +61,7 @@ class StudyTimer:
                                start=90, extent=extent, 
                                outline=styles.PURPLE_GLOW, width=8, 
                                style="arc", tags="timer_ring")
+        self.canvas.tag_raise(self.clock_display)
 
     def start(self, study_mins=25, break_mins=5):
         self.total_seconds = study_mins * 60
