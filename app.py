@@ -110,7 +110,7 @@ class FlowApp:
             is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
 
             if is_distraction and not exception:
-                site_name = next((s for s in distraction_sites if s in window_title), "this site")
+                site_name = next((s for s in distraction_sites if s in window_title or s in current_app), "this site")
                 self.nudge.show(site_name)
                 threshold = 0 if self.is_task_mode else 10
                 status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b"
