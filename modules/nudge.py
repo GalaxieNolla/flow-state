@@ -19,7 +19,7 @@ H = 120
 class Nudge:
     COUNTDOWN_SECS = 30
 
-    def __init__(self, root):
+    def __init__(self, root, monitor):
         self.root = root
         self.window = None
         self.streak_start = time.time()
