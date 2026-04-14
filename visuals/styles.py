@@ -4,7 +4,7 @@ PURPLE_GLOW = "#c37aff" # Primary neon purple
 CYAN_FOG = "#40c9c9"    # The secondary teal/cyan
 GREY_MUTED = "#7a7a7a"  # For inactive text
 RED_LOCKIN = "#ff4b4b"  # For distractions
-active_purple = "#2A1440" 
+PURPLE_BUTTON = "#2A1440" 
 
 # Font Styles
 FONT_HEADER = ("Helvetica", 14)
