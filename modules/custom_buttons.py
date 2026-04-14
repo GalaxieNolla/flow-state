@@ -5,7 +5,7 @@ import os
 
 def create_mode_button(canvas, x, y, text, command):
     visuals_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "visuals")
-    size = (180, 60)
+    size = (260, 90)
     
     active_path = os.path.join(visuals_dir, "active.png")
     inactive_path = os.path.join(visuals_dir, "inactive.png")
