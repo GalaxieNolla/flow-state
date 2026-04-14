@@ -5,6 +5,7 @@ from visuals import styles
 from modules.task_module import TaskSticky
 from modules.timer_module import StudyTimer
 from modules.custom_buttons import create_mode_button
+import os
 
 class FlowApp:
     def __init__(self, root):
