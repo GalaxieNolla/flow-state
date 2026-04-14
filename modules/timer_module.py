@@ -22,7 +22,7 @@ class StudyTimer:
         )
 
     def show_setup(self):
-        """Resets the UI for a new input session."""
+        """Clean UI with an ultra-flat vertical hitbox."""
         self.canvas.delete("timer_elements") 
         self.canvas.itemconfig(self.clock_display, state="hidden")
         
@@ -33,11 +33,12 @@ class StudyTimer:
             self.input_frame, font=styles.FONT_DISPLAY, 
             bg=styles.BG_DARK, fg=styles.PURPLE_GLOW, bd=0, 
             justify="center", insertbackground="white", width=4,
-            highlightthickness=0 # Tightens vertical hitbox
+            highlightthickness=0 # hitbox fix
         )
-        self.time_entry.pack(side="top", pady=0)
+        self.time_entry.pack(side="top", pady=0) # (-) vertical padding
         
-        tk.Frame(self.input_frame, height=2, bg=styles.PURPLE_GLOW).pack(fill="x", pady=2)
+        tk.Frame(self.input_frame, height=2, bg=styles.PURPLE_GLOW).pack(fill="x")
+        
         self.time_entry.focus_set()
         self.time_entry.bind("<Return>", lambda e: self.validate_and_start())
 
