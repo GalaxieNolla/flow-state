@@ -19,25 +19,28 @@ def create_mode_button(canvas, x, y, text, command):
     # create label 2nd
     text_label = tk.Label(canvas.master, text=text, fg="white", 
                           font=("Helvetica", 25, "bold"), bd=0, cursor="hand2")
+
+    text_id = canvas.create_text(x, y, text=text, fill="white", font=("Helvetica", 20, "bold"), justify="center")
     
     canvas.create_window(x, y, window=text_label)
 
     def on_hover(e):
-        nonlocal bg_id
-        canvas.itemconfig(bg_id, image=active_i)
-        text_label.config(fg=styles.PURPLE_GLOW)
+        canvas.itemconfig(text_id, fill=styles.PURPLE_GLOW)
 
     def on_leave(e):
-        nonlocal bg_id
         canvas.itemconfig(bg_id, image=inactive_i)
-        text_label.config(fg="white")
+        canvas.itemconfig(text_id, fill="white")
 
-    text_label.bind("<Button-1>", lambda e: command())
-    text_label.bind("<Enter>", on_hover)
-    text_label.bind("<Leave>", on_leave)
+    # bind to canvas
+    canvas.tag_bind(bg_id, "<Button-1>", lambda e: command())
+    canvas.tag_bind(text_id, "<Button-1>", lambda e: command())
+    
+    canvas.tag_bind(bg_id, "<Enter>", on_hover)
+    canvas.tag_bind(text_id, "<Enter>", on_hover)
+    canvas.tag_bind(bg_id, "<Leave>", on_leave)
     
     # keep ref so iamages don't disappear
-    text_label.active_ref = active_i
-    text_label.inactive_ref = inactive_i
+    canvas.active_ref = active_i 
+    canvas.inactive_ref = inactive_i
     
-    return text_label
+    return bg_id
