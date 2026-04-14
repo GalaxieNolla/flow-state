@@ -10,7 +10,7 @@ def create_mode_button(parent, text, command):
     # Create mask for rounded corners
     img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-    draw.rounded_rectangle((0, 0, width, height), radius=radius, fill="#2A1440", outline=styles.GREY_MUTED)
+    draw.rounded_rectangle((0, 0, width, height), radius=radius, fill=styles.PURPLE_BUTTON, outline=styles.GREY_MUTED)
     
     btn_img = ImageTk.PhotoImage(img)
     
