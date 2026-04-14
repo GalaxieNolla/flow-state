@@ -46,39 +46,32 @@ class TaskSticky:
             return
 
         self.input_frame.destroy() # Remove old +
-        self.create_task_row(text) # Add the row to the container
-        self.setup_input_line()    # New + appears directly under the new row
+        self.create_task_row(text) # Add row to the container
+        self.setup_input_line()    # New + dir under row
 
     def create_task_row(self, text):
-        # Changed to main_container to match open()
         row = tk.Frame(self.main_container, bg="#120921")
         row.pack(fill="x", side="top", pady=2)
 
-        # bullet pt
-        circle_btn = tk.Label(row, text="○", font=("Helvetica", 20), fg="#c37aff", bg="#120921", cursor="hand2")
-        circle_btn.pack(side="left", padx=(0, 10))
+        # 'padding' so it's easier to delete
+        delete_btn = tk.Label(row, text="○", font=("Helvetica", 22), 
+                              fg="#c37aff", bg="#120921", cursor="hand2",
+                              padx=15, pady=10) # "hit-box"
+        delete_btn.pack(side="left")
 
-        # Editable Entry
+        # allow user to edit
         task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="#c37aff", 
-                             bd=0, insertbackground="white", highlightthickness=1, highlightbackground="#120921")
+                             bd=0, insertbackground="white", highlightthickness=1, 
+                             highlightbackground="#120921")
         task_edit.insert(0, text)
-        task_edit.pack(side="left", fill="x", expand=True)
+        task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
 
-        # Delete appear
-        delete_btn = tk.Label(row, text="✕", font=("Helvetica", 14), fg="#120921", bg="#120921", cursor="hand2")
-        delete_btn.pack(side="right", padx=5)
-        def on_enter(e):
-            task_edit.config(highlightbackground="#3d2b56")
-            delete_btn.config(fg="#c37aff") # reveal when hover over row
+        # delete task
+        delete_btn.bind("<Button-1>", lambda e: row.destroy())
 
-        def on_leave(e):
-            task_edit.config(highlightbackground="#120921")
-            delete_btn.config(fg="#120921")
-        
-        # Interactivity
+        # Hover logic
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
         task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
-        circle_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, circle_btn))
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
 
     def toggle_strike(self, entry_widget, circle_widget):
