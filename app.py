@@ -116,9 +116,9 @@ class FlowApp:
                 status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b"
             else:
                 self.nudge.hide()
-                threshold = 1800 if (current_app in lecture_apps or exception) else 300
-                status_text = "We love an academic queen 💎" if (current_app in lecture_apps or exception) else "We in the flow state 💃"
-                status_color = "#40c9c9" if (current_app in lecture_apps or exception) else "#c37aff"
+                threshold = 1800 if (current_app in exception) else 300
+                status_text = "We love an academic queen 💎" if (current_app in exception) else "We in the flow state 💃"
+                status_color = "#40c9c9" if (current_app in exception) else "#c37aff"
             
             if idle_time > threshold:
                 self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
