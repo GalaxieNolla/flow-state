@@ -4,24 +4,22 @@ from visuals import styles
 class StudyTimer:
     def __init__(self, root, status_label, container, canvas):
         self.root = root
-        self.status_label = status_label
-        self.container = container 
         self.canvas = canvas
+        self.container = container 
         self.seconds_left = 0
         self.total_seconds = 0
-        self.running = False
-        self.input_frame = None
         
+        # This creates the text item directly on the background
         self.clock_display = self.canvas.create_text(256, 256, text="", 
-                                                     font=("Helvetica", 40, "bold"), 
+                                                     font=("Helvetica", 48, "bold"), 
                                                      fill=styles.PURPLE_GLOW, state="hidden")
 
     def show_setup(self):
-        """Centered input for minutes."""
-        self.canvas.itemconfig(self.clock_display, state="hidden")
         self.canvas.delete("timer_ring")
+        self.canvas.itemconfig(self.clock_display, state="hidden")
         
-        self.input_frame = tk.Frame(self.container, bg=styles.BG_DARK)
+        # Create input frame on the ROOT so it sits ABOVE the canvas
+        self.input_frame = tk.Frame(self.root, bg=styles.BG_DARK)
         self.input_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         self.time_entry = tk.Entry(self.input_frame, font=styles.FONT_DISPLAY, 
@@ -44,30 +42,29 @@ class StudyTimer:
         except ValueError:
             self.time_entry.config(fg="red")
 
-    def start(self, study_mins=25, break_mins=5):
-        self.total_seconds = study_mins * 60
-        self.seconds_left = self.total_seconds
-        self.tick(break_mins)
-
     def tick(self, break_mins):
         if self.seconds_left >= 0:
             mins, secs = divmod(self.seconds_left, 60)
             self.canvas.itemconfig(self.clock_display, text=f"{mins:02d}:{secs:02d}")
             self.draw_ring()
-            
             self.seconds_left -= 1
             self.root.after(1000, lambda: self.tick(break_mins))
         else:
             self.handle_break(break_mins)
 
     def draw_ring(self):
-        """Purple ring clock decreasing / time"""
+        # Calculate arc based on time remaining
         extent = (self.seconds_left / self.total_seconds) * 359.9
         self.canvas.delete("timer_ring")
         self.canvas.create_arc(156, 156, 356, 356, 
                                start=90, extent=extent, 
                                outline=styles.PURPLE_GLOW, width=8, 
                                style="arc", tags="timer_ring")
+
+    def start(self, study_mins=25, break_mins=5):
+        self.total_seconds = study_mins * 60
+        self.seconds_left = self.total_seconds
+        self.tick(break_mins)
 
     def handle_break(self, break_mins):
         self.canvas.itemconfig(self.clock_display, fill=styles.CYAN_FOG)
