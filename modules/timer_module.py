@@ -16,7 +16,7 @@ class StudyTimer:
 
         self.clock_display = self.canvas.create_text(
             256, 256, text="", 
-            font=("Helvetica", 48, "bold"), 
+            font=("Courier New", 48, "bold"), 
             fill=styles.PURPLE_GLOW, 
             state="hidden"
         )
