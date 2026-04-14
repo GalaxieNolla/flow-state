@@ -110,7 +110,7 @@ class StudyTimer:
                                style="arc", tags="timer_ring")
         self.canvas.tag_raise(self.clock_display)
 
-   def handle_break(self, break_mins):
+    def handle_break(self, break_mins):
        # is break is switch to determine if it's study/break time
         if not self.is_break:
             self.is_break = True
