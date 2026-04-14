@@ -98,13 +98,12 @@ class FlowApp:
             # ADD THIS LINE TO DEBUG:
             print(f"I see you are using: {current_app}")
             
-            lecture_apps = ["chrome", "safari", "preview", "zoom", "spotify", "music", "bcourses"] # Ones that get an exception if studying 
             distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages"]
     
             # Exceptions check -- berkeley, school, lecture, etc. or music
             exception = any(word in window_title.lower() for word in 
                             ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
-                             "classical", "music", "lofi", "instrumental"])
+                             "classical", "music", "lofi", "instrumental", "spotify", "music", "bcourses", "zoom"])
             
             is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
     
@@ -112,7 +111,7 @@ class FlowApp:
             if is_distraction and not exception:
                 threshold = 0 if self.is_task_mode else 10 # 10 seconds
                 status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b" # Vivid Red
-            elif current_app in lecture_apps or exception:
+            elif current_app in exception:
                 threshold = 1800 # 30 mins
                 status_text, status_color = "We love an academic queen 💎", "#40c9c9" # Cyan fog
             else:
