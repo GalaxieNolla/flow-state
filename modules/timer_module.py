@@ -13,24 +13,31 @@ class StudyTimer:
         self.running = False
         self.input_frame = None
         self.is_break = False
+        self.original_study_seconds = 0  # To remember Pomodoro rounds
 
-        # create clock
-        self.clock_display = self.canvas.create_text(256, 256, text="", font=("Helvetica", 48, "bold"), fill=styles.PURPLE_GLOW, state="hidden")
+        # Create persistent clock text
+        self.clock_display = self.canvas.create_text(
+            256, 256, text="", 
+            font=("Helvetica", 48, "bold"), 
+            fill=styles.PURPLE_GLOW, 
+            state="hidden"
+        )
 
     def show_setup(self):
         """Displays centered input for minutes."""
         self.status_label.pack_forget()
         self.canvas.delete("timer_ring")
-        self.canvas.delete("timer_graphic")
+        self.canvas.delete("timer_static")
         self.canvas.itemconfig(self.clock_display, state="hidden")
         
-        # Create input frame on ROOT to ensure it sits above the canvas
         self.input_frame = tk.Frame(self.root, bg=styles.BG_DARK)
         self.input_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.time_entry = tk.Entry(self.input_frame, font=styles.FONT_DISPLAY, 
-                                   bg=styles.BG_DARK, fg=styles.PURPLE_GLOW, bd=0, 
-                                   justify="center", insertbackground="white", width=4)
+        self.time_entry = tk.Entry(
+            self.input_frame, font=styles.FONT_DISPLAY, 
+            bg=styles.BG_DARK, fg=styles.PURPLE_GLOW, bd=0, 
+            justify="center", insertbackground="white", width=4
+        )
         self.time_entry.pack(side="top")
         
         line = tk.Frame(self.input_frame, height=2, bg=styles.PURPLE_GLOW)
@@ -42,20 +49,16 @@ class StudyTimer:
     def create_center_graphic(self):
         """Processes monkey.jpg with a circular mask and transparency."""
         try:
-            # Load and convert to RGBA
             img = Image.open("visuals/monkey.jpg").convert("RGBA")
             size = (200, 200)
             img = img.resize(size)
 
-            # Create circular mask
             mask = Image.new("L", size, 0)
             draw = ImageDraw.Draw(mask)
             draw.ellipse((0, 0, size[0], size[1]), fill=255)
             
-            # Apply mask and set transparency (0-255)
             img.putalpha(80) 
             
-            # Combine image with mask
             output = Image.new("RGBA", size, (0, 0, 0, 0))
             output.paste(img, (0, 0), mask=mask)
 
@@ -68,60 +71,9 @@ class StudyTimer:
     def validate_and_start(self):
         try:
             mins = int(self.time_entry.get())
+            self.original_study_seconds = mins * 60 # Store OG time for rounds
             self.input_frame.destroy()
             self.canvas.itemconfig(self.clock_display, state="normal")
             self.start(study_mins=mins)
         except ValueError:
-            self.time_entry.config(fg="red")
-
-    def start(self, study_mins=25, break_mins=5):
-        self.total_seconds = study_mins * 60
-        self.seconds_left = self.total_seconds
-        self.tick(break_mins)
-
-    def tick(self, break_mins):
-        if self.seconds_left >= 0:
-            mins, secs = divmod(self.seconds_left, 60)
-            self.canvas.itemconfig(self.clock_display, text=f"{mins:02d}:{secs:02d}")
-            
-            # To fix choppiness: Only redraw the ring, don't re-process the image
-            self.draw_ring_only() 
-            
-            self.seconds_left -= 1
-            self.root.after(1000, lambda: self.tick(break_mins))
-        else:
-            self.handle_break(break_mins)
-
-    def draw_ring(self):
-        """Draws the shadow graphic, ring, and clock text in order"""
-        extent = (self.seconds_left / self.total_seconds) * 359.9
-        self.canvas.delete("timer_ring")
-        self.canvas.delete("timer_graphic")
-        
-        if not hasattr(self, 'center_image'):
-            self.create_center_graphic()
-        
-        if hasattr(self, 'center_image'):
-            self.canvas.create_image(256, 256, image=self.center_image, tags="timer_graphic")
-            
-        self.canvas.create_arc(156, 156, 356, 356, 
-                               start=90, extent=extent, 
-                               outline=styles.PURPLE_GLOW, width=8, 
-                               style="arc", tags="timer_ring")
-        self.canvas.tag_raise(self.clock_display)
-
-    def handle_break(self, break_mins):
-       # is break is switch to determine if it's study/break time
-        if not self.is_break:
-            self.is_break = True
-            self.canvas.itemconfig(self.clock_display, fill="#00ffff") # Cyan for break
-            self.seconds_left = break_mins * 60
-            self.total_seconds = break_mins * 60
-            self.root.after(1000, lambda: self.tick(break_mins))
-        else:
-            self.is_break = False
-            self.canvas.itemconfig(self.clock_display, fill=styles.PURPLE_GLOW)
-            # revert to OG time
-            self.seconds_left = self.original_study_mins * 60
-            self.total_seconds = self.seconds_left
-            self.root.after(1000, lambda: self.tick(break_mins))
+            self.time_entry.
