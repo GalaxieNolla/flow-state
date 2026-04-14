@@ -12,7 +12,7 @@ class StudyTimer:
         # This creates the text item directly on the background
         self.clock_display = self.canvas.create_text(256, 256, text="", 
                                                      font=("Helvetica", 48, "bold"), 
-                                                     fill=styles.PURPLE_GLOW, state="hidden")
+                                                     fill="#6b3fa0", state="hidden")
 
     def show_setup(self):
         self.canvas.delete("timer_ring")
@@ -56,6 +56,7 @@ class StudyTimer:
         # Calculate arc based on time remaining
         extent = (self.seconds_left / self.total_seconds) * 359.9
         self.canvas.delete("timer_ring")
+        self.canvas.create_oval(160, 160, 352, 352, fill="#0f071a", outline="") # shadow
         self.canvas.create_arc(156, 156, 356, 356, 
                                start=90, extent=extent, 
                                outline=styles.PURPLE_GLOW, width=8, 
