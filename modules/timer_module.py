@@ -26,15 +26,16 @@ class StudyTimer:
         self.canvas.delete("timer_elements") 
         self.canvas.itemconfig(self.clock_display, state="hidden")
         
-        self.input_frame = tk.Frame(self.root, bg=styles.BG_DARK)
+        self.input_frame = tk.Frame(self.root, bg=styles.BG_DARK, highlightthickness=0, bd=0)
         self.input_frame.place(relx=0.5, rely=0.5, anchor="center")
 
         self.time_entry = tk.Entry(
             self.input_frame, font=styles.FONT_DISPLAY, 
             bg=styles.BG_DARK, fg=styles.PURPLE_GLOW, bd=0, 
-            justify="center", insertbackground="white", width=4
+            justify="center", insertbackground="white", width=4,
+            highlightthickness=0 # Tightens vertical hitbox
         )
-        self.time_entry.pack(side="top")
+        self.time_entry.pack(side="top", pady=0)
         
         tk.Frame(self.input_frame, height=2, bg=styles.PURPLE_GLOW).pack(fill="x", pady=2)
         self.time_entry.focus_set()
