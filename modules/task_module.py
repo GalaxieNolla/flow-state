@@ -20,7 +20,7 @@ class TaskSticky:
 
         # Main container that holds the growing list
         self.main_container = tk.Frame(self.window, bg="#120921")
-        self.main_container.pack(fill="both", expand=True, padx=15, pady=15)
+        self.main_container.pack(fill="both", expand=True, padx=5, pady=15)
 
         self.setup_input_line()
 
@@ -29,8 +29,8 @@ class TaskSticky:
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
         self.input_frame.pack(fill="x", side="top", pady=5)
 
-        plus_label = tk.Label(self.input_frame, text="+", font=self.font_normal, fg="#c37aff", bg="#120921")
-        plus_label.pack(side="left", padx=(15, 10))
+        plus_label = tk.Label(self.input_frame, text="+", font=self.font_normal, fg="#c37aff", bg="#120921", width=3)
+        plus_label.pack(side="left", padx=(5, 15))
 
         self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921", 
                                   fg="#c37aff", bd=0, insertbackground="white",
@@ -56,14 +56,14 @@ class TaskSticky:
         # bullet pt
         bullet_btn = tk.Label(row, text="○", font=("Helvetica", 22), 
                               fg="#c37aff", bg="#120921", cursor="hand2",
-                              padx=5, pady=5) 
-        bullet_btn.pack(side="left", padx=(15, 10)) 
+                              width=3, pady=5) 
+        bullet_btn.pack(side="left", padx=(5, 15)) 
 
         task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="#c37aff", 
                              bd=0, insertbackground="white", highlightthickness=1, 
                              highlightbackground="#120921")
         task_edit.insert(0, text)
-        task_edit.pack(side="left", fill="x", expand=True)
+        task_edit.pack(side="left", fill="x", expand=True, padx=(5, 15))
 
         # Strike through
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn))
