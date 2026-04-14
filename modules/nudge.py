@@ -208,9 +208,10 @@ class Nudge:
         sw = screen.frame().size.width
         sh = screen.frame().size.height
     
-        # match position of the AppKit window (remember: AppKit y is from bottom, tkinter from top)
+        # AppKit y is from bottom, tkinter from top
         win_x = int(sw - W - 20)
-        win_y = int(sh - (sh - (sh - H - 20)) - H)  # flips coordinate system
+        appkit_y = sh - H - 20
+        tkinter_y = int(sh - appkit_y - H) + 10
     
         self.overlay = tk.Toplevel(self.root)
         self.overlay.overrideredirect(True)
@@ -218,6 +219,7 @@ class Nudge:
         self.overlay.attributes("-transparentcolor", "#000001")
         self.overlay.configure(bg="#000001")
         self.overlay.geometry(f"{W}x30+{win_x}+{win_y + H - 28}")  # sits at bottom of nudge
+        print(f"overlay at: {win_x}, {tkinter_y}, screen height: {sh}")
     
         stressed_btn = tk.Button(
             self.overlay, text="stressed", font=("Helvetica", 9),
