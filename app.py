@@ -28,6 +28,10 @@ class FlowApp:
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
         self.canvas.create_window(256, 256, window=self.status_label)
 
+        # set up containers
+        self.main_container = tk.Frame(self.root, bg="#120921")
+        self.main_container.pack(fill="both", expand=True)
+        
         # Refer to modules
         self.task_manager = TaskSticky(self.root)
         self.timer_manager = StudyTimer(self.root, self.status_label, self.main_container)
