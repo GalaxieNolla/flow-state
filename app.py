@@ -26,7 +26,7 @@ class FlowApp:
 
         # BUTTON SECTION -------
         self.time_btn = create_mode_button(self.canvas, 130, 220, "Time-Based", lambda: self.set_mode(False))
-        self.task_btn = create_mode_button(self.canvas, 380, 200, "Task-Based", lambda: self.set_mode(True))
+        self.task_btn = create_mode_button(self.canvas, 380, 220, "Task-Based", lambda: self.set_mode(True))
 
         self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
