@@ -34,7 +34,7 @@ class TaskSticky:
 
         self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921", 
                                   fg="#c37aff", bd=0, insertbackground="white",
-                                  highlightthickness=1, highlightbackground="#3d2b56")
+                                  highlightthickness=1, highlightbackground="#c37aff", highlightcolor="#c37aff")
         self.new_entry.pack(side="left", fill="x", expand=True)
         self.new_entry.focus_set()
         
