@@ -64,7 +64,7 @@ class TaskSticky:
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
         self.input_frame.pack(fill="x", side="top", pady=5)
 
-        plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c9a84c", bg="#120921") # fg="#c37aff", bg="#120921")
+        plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(5, 10))
 
         self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921", 
