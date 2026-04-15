@@ -15,6 +15,8 @@ GREY_MUTED = "#6b6080"      # muted with purple undertone
 RED_LOCKIN = "#f87171"      # softer red
 PURPLE_BUTTON = "#1e0f35"
 RUNE_GLOW = "#a78bfa"       # lavender rune color
+GOLD_ACCENT = "#c9a84c"
+PURPLE_DIM = "#7c3aed"
 
 # Font Styles
 FONT_HEADER = ("Cinzel", 14)
