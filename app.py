@@ -100,7 +100,7 @@ class FlowApp:
             # ADD THIS LINE TO DEBUG:
             print(f"I see you are using: {current_app}")
             
-            distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages"]
+            distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
     
             # Exceptions check -- berkeley, school, lecture, etc. or music
             exception = any(word in window_title.lower() for word in 
