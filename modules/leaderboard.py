@@ -1,7 +1,7 @@
 import tkinter as tk
 import json
 import os
-from datetime import datetime
+import time
 from visuals import styles
 from PIL import Image, ImageTk
 
@@ -27,138 +27,128 @@ class Leaderboard:
 
         # background
         bg_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
-        bg_img = Image.open(bg_path).resize((1320, 600), Image.Resampling.LANCZOS)
+        bg_img = Image.open(bg_path).resize((1100, 580), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_img)
         W, H = bg_img.width, bg_img.height
 
         self.window.geometry(f"{W}x{H}")
-        self.canvas = tk.Canvas(self.window, width=W, height=H, highlightthickness=0)
+        self.canvas = tk.Canvas(self.window, width=W, height=H, highlightthickness=0, bg=styles.BG_DARK)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        # load panel images
-        left_path = os.path.join(VISUALS_DIR, "left-blue.png")
-        right_path = os.path.join(VISUALS_DIR, "right-pink.png")
+        # panel dimensions
+        panel_w = 460
+        panel_h = 480
+        left_x = 80       # left edge of left panel
+        right_x = 580     # left edge of right panel
+        panel_y = 60      # top edge of both panels
 
-        left_img = Image.open(left_path).convert("RGBA")
-        right_img = Image.open(right_path).convert("RGBA")
-
-        # scale panels to fit side by side with padding
-        panel_w = W // 2 - 40
-        panel_h = H - 60
-
+        # load + place left panel
+        left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
         left_img = left_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
-        right_img = right_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
-
         self.left_panel_img = ImageTk.PhotoImage(left_img)
+        self.canvas.create_image(left_x, panel_y, image=self.left_panel_img, anchor="nw")
+
+        # load + place right panel
+        right_img = Image.open(os.path.join(VISUALS_DIR, "right-pink.png")).convert("RGBA")
+        right_img = right_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
         self.right_panel_img = ImageTk.PhotoImage(right_img)
+        self.canvas.create_image(right_x, panel_y, image=self.right_panel_img, anchor="nw")
 
-        # place panels
-        left_x = W // 4
-        right_x = W * 3 // 4
-        panel_y = H // 2
+        # center x of each panel
+        lc = left_x + panel_w // 2
+        rc = right_x + panel_w // 2
 
-        self.canvas.create_image(left_x, panel_y, image=self.left_panel_img, anchor="center")
-        self.canvas.create_image(right_x, panel_y, image=self.right_panel_img, anchor="center")
+        # headers
+        self.canvas.create_text(lc, panel_y + 30, text="✦ Winner's Circle ✦",
+            font=("Cinzel", 15, "bold"), fill=styles.JINX_BLUE)
+        self.canvas.create_text(rc, panel_y + 30, text="✦ Current Session ✦",
+            font=("Cinzel", 15, "bold"), fill="#e8a0c0")
 
-        # winner's circle header
-        self.canvas.create_text(left_x, 40,
-            text="✦ Winner's Circle ✦",
-            font=("Cinzel", 16, "bold"), fill=styles.JINX_BLUE)
+        # dividers
+        self.canvas.create_line(left_x + 30, panel_y + 50, left_x + panel_w - 30, panel_y + 50,
+            fill=styles.JINX_BLUE, width=1)
+        self.canvas.create_line(right_x + 30, panel_y + 50, right_x + panel_w - 30, panel_y + 50,
+            fill="#e8a0c0", width=1)
 
-        # current session header
-        self.canvas.create_text(right_x, 40,
-            text="✦ Current Session ✦",
-            font=("Cinzel", 16, "bold"), fill="#f9a8d4")  # pink for right panel
+        self._draw_winners(lc, panel_y + 65, panel_w)
+        self._draw_current_session(rc, panel_y + 65)
 
-        # left panel content — top sessions
-        left_frame = tk.Frame(self.canvas, bg="")
-        try:
-            left_frame.config(bg="systemTransparent")
-        except:
-            left_frame.config(bg=styles.JINX_BG)
-        self.canvas.create_window(left_x, 70, window=left_frame, anchor="n")
-        self._render_winners(left_frame, panel_w - 40)
-
-        # right panel content — current session
-        right_frame = tk.Frame(self.canvas)
-        try:
-            right_frame.config(bg="systemTransparent")
-        except:
-            right_frame.config(bg="#1a0a1a")
-        self.canvas.create_window(right_x, 70, window=right_frame, anchor="n")
-        self._render_current_session(right_frame)
-
-    def _render_winners(self, frame, width):
+    def _draw_winners(self, cx, start_y, panel_w):
         sessions = self._load()
+        col_spacing = 68
+        cols = ["#", "date", "hrs", "streak", "dist", "score"]
+        col_x = [cx - 160, cx - 90, cx - 20, cx + 45, cx + 105, cx + 160]
 
         # column headers
-        header = tk.Frame(frame, bg=frame.cget("bg"))
-        header.pack(fill="x", pady=(8, 4), padx=10)
-        for text in ["#", "date", "hrs", "streak", "dist.", "score"]:
-            tk.Label(header, text=text, font=("Cinzel", 9),
-                     fg=styles.JINX_BLUE, bg=frame.cget("bg")).pack(side="left", expand=True)
+        for i, col in enumerate(cols):
+            self.canvas.create_text(col_x[i], start_y,
+                text=col, font=("Cinzel", 8), fill=styles.JINX_BLUE)
 
-        tk.Frame(frame, bg=styles.JINX_BLUE, height=1).pack(fill="x", padx=10, pady=(0, 6))
+        self.canvas.create_line(cx - 180, start_y + 14, cx + 180, start_y + 14,
+            fill=styles.JINX_DIVIDER, width=1)
 
         if not sessions:
-            tk.Label(frame, text="nothing here yet...\ngo make some chaos 💙",
-                     font=("Cinzel", 11, "italic"),
-                     fg=styles.JINX_BLUE_MID, bg=frame.cget("bg"),
-                     justify="center").pack(pady=20)
+            self.canvas.create_text(cx, start_y + 80,
+                text="nothing here yet...\ngo make some chaos 💙",
+                font=("Cinzel", 11, "italic"), fill=styles.JINX_BLUE_MID,
+                justify="center")
             return
 
         for i, s in enumerate(sessions[:5]):
-            row = tk.Frame(frame, bg=frame.cget("bg"))
-            row.pack(fill="x", pady=2, padx=10)
+            y = start_y + 30 + i * 34
             color = styles.JINX_BLUE if i == 0 else styles.JINX_BLUE_MID if i < 3 else styles.JINX_BLUE_DARK
-            for text in [
+            values = [
                 f"#{i+1}",
                 s["date"],
                 str(s.get("duration_hrs", round(s.get("duration_mins", 0) / 60, 1))),
                 str(s["longest_streak"]),
                 str(s["distractions"]),
                 str(s["score"]),
-            ]:
-                tk.Label(row, text=text, font=("Cinzel", 10),
-                         fg=color, bg=frame.cget("bg")).pack(side="left", expand=True)
+            ]
+            for j, val in enumerate(values):
+                self.canvas.create_text(col_x[j], y,
+                    text=val, font=("Cinzel", 10), fill=color)
 
-    def _render_current_session(self, frame):
+    def _draw_current_session(self, cx, start_y):
+        pink = "#e8a0c0"
+
         if not self.session_tracker:
-            tk.Label(frame, text="no active session",
-                     font=("Cinzel", 11, "italic"),
-                     fg="#f9a8d4", bg=frame.cget("bg")).pack(pady=20)
+            self.canvas.create_text(cx, start_y + 60,
+                text="no active session", font=("Cinzel", 11, "italic"), fill=pink)
             return
 
-        duration_hrs = round((
-            __import__('time').time() - self.session_tracker.session_start) / 3600, 1)
-        streak_hrs = round((
-            __import__('time').time() - self.session_tracker.nudge.streak_start) / 3600, 1)
+        duration_hrs = round((time.time() - self.session_tracker.session_start) / 3600, 1)
+        streak_hrs = round((time.time() - self.session_tracker.nudge.streak_start) / 3600, 1)
         distractions = self.session_tracker.distractions
         score = self.session_tracker._calculate_score(
             int(duration_hrs * 60), int(streak_hrs * 60), distractions)
 
-        pink = "#f9a8d4"
-        bg = frame.cget("bg")
-
-        tk.Frame(frame, bg=pink, height=1).pack(fill="x", padx=10, pady=(8, 10))
-
-        for label, value in [
+        rows = [
             ("session time", f"{duration_hrs} hrs"),
             ("focus streak", f"{streak_hrs} hrs"),
             ("distractions", str(distractions)),
-            ("score", str(score)),
-        ]:
-            row = tk.Frame(frame, bg=bg)
-            row.pack(fill="x", pady=4, padx=20)
-            tk.Label(row, text=label, font=("Cinzel", 9),
-                     fg=pink, bg=bg, anchor="w").pack(side="left", expand=True)
-            tk.Label(row, text=value, font=("Cinzel", 12, "bold"),
-                     fg="white", bg=bg, anchor="e").pack(side="right")
+            ("score",        str(score)),
+        ]
 
-        # refresh button
-        tk.Label(frame, text="↻ refresh", font=styles.FONT_FOOTER,
-                 fg=pink, bg=bg, cursor="hand2").pack(pady=(12, 0))
+        for i, (label, value) in enumerate(rows):
+            y = start_y + 20 + i * 60
+            self.canvas.create_text(cx, y,
+                text=label, font=("Cinzel", 9), fill=pink)
+            self.canvas.create_text(cx, y + 26,
+                text=value, font=("Cinzel", 18, "bold"), fill="white")
+
+        # refresh — clickable text
+        refresh_y = start_y + 280
+        refresh = self.canvas.create_text(cx, refresh_y,
+            text="↻ refresh", font=("Cinzel", 10), fill=pink)
+        self.canvas.tag_bind(refresh, "<Button-1>", lambda e: self._refresh())
+
+    def _refresh(self):
+        if self.window and self.window.winfo_exists():
+            self.window.destroy()
+            self.window = None
+            self.open()
 
     def _load(self):
         if not os.path.exists(SESSIONS_FILE):
