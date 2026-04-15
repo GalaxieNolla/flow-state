@@ -23,7 +23,7 @@ class FlowApp:
         
         self.session_tracker = SessionTracker(self.monitor, self.nudge)
         self.session_tracker.start(self.root)
-        self.leaderboard = Leaderboard(self.root)
+        self.leaderboard = Leaderboard(self.root, self.session_tracker)
 
         # create canvas
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
