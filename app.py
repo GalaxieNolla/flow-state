@@ -6,6 +6,8 @@ from modules.task_module import TaskSticky
 from modules.timer_module import StudyTimer
 from modules.custom_buttons import create_mode_button
 from modules.nudge import Nudge
+from modules.session_tracker import SessionTracker
+from modules.leaderboard import Leaderboard
 import os
 
 class FlowApp:
@@ -14,13 +16,19 @@ class FlowApp:
         self.root.title("Flow State")
         self.root.geometry("512x512")
         self.root.attributes("-topmost", True)
+        
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
         self.nudge = Nudge(self.root, self.monitor)
+        
+        self.session_tracker = SessionTracker(self.monitor, self.nudge)
+        self.session_tracker.start(self.root)
+        self.leaderboard = Leaderboard(self.root)
 
         # create canvas
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
+        self.leaderboard_btn = create_mode_button(self.canvas, 256, 220, "Leaderboard", self.leaderboard.open)
 
         # load & display image
         self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp").resize((512, 512)))
@@ -111,6 +119,8 @@ class FlowApp:
             if is_distraction and not exception:
                 site_name = next((s for s in distraction_sites if s in window_title or s in current_app), "this site")
                 self.nudge.show(site_name)
+                if not self.nudge.is_distracted:  # only count new distractions
+                    self.session_tracker.record_distraction()
             else:
                 self.nudge.hide()
                 
@@ -121,4 +131,5 @@ class FlowApp:
 if __name__ == "__main__":
     root = tk.Tk()
     app = FlowApp(root)
+    root.protocol("WM_DELETE_WINDOW", lambda: [app.session_tracker.save_session(), root.destroy()])
     root.mainloop()
