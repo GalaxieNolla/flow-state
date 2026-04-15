@@ -56,7 +56,7 @@ class Leaderboard:
         # empty string bg = transparent in tkinter
         tk.Label(self.list_frame, text="Nothing to see here...yet.\nBack to the books, Cupcake!",
                      font=("Cormorant Garamond", 13, "italic"),
-                     fg="#7dd3fc" bg="#050d1a", #blue
+                     fg="#7dd3fc", bg="#050d1a", #blue
                      justify="center").pack(pady=40)
         header = tk.Frame(self.list_frame, bg="#050d1a")
         tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1).pack(fill="x", pady=(0, 6)) #keep colored
