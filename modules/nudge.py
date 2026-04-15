@@ -11,6 +11,7 @@ from AppKit import (
     NSNonactivatingPanelMask, NSPanel, NSView,
     NSFontManager, NSItalicFontMask
 )
+from visuals import styles
 
 W = 240
 H = 120
@@ -120,13 +121,14 @@ class Nudge:
         self._add_label(cv, "🔥", 14, 92, 28, 22, size=16)
         self.streak_label = self._add_label(
             cv, self._streak_text(), 28, 94, 186, 18,
-            size=13, color=(0.765, 0.478, 1.0)
+            size=13, color=styles.PURPLE_GLOW #(0.765, 0.478, 1.0)
         )
 
         # row 2: distraction message  (y=68)
         self.msg_label = self._add_label(
             cv, f"hey, {site_name} isn't it...", 14, 68, W - 28, 18,
-            size=10, color=(0.9, 0.45, 0.45), italic=True
+            size=10, color=styles.RED_LOCKIN, #(0.9, 0.45, 0.45)
+            italic=True
         )
 
         # row 3: progress bar track + fill  (y=54)
@@ -162,7 +164,7 @@ class Nudge:
         )
         self.stressed_view.layer().setCornerRadius_(6)
         cv.addSubview_(self.stressed_view)
-        self._add_label(self.stressed_view, "stressed", 0, 4, 90, 16, size=11, color=(0.7, 0.6, 0.9))
+        self._add_label(self.stressed_view, "stressed", 0, 4, 90, 16, size=11, color=styles.RUNE_GLOW) #color=(0.7, 0.6, 0.9))
         
         # (2) break button
         self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(112, 10, 110, 24))
