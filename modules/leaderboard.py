@@ -30,16 +30,17 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg=styles.BG_DARK)  
+        content = tk.Frame(self.canvas, bg="#050d1a") # blue tinted 
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
         tk.Label(content, text="✦ Hall of Focus ✦",
-                 font=("Cinzel", 18, "bold"), fg=styles.GOLD_ACCENT,
-                 bg=styles.BG_DARK).pack(pady=(24, 4))
+                 font=("Cinzel", 18, "bold"), fg="#5ee7ff",  # Jinx electric blue
+                 bg="#050d1a").pack(pady=(24, 4))
+
         tk.Label(content, text="BOOM! The Winner's Circle",
-                 font=("Cormorant Garamond", 11, "italic"), fg=styles.GREY_MUTED,
-                 bg=styles.BG_DARK).pack(pady=(0, 16))
+                 font=("Cormorant Garamond", 11, "italic"), fg="#a78bfa",  # soft purple
+                 bg="#050d1a").pack(pady=(0, 16))
         
         # sessions list
         self.list_frame = tk.Frame(content, bg=styles.BG_DARK)
@@ -49,21 +50,21 @@ class Leaderboard:
 
         # clear button
         tk.Label(self.window, text="clear history", font=styles.FONT_FOOTER,
-                 fg=styles.GREY_MUTED, bg=styles.BG_DARK, cursor="hand2").pack(pady=12)
+                 fg=styles.GREY_MUTED, bg="#050d1a", cursor="hand2").pack(pady=12)
 
     def _render_sessions(self):
         # empty string bg = transparent in tkinter
-        tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!",
+        tk.Label(self.list_frame, text="Nothing to see here...yet.\nBack to the books, Cupcake!",
                      font=("Cormorant Garamond", 13, "italic"),
-                     fg=styles.GREY_MUTED, bg=styles.BG_DARK,
+                     fg="#7dd3fc" bg="#050d1a", #blue
                      justify="center").pack(pady=40)
-        header = tk.Frame(self.list_frame, bg=styles.BG_DARK)
+        header = tk.Frame(self.list_frame, bg="#050d1a")
         tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1).pack(fill="x", pady=(0, 6)) #keep colored
-        row = tk.Frame(self.list_frame, bg=styles.BG_DARK)
+        row = tk.Frame(self.list_frame, bg="#050d1a")
         row.pack(fill="x", pady=3)
         
         tk.Label(row, text=text, font=("Cormorant Garamond", 12),
-                 fg=rank_color, bg=styles.BG_DARK,
+                 fg=rank_color, bg="#050d1a",
                  width=w, anchor="w").pack(side="left")
         
         sessions = self._load()
@@ -71,7 +72,7 @@ class Leaderboard:
         if not sessions:
             tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!",
                      font=("Cormorant Garamond", 13, "italic"),
-                     fg=styles.GREY_MUTED, bg=styles.BG_DARK,
+                     fg=styles.GREY_MUTED, bg="#050d1a",
                      justify="center").pack(pady=40)
             return
 
@@ -80,7 +81,7 @@ class Leaderboard:
         header.pack(fill="x", pady=(0, 8))
         for text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
             tk.Label(header, text=text, font=("Cinzel", 9),
-                     fg=styles.GOLD_ACCENT, bg=styles.BG_DARK,
+                     fg="#5ee7ff", bg="#050d1a", # electric blue
                      width=w, anchor="w").pack(side="left")
 
         # divider
@@ -88,10 +89,10 @@ class Leaderboard:
 
         # rows
         for i, s in enumerate(sessions[:10]):  # top 10
-            row = tk.Frame(self.list_frame, bg=styles.BG_DARK)
+            row = tk.Frame(self.list_frame, bg="#050d1a")
             row.pack(fill="x", pady=3)
 
-            rank_color = styles.GOLD_ACCENT if i == 0 else styles.PURPLE_GLOW if i < 3 else styles.GREY_MUTED
+            rank_color = "#5ee7ff" if i == 0 else "#a78bfa" if i < 3 else "#7dd3fc"
             for text, w in [
                 (f"#{i+1}", 3),
                 (s["date"], 10),
@@ -101,7 +102,7 @@ class Leaderboard:
                 (str(s["score"]), 6),
             ]:
                 tk.Label(row, text=text, font=("Cormorant Garamond", 12),
-                         fg=rank_color, bg=styles.BG_DARK,
+                         fg=rank_color, bg="#050d1a",
                          width=w, anchor="w").pack(side="left")
 
     def _load(self):
