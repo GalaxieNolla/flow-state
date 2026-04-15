@@ -153,26 +153,26 @@ class Nudge:
             size=9, color=(0.478, 0.416, 0.604)
         )
 
-        # row 5: stressed + break buttons  (y=8)
-        # (1) stressed buton
-        self.stressed_view = NSView.alloc().initWithFrame_(NSMakeRect(14, 8, 72, 20))
+        # row 5: stressed + break buttons
+        # (1) stressed button
+        self.stressed_view = NSView.alloc().initWithFrame_(NSMakeRect(14, 10, 90, 24))
         self.stressed_view.setWantsLayer_(True)
         self.stressed_view.layer().setBackgroundColor_(
             NSColor.colorWithRed_green_blue_alpha_(0.15, 0.1, 0.25, 1.0).CGColor()
         )
-        self.stressed_view.layer().setCornerRadius_(4)
+        self.stressed_view.layer().setCornerRadius_(6)
         cv.addSubview_(self.stressed_view)
-        self._add_label(self.stressed_view, "stressed", 4, 2, 64, 16, size=10, color=(0.7, 0.6, 0.9))
-
+        self._add_label(self.stressed_view, "stressed", 0, 4, 90, 16, size=11, color=(0.7, 0.6, 0.9))
+        
         # (2) break button
-        self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(92, 8, 90, 20))
+        self.break_view = NSView.alloc().initWithFrame_(NSMakeRect(112, 10, 110, 24))
         self.break_view.setWantsLayer_(True)
         self.break_view.layer().setBackgroundColor_(
             NSColor.colorWithRed_green_blue_alpha_(0.2, 0.1, 0.25, 1.0).CGColor()
         )
-        self.break_view.layer().setCornerRadius_(4)
+        self.break_view.layer().setCornerRadius_(6)
         cv.addSubview_(self.break_view)
-        self._add_label(self.break_view, "take a break", 4, 2, 82, 16, size=10, color=(0.8, 0.6, 1.0))
+        self._add_label(self.break_view, "take a break", 0, 4, 110, 16, size=11, color=(0.8, 0.6, 1.0))
 
         self._tick()
         self._start_click_polling()
@@ -266,10 +266,10 @@ class Nudge:
             pressed = AppKit.NSEvent.pressedMouseButtons() & 1
 
             if pressed:
-                if 14 <= local_x <= 86 and 8 <= local_y <= 28:
+                if 14 <= local_x <= 104 and 10 <= local_y <= 34:
                     self._on_stressed()
                     return
-                if 92 <= local_x <= 182 and 8 <= local_y <= 28:
+                if 112 <= local_x <= 222 and 10 <= local_y <= 34:
                     self._on_break()
                     return
         except Exception as e:
