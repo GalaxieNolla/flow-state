@@ -85,7 +85,7 @@ class Leaderboard:
             for rank_text, w in [
                 (f"#{i+1}", 3),
                 (s["date"], 10),
-                (str(s["duration_mins"]), 6),
+                (str(s["duration_hrs"]), 6),
                 (str(s["longest_streak"]), 7),
                 (str(s["distractions"]), 6),
                 (str(s["score"]), 6),
