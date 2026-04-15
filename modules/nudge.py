@@ -298,10 +298,10 @@ class Nudge:
             self.window.orderOut_(None)
             self.window = None
         self.countdown = 0
+        self._last_shown = time.time() + 300  # blocks show() for 5 minutes
         self._show_message_popup(
             random.choice(self.BREAK_MESSAGES), color=(0.2, 0.8, 0.55)
         )
-        self.root.after(300_000, self._end_break)
 
     def _end_break(self):
         self._last_shown = 0
