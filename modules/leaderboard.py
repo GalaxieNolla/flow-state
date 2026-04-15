@@ -53,7 +53,10 @@ class Leaderboard:
 
     def _render_sessions(self):
         # empty string bg = transparent in tkinter
-        tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!", bg="", ...)
+        tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!",
+                     font=("Cormorant Garamond", 13, "italic"),
+                     fg=styles.GREY_MUTED, bg=styles.BG_DARK,
+                     justify="center").pack(pady=40)
         header = tk.Frame(self.list_frame, bg="")
         tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1)  # keep this one colored
         row = tk.Frame(self.list_frame, bg="")
