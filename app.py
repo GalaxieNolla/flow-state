@@ -69,9 +69,8 @@ class FlowApp:
 
     def setup_time_mode(self):
         # clear main container
-        '''for widget in self.main_container.winfo_children():
-            widget.destroy()'''
         self.main_container.pack_forget() 
+        
         # move status to bottom
         self.status_label.pack_forget() 
         self.status_label.config(font=("Helvetica", 14, "italic")) # Slightly smaller for the bottom
@@ -114,23 +113,6 @@ class FlowApp:
                 self.nudge.show(site_name)
             else:
                 self.nudge.hide()
-            
-            '''OLD V 1 
-            if is_distraction and not exception:
-                threshold = 0 if self.is_task_mode else 10 # 10 seconds
-                status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b" # Vivid Red
-            elif current_app in exception:
-                threshold = 1800 # 30 mins
-                status_text, status_color = "We love an academic queen 💎", "#40c9c9" # Cyan fog
-            else:
-                threshold = 300 # 5 min
-                status_text, status_color = "We in the flow state 💃", "#c37aff" # Neon Purple
-
-            # If idle time too long
-            if idle_time > threshold:
-                self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
-            else:
-                self.status_label.config(text=status_text, fg=status_color)'''
                 
         except Exception as e:
             print(f"Internal Error: {e}") # This lets you see the error in terminal instead of freezing
