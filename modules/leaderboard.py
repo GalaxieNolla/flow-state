@@ -37,11 +37,11 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # panel dimensions
-        panel_w = 620
-        panel_h = 420
-        left_x = 40
-        right_x = 720
-        panel_y = 80
+        panel_w = 650
+        panel_h = 400
+        left_x = 30
+        right_x = 700
+        panel_y = 100
 
         # load + place left panel
         left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
