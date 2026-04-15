@@ -79,8 +79,8 @@ class Leaderboard:
         # column headers
         header = tk.Frame(self.list_frame, bg=styles.BG_DARK)
         header.pack(fill="x", pady=(0, 8))
-        for text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
-            tk.Label(header, text=text, font=("Cinzel", 9),
+        for header_text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
+            tk.Label(header, text=header_text, font=("Cinzel", 9),
                      fg="#5ee7ff", bg="#050d1a", # electric blue
                      width=w, anchor="w").pack(side="left")
 
@@ -93,7 +93,7 @@ class Leaderboard:
             row.pack(fill="x", pady=3)
 
             rank_color = "#5ee7ff" if i == 0 else "#a78bfa" if i < 3 else "#7dd3fc"
-            for text, w in [
+            for rank_text, w in [
                 (f"#{i+1}", 3),
                 (s["date"], 10),
                 (str(s["duration_mins"]), 6),
@@ -101,7 +101,7 @@ class Leaderboard:
                 (str(s["distractions"]), 6),
                 (str(s["score"]), 6),
             ]:
-                tk.Label(row, text=text, font=("Cinzel", 12),
+                tk.Label(row, text=rank_text, font=("Cinzel", 12),
                          fg=rank_color, bg="#050d1a",
                          width=w, anchor="w").pack(side="left")
 
