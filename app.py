@@ -57,8 +57,8 @@ class FlowApp:
 
         # Set up buttons
         self.leaderboard_btn = create_mode_button(self.canvas, 256, 100, "Leaderboard", self.leaderboard.open) #top center
-        self.time_btn = create_mode_button(self.canvas, 140, 220, "Time-Based", lambda: self.set_mode(False)) #side by side
-        self.task_btn = create_mode_button(self.canvas, 372, 220, "Task-Based", lambda: self.set_mode(True))
+        self.time_btn = create_mode_button(self.canvas, 140, 180, "Time-Based", lambda: self.set_mode(False)) #side by side
+        self.task_btn = create_mode_button(self.canvas, 372, 180, "Task-Based", lambda: self.set_mode(True))
 
         # Update
         self.update_button_colors()
