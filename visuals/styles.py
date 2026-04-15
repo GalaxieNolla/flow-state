@@ -18,6 +18,13 @@ RUNE_GLOW = "#a78bfa"       # lavender rune color
 GOLD_ACCENT = "#c9a84c"
 PURPLE_DIM = "#7c3aed"
 
+# Leadership board
+JINX_BLUE = "#5ee7ff"      # electric blue
+JINX_BLUE_MID = "#7dd3fc"  # sky blue
+JINX_BLUE_DARK = "#4a7fa5" # muted blue 
+JINX_BG = "#050d1a"        # dark navy -- main background color
+JINX_DIVIDER = "#1e3a5f"   # mid navy
+
 # Font Styles
 FONT_HEADER = ("Cinzel", 14)
 FONT_DISPLAY = ("Cinzel", 40, "bold")
