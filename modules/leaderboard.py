@@ -30,21 +30,21 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg=styles.BG_DARK)  
+        content = tk.Frame(self.canvas, bg="")  
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
-        tk.Label(self.window, text="✦ Hall of Focus ✦",
+        tk.Label(content, text="✦ Hall of Focus ✦",
                  font=("Cinzel", 18, "bold"), fg=styles.GOLD_ACCENT,
-                 bg=styles.BG_DARK).pack(pady=(24, 4))
-        tk.Label(self.window, text="your best sessions",
+                 bg="").pack(pady=(24, 4))
+        tk.Label(content, text="BOOM! The Winner's Circle",
                  font=("Cormorant Garamond", 11, "italic"), fg=styles.GREY_MUTED,
-                 bg=styles.BG_DARK).pack(pady=(0, 16))
-
+                 bg="").pack(pady=(0, 16))
+        
         # sessions list
-        self.list_frame = tk.Frame(self.window, bg=styles.BG_DARK)
+        self.list_frame = tk.Frame(content, bg="")
         self.list_frame.pack(fill="both", expand=True, padx=20)
-
+        
         self._render_sessions()
 
         # clear button
@@ -52,10 +52,17 @@ class Leaderboard:
                  fg=styles.GREY_MUTED, bg=styles.BG_DARK, cursor="hand2").pack(pady=12)
 
     def _render_sessions(self):
+        # empty string bg = transparent in tkinter
+        tk.Label(self.list_frame, text="no sessions yet...", bg="", ...)
+        header = tk.Frame(self.list_frame, bg="")
+        tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1)  # keep this one colored
+        row = tk.Frame(self.list_frame, bg="")
+        tk.Label(row, ..., bg="")
+        
         sessions = self._load()
 
         if not sessions:
-            tk.Label(self.list_frame, text="no sessions yet.\ngo study something 💜",
+            tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!",
                      font=("Cormorant Garamond", 13, "italic"),
                      fg=styles.GREY_MUTED, bg=styles.BG_DARK,
                      justify="center").pack(pady=40)
