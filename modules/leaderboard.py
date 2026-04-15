@@ -35,7 +35,7 @@ class Leaderboard:
 
         # place all content on canvas
         content = tk.Frame(self.canvas, bg=styles.JINX_BG) # blue tinted 
-        self.canvas.create_window(190, 10, window=content, anchor="n")
+        self.canvas.create_window(img.width // 2, 10, window=content, anchor="n")
 
         # header
         tk.Label(content, text="✦ Hall of Focus ✦",
@@ -70,9 +70,9 @@ class Leaderboard:
         # column headers
         header = tk.Frame(self.list_frame, bg=styles.JINX_BG)
         header.pack(fill="x", pady=(0, 8))
-        for header_text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
+        for header_text, pad in [("#", 8), ("date", 24), ("hrs", 16), ("streak", 16), ("dist.", 16), ("score", 16)]:
             tk.Label(header, text=header_text, font=("Cinzel", 9),
-                     fg=styles.JINX_BLUE, bg=styles.JINX_BG).pack(side="left", expand=True)
+                     fg=styles.JINX_BLUE, bg=styles.JINX_BG, padx=pad).pack(side="left")
     
         # divider
         tk.Frame(self.list_frame, bg=styles.JINX_DIVIDER, height=1).pack(fill="x", pady=(0, 6))
