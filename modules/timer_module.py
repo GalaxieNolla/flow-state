@@ -45,7 +45,7 @@ class StudyTimer:
     def create_transparent_monkey(self):
         """Strips the black background and forces transparency."""
         try:
-            img = Image.open("visuals/monkey.jpg").convert("RGBA")
+            img = Image.open("visuals/images/monkey.jpg").convert("RGBA")
             img = img.resize((200, 200), Image.Resampling.LANCZOS)
             
             # THE FIX: Replace black pixels with transparency
