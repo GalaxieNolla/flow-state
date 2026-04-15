@@ -23,7 +23,7 @@ class Leaderboard:
         self.window.attributes("-topmost", True)
 
         # background image
-        img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "images", "leader background.webp")
+        img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
         self.bg_image = ImageTk.PhotoImage(Image.open(img_path).resize((380, 500)))
         self.canvas = tk.Canvas(self.window, width=380, height=500, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
