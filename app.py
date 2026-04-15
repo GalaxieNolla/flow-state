@@ -97,8 +97,8 @@ class FlowApp:
             current_app = str(current_app).lower() # update both to be lowercase str, case sensitive
             window_title = str(window_title).lower()
     
-            # ADD THIS LINE TO DEBUG:
-            print(f"I see you are using: {current_app}")
+            # ADD THIS LINE TO DEBUG: -- see if the monitor detects your 'distractions'
+            # print(f"I see you are using: {current_app}")
             
             distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
     
