@@ -15,7 +15,7 @@ class StudyTimer:
         self.center_image = None
 
         self.clock_display = self.canvas.create_text(
-            256, 256, text="", 
+            256, 370, text="", 
             font=("Courier New", 48, "bold"), 
             fill=styles.PURPLE_GLOW, 
             state="hidden"
@@ -86,7 +86,7 @@ class StudyTimer:
         
         # FIX CHUNKY CIRCLE: Shrink dimensions (165,165 to 347,347) so it stays INSIDE the ring
         self.canvas.create_oval(
-            165, 165, 347, 347, 
+            165, 265, 347, 447,
             fill="#0b0514", outline="", 
             tags=("timer_bg", "timer_elements")
         )
@@ -94,7 +94,7 @@ class StudyTimer:
         if not self.center_image:
             self.create_transparent_monkey()
         if self.center_image:
-            self.canvas.create_image(256, 256, image=self.center_image, tags=("timer_bg", "timer_elements"))
+            self.canvas.create_image(256, 356, image=self.center_image, tags=("timer_bg", "timer_elements"))
 
     def tick(self):
         if self.seconds_left >= 0:
@@ -111,7 +111,7 @@ class StudyTimer:
         extent = (self.seconds_left / self.total_seconds) * 359.9
         self.canvas.delete("timer_ring")
         self.canvas.create_arc(
-            156, 156, 356, 356, start=90, extent=extent,
+            156, 256, 356, 456, start=90, extent=extent,
             outline=styles.PURPLE_GLOW if not self.is_break else "#00ffff",
             width=8, style="arc", tags=("timer_ring", "timer_elements")
         )
