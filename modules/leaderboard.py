@@ -30,19 +30,19 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg="")  
+        content = tk.Frame(self.canvas, bg=styles.BG_DARK)  
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
         tk.Label(content, text="✦ Hall of Focus ✦",
                  font=("Cinzel", 18, "bold"), fg=styles.GOLD_ACCENT,
-                 bg="").pack(pady=(24, 4))
+                 bg=styles.BG_DARK).pack(pady=(24, 4))
         tk.Label(content, text="BOOM! The Winner's Circle",
                  font=("Cormorant Garamond", 11, "italic"), fg=styles.GREY_MUTED,
-                 bg="").pack(pady=(0, 16))
+                 bg=styles.BG_DARK).pack(pady=(0, 16))
         
         # sessions list
-        self.list_frame = tk.Frame(content, bg="")
+        self.list_frame = tk.Frame(content, bg=styles.BG_DARK)
         self.list_frame.pack(fill="both", expand=True, padx=20)
         
         self._render_sessions()
@@ -57,10 +57,14 @@ class Leaderboard:
                      font=("Cormorant Garamond", 13, "italic"),
                      fg=styles.GREY_MUTED, bg=styles.BG_DARK,
                      justify="center").pack(pady=40)
-        header = tk.Frame(self.list_frame, bg="")
-        tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1)  # keep this one colored
-        row = tk.Frame(self.list_frame, bg="")
-        tk.Label(row, ..., bg="")
+        header = tk.Frame(self.list_frame, bg=styles.BG_DARK)
+        tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1).pack(fill="x", pady=(0, 6)) #keep colored
+        row = tk.Frame(self.list_frame, bg=styles.BG_DARK)
+        row.pack(fill="x", pady=3)
+        
+        tk.Label(row, text=text, font=("Cormorant Garamond", 12),
+                 fg=rank_color, bg=styles.BG_DARK,
+                 width=w, anchor="w").pack(side="left")
         
         sessions = self._load()
 
