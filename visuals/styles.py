@@ -24,6 +24,7 @@ JINX_BLUE_MID = "#7dd3fc"  # sky blue
 JINX_BLUE_DARK = "#4a7fa5" # muted blue 
 JINX_BG = "#050d1a"        # dark navy -- main background color
 JINX_DIVIDER = "#1e3a5f"   # mid navy
+JINX_BG_TINT = "#0a1628"
 
 # Font Styles
 FONT_HEADER = ("Cinzel", 14)
