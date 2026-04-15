@@ -39,7 +39,7 @@ class Leaderboard:
                  bg="#050d1a").pack(pady=(24, 4))
 
         tk.Label(content, text="BOOM! The Winner's Circle",
-                 font=("Cormorant Garamond", 11, "italic"), fg="#a78bfa",  # soft purple
+                 font=("Cinzel", 11, "italic"), fg="#a78bfa",  # soft purple
                  bg="#050d1a").pack(pady=(0, 16))
         
         # sessions list
@@ -55,7 +55,7 @@ class Leaderboard:
     def _render_sessions(self):
         # empty string bg = transparent in tkinter
         tk.Label(self.list_frame, text="Nothing to see here...yet.\nBack to the books, Cupcake!",
-                     font=("Cormorant Garamond", 13, "italic"),
+                     font=("Cinzel", 13, "italic"),
                      fg="#7dd3fc", bg="#050d1a", #blue
                      justify="center").pack(pady=40)
         header = tk.Frame(self.list_frame, bg="#050d1a")
@@ -63,7 +63,7 @@ class Leaderboard:
         row = tk.Frame(self.list_frame, bg="#050d1a")
         row.pack(fill="x", pady=3)
         
-        tk.Label(row, text=text, font=("Cormorant Garamond", 12),
+        tk.Label(row, text=text, font=("Cinzel", 12),
                  fg=rank_color, bg="#050d1a",
                  width=w, anchor="w").pack(side="left")
         
@@ -71,7 +71,7 @@ class Leaderboard:
 
         if not sessions:
             tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!",
-                     font=("Cormorant Garamond", 13, "italic"),
+                     font=("Cinzel", 13, "italic"),
                      fg=styles.GREY_MUTED, bg="#050d1a",
                      justify="center").pack(pady=40)
             return
@@ -101,7 +101,7 @@ class Leaderboard:
                 (str(s["distractions"]), 6),
                 (str(s["score"]), 6),
             ]:
-                tk.Label(row, text=text, font=("Cormorant Garamond", 12),
+                tk.Label(row, text=text, font=("Cinzel", 12),
                          fg=rank_color, bg="#050d1a",
                          width=w, anchor="w").pack(side="left")
 
