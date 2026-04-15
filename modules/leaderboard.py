@@ -30,7 +30,7 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg="#050d1a") # blue tinted 
+        content = tk.Frame(self.canvas, bg="#0a1628") # blue tinted 
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
@@ -39,7 +39,7 @@ class Leaderboard:
                  bg="#050d1a").pack(pady=(24, 4))
 
         tk.Label(content, text="BOOM! The Winner's Circle",
-                 font=("Cinzel", 11, "italic"), fg="#a78bfa",  # soft purple
+                 font=("Cinzel", 11, "italic"), fg="#7dd3fc",  # sky blue
                  bg="#050d1a").pack(pady=(0, 16))
         
         # sessions list
@@ -50,7 +50,7 @@ class Leaderboard:
 
         # clear button
         tk.Label(self.window, text="clear history", font=styles.FONT_FOOTER,
-                 fg=styles.GREY_MUTED, bg="#050d1a", cursor="hand2").pack(pady=12)
+                 fg="#4a7fa5", bg="#050d1a", cursor="hand2").pack(pady=12)
 
     def _render_sessions(self):
         # empty string bg = transparent in tkinter
@@ -85,14 +85,14 @@ class Leaderboard:
                      width=w, anchor="w").pack(side="left")
 
         # divider
-        tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1).pack(fill="x", pady=(0, 6))
+        tk.Frame(self.list_frame, bg=#1e3a5f, height=1).pack(fill="x", pady=(0, 6))
 
         # rows
         for i, s in enumerate(sessions[:10]):  # top 10
             row = tk.Frame(self.list_frame, bg="#050d1a")
             row.pack(fill="x", pady=3)
 
-            rank_color = "#5ee7ff" if i == 0 else "#a78bfa" if i < 3 else "#7dd3fc"
+            rank_color = "#5ee7ff" if i == 0 else "#7dd3fc" if i < 3 else "#4a7fa5"
             for rank_text, w in [
                 (f"#{i+1}", 3),
                 (s["date"], 10),
