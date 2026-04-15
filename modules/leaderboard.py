@@ -85,7 +85,7 @@ class Leaderboard:
                      width=w, anchor="w").pack(side="left")
 
         # divider
-        tk.Frame(self.list_frame, bg=#1e3a5f, height=1).pack(fill="x", pady=(0, 6))
+        tk.Frame(self.list_frame, bg="#1e3a5f", height=1).pack(fill="x", pady=(0, 6))
 
         # rows
         for i, s in enumerate(sessions[:10]):  # top 10
