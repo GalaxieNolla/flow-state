@@ -33,7 +33,7 @@ class SessionTracker:
         self._idle_check_job = self.root.after(60_000, self._poll_idle)
 
     def save_session(self):
-        duration_hrs = round(self.seconds_elapsed / 3600, 1)
+        duration_hrs = round((time.time() - self.session_start) / 3600, 1)
         
         streak_mins = int((time.time() - self.nudge.streak_start) / 60)
         score = self._calculate_score(duration_mins, streak_mins, self.distractions)
