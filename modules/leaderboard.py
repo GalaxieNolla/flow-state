@@ -23,7 +23,7 @@ class Leaderboard:
         self.window.attributes("-topmost", True)
 
         # background image
-        img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
+        img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.jpg")
         img = Image.open(img_path)
         img.thumbnail((380, 500), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
