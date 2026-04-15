@@ -24,8 +24,12 @@ class Leaderboard:
 
         # background image
         img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
-        self.bg_image = ImageTk.PhotoImage(Image.open(img_path).resize((380, 500)))
-        self.canvas = tk.Canvas(self.window, width=380, height=500, highlightthickness=0)
+        img = Image.open(img_path)
+        img.thumbnail((380, 500), Image.Resampling.LANCZOS)
+        self.bg_image = ImageTk.PhotoImage(img)
+        self.canvas = tk.Canvas(self.window, width=img.width, height=img.height, highlightthickness=0)
+        self.canvas.config(width=img.width, height=img.height)
+        self.window.geometry(f"{img.width}x{img.height}")
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
