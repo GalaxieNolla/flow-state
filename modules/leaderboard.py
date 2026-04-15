@@ -43,8 +43,8 @@ class Leaderboard:
         
         # semi-transparent box behind the table only
         self.canvas.create_rectangle(20, 105, img.width - 20, 500,
-            fill=white, stipple="gray25",
-            outline=white)
+            fill="white", stipple="gray25",
+            outline="white")
         
         # list frame still a widget but placed lower
         self.list_frame = tk.Frame(self.canvas, bg=styles.JINX_BG)
