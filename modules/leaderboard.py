@@ -24,7 +24,7 @@ class Leaderboard:
         # background image
         img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
         img = Image.open(img_path)
-        img.thumbnail((380, 600), Image.Resampling.LANCZOS)
+        img.thumbnail((750, 600), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
         self.canvas = tk.Canvas(self.window, width=img.width, height=img.height, highlightthickness=0)
         self.window.geometry(f"{img.width}x{img.height}")
@@ -42,7 +42,7 @@ class Leaderboard:
             font=("Cinzel", 11, "italic"), fill=styles.JINX_BLUE_MID)
         
         # semi-transparent box behind the table only
-        self.canvas.create_rectangle(20, 105, img.width - 20, 400,
+        self.canvas.create_rectangle(20, 105, img.width - 20, 500,
             fill=white, stipple="gray25",
             outline=white)
         
