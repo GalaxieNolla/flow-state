@@ -42,7 +42,7 @@ class ActivityMonitor:
             
             if app_name in BROWSER_APPS:
                 title = self.get_browser_title(app_name)
-                print(f"Browser title: '{title}'")
+                # print(f"Browser title: '{title}'") for debugging
                 return app_name, title
 
             options = CG.kCGWindowListOptionOnScreenOnly | CG.kCGWindowListExcludeDesktopElements
