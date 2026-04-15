@@ -2,6 +2,7 @@ import tkinter as tk
 import json
 import os
 from visuals import styles
+from PIL import Image, ImageTk
 
 SESSIONS_FILE = os.path.join(os.path.dirname(__file__), "sessions.json")
 
@@ -9,7 +10,7 @@ class Leaderboard:
     def __init__(self, root):
         self.root = root
         self.window = None
-
+    
     def open(self):
         if self.window and self.window.winfo_exists():
             self.window.lift()
@@ -20,6 +21,17 @@ class Leaderboard:
         self.window.geometry("380x500")
         self.window.configure(bg=styles.BG_DARK)
         self.window.attributes("-topmost", True)
+
+        # background image
+        img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "images", "leader background.webp")
+        self.bg_image = ImageTk.PhotoImage(Image.open(img_path).resize((380, 500)))
+        self.canvas = tk.Canvas(self.window, width=380, height=500, highlightthickness=0)
+        self.canvas.pack(fill="both", expand=True)
+        self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+
+        # place all content on canvas
+        content = tk.Frame(self.canvas, bg=styles.BG_DARK, bg="")  
+        self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
         tk.Label(self.window, text="✦ Hall of Focus ✦",
