@@ -73,10 +73,12 @@ class Leaderboard:
 
         self._draw_winners(lc, panel_y + 65, panel_w)
         self._draw_current_session(rc, panel_y + 65)
+        self.window.lift()
+        self.window.focus_force()
+        self.canvas.update()
 
     def _draw_winners(self, cx, start_y, panel_w):
         sessions = self._load()
-        col_spacing = 68
         cols = ["#", "date", "hrs", "streak", "dist", "score"]
         col_x = [cx - 160, cx - 90, cx - 20, cx + 45, cx + 105, cx + 160]
 
