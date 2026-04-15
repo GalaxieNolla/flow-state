@@ -33,22 +33,23 @@ class Leaderboard:
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        # place all content on canvas
-        content = tk.Frame(self.canvas, bg=styles.JINX_BG) # blue tinted 
-        self.canvas.create_window(img.width // 2, 10, window=content, anchor="n")
-
-        # header
-        tk.Label(content, text="✦ Hall of Focus ✦",
-                 font=("Cinzel", 18, "bold"), fg=styles.JINX_BLUE,  # Jinx electric blue
-                 bg="#050d1a").pack(pady=(24, 4))
-
-        tk.Label(content, text="BOOM! The Winner's Circle",
-                 font=("Cinzel", 11, "italic"), fg=styles.JINX_BLUE_MID,  # sky blue
-                 bg="#050d1a").pack(pady=(0, 16))
+        # remove content frame entirely
+        self.canvas.create_text(img.width // 2, 50,
+            text="✦ Hall of Focus ✦",
+            font=("Cinzel", 18, "bold"), fill=styles.JINX_BLUE)
         
-        # sessions list
-        self.list_frame = tk.Frame(content, bg=styles.JINX_BG)
-        self.list_frame.pack(fill="both", expand=True, padx=20)
+        self.canvas.create_text(img.width // 2, 85,
+            text="BOOM! The Winner's Circle",
+            font=("Cinzel", 11, "italic"), fill=styles.JINX_BLUE_MID)
+        
+        # semi-transparent box behind the table only
+        self.canvas.create_rectangle(20, 105, img.width - 20, 320,
+            fill=styles.JINX_BG, stipple="gray50",
+            outline=styles.JINX_DIVIDER)
+        
+        # list frame still a widget but placed lower
+        self.list_frame = tk.Frame(self.canvas, bg=styles.JINX_BG)
+        self.canvas.create_window(img.width // 2, 115, window=self.list_frame, anchor="n")
         
         self._render_sessions()
 
