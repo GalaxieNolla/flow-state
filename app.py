@@ -112,18 +112,8 @@ class FlowApp:
             if is_distraction and not exception:
                 site_name = next((s for s in distraction_sites if s in window_title or s in current_app), "this site")
                 self.nudge.show(site_name)
-                threshold = 0 if self.is_task_mode else 10
-                status_text, status_color = "Lock in gamers!! 💪", "#ff4b4b"
             else:
                 self.nudge.hide()
-                threshold = 1800 if exception else 300
-                status_text = "We love an academic queen 💎" if exception else "We in the flow state 💃"
-                status_color = "#40c9c9" if exception else "#c37aff"
-            
-            if idle_time > threshold:
-                self.status_label.config(text="Lock in gamers!! 💪", fg=styles.RED_LOCKIN)
-            else:
-                self.status_label.config(text=status_text, fg=status_color)
             
             '''OLD V 1 
             if is_distraction and not exception:
