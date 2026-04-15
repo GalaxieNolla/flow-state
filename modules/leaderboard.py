@@ -37,11 +37,11 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # panel dimensions
-        panel_w = 460
-        panel_h = 480
-        left_x = 80       # left edge of left panel
-        right_x = 580     # left edge of right panel
-        panel_y = 60      # top edge of both panels
+        panel_w = 520
+        panel_h = 580
+        left_x = 40
+        right_x = 600
+        panel_y = 40
 
         # load + place left panel
         left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
@@ -61,9 +61,9 @@ class Leaderboard:
 
         # headers
         self.canvas.create_text(lc, panel_y + 30, text="✦ Winner's Circle ✦",
-            font=("Cinzel", 15, "bold"), fill=styles.JINX_BLUE)
+            font=("Cinzel", 18, "bold"), fill=styles.JINX_BLUE)
         self.canvas.create_text(rc, panel_y + 30, text="✦ Current Session ✦",
-            font=("Cinzel", 15, "bold"), fill="#e8a0c0")
+            font=("Cinzel", 18, "bold"), fill="#e8a0c0")
 
         # dividers
         self.canvas.create_line(left_x + 30, panel_y + 50, left_x + panel_w - 30, panel_y + 50,
@@ -83,7 +83,7 @@ class Leaderboard:
         # column headers
         for i, col in enumerate(cols):
             self.canvas.create_text(col_x[i], start_y,
-                text=col, font=("Cinzel", 8), fill=styles.JINX_BLUE)
+                text=col, font=("Cinzel", 11), fill=styles.JINX_BLUE)
 
         self.canvas.create_line(cx - 180, start_y + 14, cx + 180, start_y + 14,
             fill=styles.JINX_DIVIDER, width=1)
@@ -91,7 +91,7 @@ class Leaderboard:
         if not sessions:
             self.canvas.create_text(cx, start_y + 80,
                 text="nothing here yet...\ngo make some chaos 💙",
-                font=("Cinzel", 11, "italic"), fill=styles.JINX_BLUE_MID,
+                font=("Cinzel", 13, "italic"), fill=styles.JINX_BLUE_MID,
                 justify="center")
             return
 
@@ -115,7 +115,7 @@ class Leaderboard:
 
         if not self.session_tracker:
             self.canvas.create_text(cx, start_y + 60,
-                text="no active session", font=("Cinzel", 11, "italic"), fill=pink)
+                text="no active session", font=("Cinzel", 11=3, "italic"), fill=pink)
             return
 
         duration_hrs = round((time.time() - self.session_tracker.session_start) / 3600, 1)
@@ -134,14 +134,14 @@ class Leaderboard:
         for i, (label, value) in enumerate(rows):
             y = start_y + 20 + i * 60
             self.canvas.create_text(cx, y,
-                text=label, font=("Cinzel", 9), fill=pink)
+                text=label, font=("Cinzel", 12), fill=pink)
             self.canvas.create_text(cx, y + 26,
-                text=value, font=("Cinzel", 18, "bold"), fill="white")
+                text=value, font=("Cinzel", 22, "bold"), fill="white")
 
         # refresh — clickable text
         refresh_y = start_y + 280
         refresh = self.canvas.create_text(cx, refresh_y,
-            text="↻ refresh", font=("Cinzel", 10), fill=pink)
+            text="↻ refresh", font=("Cinzel", 12), fill=pink)
         self.canvas.tag_bind(refresh, "<Button-1>", lambda e: self._refresh())
 
     def _refresh(self):
