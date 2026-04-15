@@ -30,27 +30,27 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg="#0a1628") # blue tinted 
+        content = tk.Frame(self.canvas, bg=styles.JINX_BG_TINT) # blue tinted 
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
         tk.Label(content, text="✦ Hall of Focus ✦",
-                 font=("Cinzel", 18, "bold"), fg="#5ee7ff",  # Jinx electric blue
+                 font=("Cinzel", 18, "bold"), fg=styles.JINX_BLUE,  # Jinx electric blue
                  bg="#050d1a").pack(pady=(24, 4))
 
         tk.Label(content, text="BOOM! The Winner's Circle",
-                 font=("Cinzel", 11, "italic"), fg="#7dd3fc",  # sky blue
+                 font=("Cinzel", 11, "italic"), fg=styles.JINX_BLUE_MID,  # sky blue
                  bg="#050d1a").pack(pady=(0, 16))
         
         # sessions list
-        self.list_frame = tk.Frame(content, bg=styles.BG_DARK)
+        self.list_frame = tk.Frame(content, bg=styles.JINX_BG)
         self.list_frame.pack(fill="both", expand=True, padx=20)
         
         self._render_sessions()
 
         # clear button
         tk.Label(self.window, text="clear history", font=styles.FONT_FOOTER,
-                 fg="#4a7fa5", bg="#050d1a", cursor="hand2").pack(pady=12)
+                 fg=styles.JINX_BLUE_DARK, bg=styles.JINX_BG, cursor="hand2").pack(pady=12)
 
     def _render_sessions(self):
         sessions = self._load()
@@ -58,27 +58,27 @@ class Leaderboard:
         if not sessions:
             tk.Label(self.list_frame, text="nothing to see here...yet.\nback to the books, cupcake!",
                      font=("Cinzel", 13, "italic"),
-                     fg="#7dd3fc", bg="#050d1a",
+                     fg=styles.JINX_BLUE_MID, bg=styles.JINX_BG,
                      justify="center").pack(pady=40)
-            tk.Frame(self.list_frame, bg="#1e3a5f", height=1).pack(fill="x", pady=(0, 6))
+            tk.Frame(self.list_frame, bg=styles.JINX_BG, height=1).pack(fill="x", pady=(0, 6))
             return
     
         # column headers
-        header = tk.Frame(self.list_frame, bg="#050d1a")
+        header = tk.Frame(self.list_frame, bg=styles.JINX_BG)
         header.pack(fill="x", pady=(0, 8))
         for header_text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
             tk.Label(header, text=header_text, font=("Cinzel", 9),
-                     fg="#5ee7ff", bg="#050d1a",
+                     fg=styles.JINX_BLUE, bg=styles.JINX_BG,
                      width=w, anchor="center").pack(side="left")
     
         # divider
-        tk.Frame(self.list_frame, bg="#1e3a5f", height=1).pack(fill="x", pady=(0, 6))
+        tk.Frame(self.list_frame, bg=styles.JINX_DIVIDER, height=1).pack(fill="x", pady=(0, 6))
     
         # rows
         for i, s in enumerate(sessions[:10]):
             row = tk.Frame(self.list_frame, bg="#050d1a")
             row.pack(fill="x", pady=3)
-            rank_color = "#5ee7ff"
+            rank_color = styles.JINX_BLUE
             for rank_text, w in [
                 (f"#{i+1}", 3),
                 (s["date"], 10),
@@ -88,7 +88,7 @@ class Leaderboard:
                 (str(s["score"]), 6),
             ]:
                 tk.Label(row, text=rank_text, font=("Cinzel", 12),
-                         fg=rank_color, bg="#050d1a",
+                         fg=rank_color, bg=styles.JINX_BG,
                          width=w, anchor="center").pack(side="left")
 
     def _load(self):
