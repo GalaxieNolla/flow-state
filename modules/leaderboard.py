@@ -53,45 +53,31 @@ class Leaderboard:
                  fg="#4a7fa5", bg="#050d1a", cursor="hand2").pack(pady=12)
 
     def _render_sessions(self):
-        # empty string bg = transparent in tkinter
-        tk.Label(self.list_frame, text="Nothing to see here...yet.\nBack to the books, Cupcake!",
-                     font=("Cinzel", 13, "italic"),
-                     fg="#7dd3fc", bg="#050d1a", #blue
-                     justify="center").pack(pady=40)
-        header = tk.Frame(self.list_frame, bg="#050d1a")
-        tk.Frame(self.list_frame, bg=styles.PURPLE_DIM, height=1).pack(fill="x", pady=(0, 6)) #keep colored
-        row = tk.Frame(self.list_frame, bg="#050d1a")
-        row.pack(fill="x", pady=3)
-        
-        tk.Label(row, text=rank_text, font=("Cinzel", 12),
-                 fg=rank_color, bg="#050d1a",
-                 width=w, anchor="w").pack(side="left")
-        
         sessions = self._load()
-
+    
         if not sessions:
-            tk.Label(self.list_frame, text="Nothing to see here... yet.\nBack to the books, Cupcake!",
+            tk.Label(self.list_frame, text="nothing to see here...yet.\nback to the books, cupcake!",
                      font=("Cinzel", 13, "italic"),
-                     fg=styles.GREY_MUTED, bg="#050d1a",
+                     fg="#7dd3fc", bg="#050d1a",
                      justify="center").pack(pady=40)
+            tk.Frame(self.list_frame, bg="#1e3a5f", height=1).pack(fill="x", pady=(0, 6))
             return
-
+    
         # column headers
-        header = tk.Frame(self.list_frame, bg=styles.BG_DARK)
+        header = tk.Frame(self.list_frame, bg="#050d1a")
         header.pack(fill="x", pady=(0, 8))
         for header_text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
             tk.Label(header, text=header_text, font=("Cinzel", 9),
-                     fg="#5ee7ff", bg="#050d1a", # electric blue
+                     fg="#5ee7ff", bg="#050d1a",
                      width=w, anchor="w").pack(side="left")
-
+    
         # divider
         tk.Frame(self.list_frame, bg="#1e3a5f", height=1).pack(fill="x", pady=(0, 6))
-
+    
         # rows
-        for i, s in enumerate(sessions[:10]):  # top 10
+        for i, s in enumerate(sessions[:10]):
             row = tk.Frame(self.list_frame, bg="#050d1a")
             row.pack(fill="x", pady=3)
-
             rank_color = "#5ee7ff" if i == 0 else "#7dd3fc" if i < 3 else "#4a7fa5"
             for rank_text, w in [
                 (f"#{i+1}", 3),
