@@ -119,7 +119,7 @@ class Nudge:
         # row 1: fire + streak  (y=92)
         self._add_label(cv, "🔥", 14, 92, 28, 22, size=16)
         self.streak_label = self._add_label(
-            cv, self._streak_text(), 30, 94, 186, 18,
+            cv, self._streak_text(), 28, 94, 186, 18,
             size=13, color=(0.765, 0.478, 1.0)
         )
 
