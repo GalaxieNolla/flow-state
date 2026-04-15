@@ -64,7 +64,7 @@ class TaskSticky:
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
         self.input_frame.pack(fill="x", side="top", pady=5)
 
-        plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c37aff", bg="#120921")
+        plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c9a84c", bg="#120921") # fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(5, 10))
 
         self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921", 
@@ -90,13 +90,14 @@ class TaskSticky:
 
         # bullet pt
         bullet_btn = tk.Label(row, text="○", font=("Helvetica", 22), 
-                              fg="#c37aff", bg="#120921", cursor="hand2",
+                              fg="#a78bfa", bg="#120921", cursor="hand2", #fg="#c37aff"
                               padx=5, pady=5) 
         bullet_btn.pack(side="left", padx=(5, 10)) 
 
         task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="#c37aff", 
                              bd=0, insertbackground="white", highlightthickness=1, 
-                             highlightbackground="#120921")
+                             highlightbackground="#a78bfa")
+                             #highlightbackground="#120921")
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 15))
 
