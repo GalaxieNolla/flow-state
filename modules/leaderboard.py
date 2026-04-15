@@ -30,7 +30,7 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg=styles.BG_DARK, bg="")  
+        content = tk.Frame(self.canvas, bg=styles.BG_DARK)  
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
