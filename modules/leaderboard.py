@@ -63,7 +63,7 @@ class Leaderboard:
         row = tk.Frame(self.list_frame, bg="#050d1a")
         row.pack(fill="x", pady=3)
         
-        tk.Label(row, text=text, font=("Cinzel", 12),
+        tk.Label(row, text=rank_text, font=("Cinzel", 12),
                  fg=rank_color, bg="#050d1a",
                  width=w, anchor="w").pack(side="left")
         
