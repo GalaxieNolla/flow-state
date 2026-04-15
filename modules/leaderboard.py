@@ -30,7 +30,7 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # place all content on canvas
-        content = tk.Frame(self.canvas, bg=styles.JINX_BG_TINT) # blue tinted 
+        content = tk.Frame(self.canvas, bg=styles.JINX_BG) # blue tinted 
         self.canvas.create_window(190, 10, window=content, anchor="n")
 
         # header
@@ -68,8 +68,7 @@ class Leaderboard:
         header.pack(fill="x", pady=(0, 8))
         for header_text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
             tk.Label(header, text=header_text, font=("Cinzel", 9),
-                     fg=styles.JINX_BLUE, bg=styles.JINX_BG,
-                     width=w, anchor="center").pack(side="left")
+                     fg=styles.JINX_BLUE, bg=styles.JINX_BG).pack(side="left", expand=True)
     
         # divider
         tk.Frame(self.list_frame, bg=styles.JINX_DIVIDER, height=1).pack(fill="x", pady=(0, 6))
@@ -88,8 +87,7 @@ class Leaderboard:
                 (str(s["score"]), 6),
             ]:
                 tk.Label(row, text=rank_text, font=("Cinzel", 12),
-                         fg=rank_color, bg=styles.JINX_BG,
-                         width=w, anchor="center").pack(side="left")
+                         fg=rank_color, bg=styles.JINX_BG).pack(side="left", expand=True)
 
     def _load(self):
         if not os.path.exists(SESSIONS_FILE):
