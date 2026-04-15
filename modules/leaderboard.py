@@ -69,7 +69,7 @@ class Leaderboard:
         for header_text, w in [("#", 3), ("date", 10), ("mins", 6), ("streak", 7), ("dist.", 6), ("score", 6)]:
             tk.Label(header, text=header_text, font=("Cinzel", 9),
                      fg="#5ee7ff", bg="#050d1a",
-                     width=w, anchor="w").pack(side="left")
+                     width=w, anchor="center").pack(side="left")
     
         # divider
         tk.Frame(self.list_frame, bg="#1e3a5f", height=1).pack(fill="x", pady=(0, 6))
@@ -78,7 +78,7 @@ class Leaderboard:
         for i, s in enumerate(sessions[:10]):
             row = tk.Frame(self.list_frame, bg="#050d1a")
             row.pack(fill="x", pady=3)
-            rank_color = "#5ee7ff" if i == 0 else "#7dd3fc" if i < 3 else "#4a7fa5"
+            rank_color = "#5ee7ff"
             for rank_text, w in [
                 (f"#{i+1}", 3),
                 (s["date"], 10),
@@ -89,7 +89,7 @@ class Leaderboard:
             ]:
                 tk.Label(row, text=rank_text, font=("Cinzel", 12),
                          fg=rank_color, bg="#050d1a",
-                         width=w, anchor="w").pack(side="left")
+                         width=w, anchor="center").pack(side="left")
 
     def _load(self):
         if not os.path.exists(SESSIONS_FILE):
