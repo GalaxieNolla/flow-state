@@ -115,7 +115,7 @@ class Leaderboard:
 
         if not self.session_tracker:
             self.canvas.create_text(cx, start_y + 60,
-                text="no active session", font=("Cinzel", 11=3, "italic"), fill=pink)
+                text="no active session", font=("Cinzel", 13, "italic"), fill=pink)
             return
 
         duration_hrs = round((time.time() - self.session_tracker.session_start) / 3600, 1)
