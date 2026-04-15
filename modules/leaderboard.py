@@ -18,18 +18,17 @@ class Leaderboard:
 
         self.window = tk.Toplevel(self.root)
         self.window.title("Leaderboard")
-        self.window.geometry("380x500")
         self.window.configure(bg=styles.BG_DARK)
         self.window.attributes("-topmost", True)
 
         # background image
         img_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
         img = Image.open(img_path)
-        img.thumbnail((380, 500), Image.Resampling.LANCZOS)
+        img.thumbnail((380, 600), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
         self.canvas = tk.Canvas(self.window, width=img.width, height=img.height, highlightthickness=0)
-        self.canvas.config(width=img.width, height=img.height)
         self.window.geometry(f"{img.width}x{img.height}")
+        self.canvas.config(width=img.width, height=img.height)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
@@ -43,9 +42,9 @@ class Leaderboard:
             font=("Cinzel", 11, "italic"), fill=styles.JINX_BLUE_MID)
         
         # semi-transparent box behind the table only
-        self.canvas.create_rectangle(20, 105, img.width - 20, 320,
-            fill=styles.JINX_BG, stipple="gray50",
-            outline=styles.JINX_DIVIDER)
+        self.canvas.create_rectangle(20, 105, img.width - 20, 400,
+            fill=white, stipple="gray25",
+            outline=white)
         
         # list frame still a widget but placed lower
         self.list_frame = tk.Frame(self.canvas, bg=styles.JINX_BG)
