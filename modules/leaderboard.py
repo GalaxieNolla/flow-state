@@ -69,10 +69,10 @@ class Leaderboard:
             font=("Cinzel", 22, "bold"), fill="#e8a0c0")
 
         # dividers
-        self.canvas.create_line(left_x + 20, panel_y_left + 50, left_x + panel_w_left - 150, panel_y_left + 50,
-            fill=styles.JINX_BLUE, width=1)
-        self.canvas.create_line(right_x + 20, panel_y_right + 70, right_x + panel_w_right - 150, panel_y_right + 70,
-            fill="#e8a0c0", width=1)
+        self.canvas.create_line(left_x + 40, panel_y_left + 50, left_x + panel_w_left - 150, panel_y_left + 50,
+            fill=styles.JINX_BLUE, width=2)
+        self.canvas.create_line(right_x + 50, panel_y_right + 70, right_x + panel_w_right - 150, panel_y_right + 70,
+            fill="#e8a0c0", width=2)
 
         self._draw_winners(lc, panel_y_left + 65, panel_w_left)
         self._draw_current_session(rc, panel_y_right + 65)
@@ -86,7 +86,7 @@ class Leaderboard:
         # column headers
         for i, col in enumerate(cols):
             self.canvas.create_text(col_x[i], start_y,
-                text=col, font=("Cinzel", 11), fill=styles.JINX_BLUE)
+                text=col, font=("Cinzel", 14), fill=styles.JINX_BLUE)
 
         self.canvas.create_line(cx - 180, start_y + 14, cx + 180, start_y + 14,
             fill=styles.JINX_DIVIDER, width=1)
@@ -94,7 +94,7 @@ class Leaderboard:
         if not sessions:
             self.canvas.create_text(cx, start_y + 80,
                 text="nothing here yet...\ngo make some chaos cupcake",
-                font=("Cinzel", 13, "italic"), fill=styles.JINX_BLUE_MID,
+                font=("Cinzel", 20, "italic"), fill=styles.JINX_BLUE_MID,
                 justify="center")
             return
 
@@ -111,7 +111,7 @@ class Leaderboard:
             ]
             for j, val in enumerate(values):
                 self.canvas.create_text(col_x[j], y,
-                    text=val, font=("Cinzel", 10), fill=color)
+                    text=val, font=("Cinzel", 14), fill=color)
 
     def _draw_current_session(self, cx, start_y):
         pink = "#e8a0c0"
