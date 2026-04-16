@@ -63,7 +63,7 @@ class Leaderboard:
         rc = right_x + panel_w_right // 2
 
         # headers
-        self.canvas.create_text(lc, panel_y_left + 30, text="✦ Winner's Circle ✦",
+        self.canvas.create_text(lc, panel_y_left + 40, text="✦ Winner's Circle ✦",
             font=("Cinzel", 22, "bold"), fill=styles.JINX_BLUE)
         self.canvas.create_text(rc, panel_y_right + 50, text="✦ Current Session ✦",
             font=("Cinzel", 22, "bold"), fill="#e8a0c0")
