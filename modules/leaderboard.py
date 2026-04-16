@@ -71,7 +71,7 @@ class Leaderboard:
         # dividers
         self.canvas.create_line(left_x + 190, panel_y_left + 70, left_x + panel_w_left - 190, panel_y_left + 70,
             fill=styles.JINX_BLUE, width=2)
-        self.canvas.create_line(right_x + 90, panel_y_right + 80, right_x + panel_w_right - 90, panel_y_right + 80,
+        self.canvas.create_line(right_x + 90, panel_y_right + 75, right_x + panel_w_right - 90, panel_y_right + 75,
             fill="#e8a0c0", width=2)
 
         self._draw_winners(lc, panel_y_left + 65, panel_w_left)
@@ -85,10 +85,10 @@ class Leaderboard:
 
         # column headers
         for i, col in enumerate(cols):
-            self.canvas.create_text(col_x[i], start_y,
+            self.canvas.create_text(col_x[i], start_y + 5,
                 text=col, font=("Cinzel", 14), fill=styles.JINX_BLUE)
 
-        self.canvas.create_line(cx - 180, start_y + 14, cx + 180, start_y + 14,
+        self.canvas.create_line(cx - 180, start_y + 20, cx + 180, start_y + 14,
             fill=styles.JINX_DIVIDER, width=1)
 
         if not sessions:
