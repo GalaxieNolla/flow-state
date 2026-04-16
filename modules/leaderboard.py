@@ -88,7 +88,7 @@ class Leaderboard:
             self.canvas.create_text(col_x[i], start_y + 10,
                 text=col, font=("Cinzel", 14, "bold"), fill=styles.JINX_BLUE)
 
-        self.canvas.create_line(cx - 180, start_y + 30, cx + 180, start_y + 30,
+        self.canvas.create_line(cx - 180, start_y + 30, cx + 190, start_y + 30,
             fill=styles.JINX_BLUE, width=1)
 
         if not sessions:
