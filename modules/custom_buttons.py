@@ -15,7 +15,7 @@ def create_mode_button(canvas, x, y, text, command):
 
     bg_id = canvas.create_image(x, y, image=inactive_i, anchor="center")
     
-    text_id = canvas.create_text(x, y, text=text, fill="white", font=("Helvetica", 24, "bold"), justify="center")
+    text_id = canvas.create_text(x, y, text=text, fill="white", font=("Cinzel", 24, "bold"), justify="center")
 
     def on_hover(e):
         canvas.itemconfig(bg_id, image=active_i)
