@@ -72,7 +72,7 @@ class Leaderboard:
         self.canvas.create_line(left_x + 190, panel_y_left + 70, left_x + panel_w_left - 190, panel_y_left + 70,
             fill=styles.JINX_BLUE, width=2)
         self.canvas.create_line(right_x + 90, panel_y_right + 75, right_x + panel_w_right - 90, panel_y_right + 75,
-            fill="#f9a8d4", width=2)
+            fill="#ff69b4", width=2)
 
         self._draw_winners(lc, panel_y_left + 85, panel_w_left)
         self._draw_current_session(rc, panel_y_right + 65)
@@ -114,7 +114,7 @@ class Leaderboard:
                     text=val, font=("Cinzel", 14), fill=color)
 
     def _draw_current_session(self, cx, start_y):
-        pink = "#f9a8d4"
+        pink = "#ff69b4"
 
         if not self.session_tracker:
             self.canvas.create_text(cx, start_y + 60,
