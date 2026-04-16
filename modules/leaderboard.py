@@ -71,7 +71,7 @@ class Leaderboard:
         # dividers
         self.canvas.create_line(left_x + 190, panel_y_left + 70, left_x + panel_w_left - 190, panel_y_left + 70,
             fill=styles.JINX_BLUE, width=2)
-        self.canvas.create_line(right_x + 80, panel_y_right + 70, right_x + panel_w_right - 80, panel_y_right + 70,
+        self.canvas.create_line(right_x + 90, panel_y_right + 80, right_x + panel_w_right - 90, panel_y_right + 80,
             fill="#e8a0c0", width=2)
 
         self._draw_winners(lc, panel_y_left + 65, panel_w_left)
