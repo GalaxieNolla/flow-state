@@ -194,10 +194,16 @@ class Nudge:
         field.setDrawsBackground_(False)
         field.setEditable_(False)
         field.setSelectable_(False)
-        field.setAlignment_(AppKit.NSTextAlignmentCenter)  # add this line
+        field.setAlignment_(AppKit.NSTextAlignmentCenter)
         field.setFont_(self._make_italic_font(size) if italic else NSFont.systemFontOfSize_(size))
-        #field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color, 1.0))
-        field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color[:3], 1.0))
+    
+        if isinstance(color, str):
+            color = color.lstrip("#")
+            r, g, b = (int(color[i:i+2], 16) / 255.0 for i in (0, 2, 4))
+            field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(r, g, b, 1.0))
+        else:
+            field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color[:3], 1.0))
+    
         parent.addSubview_(field)
         return field
 
