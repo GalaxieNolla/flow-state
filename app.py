@@ -34,7 +34,7 @@ class FlowApp:
         self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp").resize((512, 512)))
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        self.status_label = tk.Label(root, text="Select a mode...", font=("Helvetica", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
+        self.status_label = tk.Label(root, text="Select a mode...", font=("Cinzel", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
         # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
         self.canvas.create_window(256, 256, window=self.status_label)
 
@@ -47,7 +47,7 @@ class FlowApp:
         self.timer_manager = StudyTimer(self.root, self.status_label, self.main_container, self.canvas)
 
         # switch modes
-        '''self.mode_toggle = tk.Button(root, text="switch mode", font=("Helvetica", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
+        '''self.mode_toggle = tk.Button(root, text="switch mode", font=("Cinzel", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
                                      bd=0, bg="#110820", fg="#7a7a7a",
                                      activebackground="#110820", activeforeground="#c37aff", highlightthickness=0)
         self.canvas.create_window(256, 490, window=self.mode_toggle)'''
@@ -84,7 +84,7 @@ class FlowApp:
         
         # move status to bottom
         self.status_label.pack_forget() 
-        self.status_label.config(font=("Helvetica", 14, "italic")) # Slightly smaller for the bottom
+        self.status_label.config(font=("Cinzel", 14, "italic")) # Slightly smaller for the bottom
         self.status_label.pack(side="bottom", pady=20)
 
         self.timer_manager.show_setup()
