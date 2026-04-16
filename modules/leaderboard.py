@@ -85,10 +85,10 @@ class Leaderboard:
 
         # column headers
         for i, col in enumerate(cols):
-            self.canvas.create_text(col_x[i], start_y + 20,
+            self.canvas.create_text(col_x[i], start_y + 30,
                 text=col, font=("Cinzel", 14), fill=styles.JINX_BLUE)
 
-        self.canvas.create_line(cx - 180, start_y + 30, cx + 180, start_y + 30,
+        self.canvas.create_line(cx - 180, start_y + 50, cx + 180, start_y + 50,
             fill=styles.JINX_DIVIDER, width=1)
 
         if not sessions:
