@@ -114,7 +114,7 @@ class Leaderboard:
                     text=val, font=("Cinzel", 14), fill=color)
 
     def _draw_current_session(self, cx, start_y):
-        pink = "#f9a8d4"
+        pink = "#ff69b4"
 
         if not self.session_tracker:
             self.canvas.create_text(cx, start_y + 60,
@@ -135,7 +135,7 @@ class Leaderboard:
         ]
 
         for i, (label, value) in enumerate(rows):
-            y = start_y + 20 + i * 60
+            y = start_y + 30 + i * 60
             self.canvas.create_text(cx, y,
                 text=label, font=("Cinzel", 12, "bold"), fill=pink)
             self.canvas.create_text(cx, y + 26,
