@@ -74,7 +74,7 @@ class Leaderboard:
         self.canvas.create_line(right_x + 90, panel_y_right + 75, right_x + panel_w_right - 90, panel_y_right + 75,
             fill="#e8a0c0", width=2)
 
-        self._draw_winners(lc, panel_y_left + 65, panel_w_left)
+        self._draw_winners(lc, panel_y_left + 85, panel_w_left)
         self._draw_current_session(rc, panel_y_right + 65)
 
     def _draw_winners(self, cx, start_y, panel_w_left):
