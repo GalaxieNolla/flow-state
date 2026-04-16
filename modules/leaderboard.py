@@ -37,13 +37,13 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # panel dimensions
-        panel_w_left = 650
+        panel_w_left = 700
         panel_w_right = 650
-        panel_h_left = 500
+        panel_h_left = 600
         panel_h_right = 400
         left_x = 10 #30
         right_x = 500 #700
-        panel_y_left = 100
+        panel_y_left = 50
         panel_y_right = 200
 
         # load + place left panel
