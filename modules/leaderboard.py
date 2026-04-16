@@ -98,7 +98,8 @@ class Leaderboard:
                 justify="center")
             return
 
-        for i, s in enumerate(sessions[:5]):
+        # Display top 10 highest study time entries
+        for i, s in enumerate(sessions[:10]):
             y = start_y + 50 + i * 34
             color = styles.JINX_BLUE if i == 0 else styles.JINX_BLUE_MID if i < 3 else styles.JINX_BLUE_DARK
             values = [
