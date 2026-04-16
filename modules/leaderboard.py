@@ -42,7 +42,7 @@ class Leaderboard:
         left_x = 20 #30
         right_x = 600 #700
         panel_y_left = 100
-        panel_y_right = 100
+        panel_y_right = 300
 
         # load + place left panel
         left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
@@ -61,19 +61,19 @@ class Leaderboard:
         rc = right_x + panel_w // 2
 
         # headers
-        self.canvas.create_text(lc, panel_y + 30, text="✦ Winner's Circle ✦",
+        self.canvas.create_text(lc, panel_y_left + 30, text="✦ Winner's Circle ✦",
             font=("Cinzel", 18, "bold"), fill=styles.JINX_BLUE)
-        self.canvas.create_text(rc, panel_y + 30, text="✦ Current Session ✦",
+        self.canvas.create_text(rc, panel_y_right + 30, text="✦ Current Session ✦",
             font=("Cinzel", 18, "bold"), fill="#e8a0c0")
 
         # dividers
-        self.canvas.create_line(left_x + 30, panel_y + 50, left_x + panel_w - 30, panel_y + 50,
+        self.canvas.create_line(left_x + 30, panel_y_left + 50, left_x + panel_w - 30, panel_y_left + 50,
             fill=styles.JINX_BLUE, width=1)
-        self.canvas.create_line(right_x + 30, panel_y + 50, right_x + panel_w - 30, panel_y + 50,
+        self.canvas.create_line(right_x + 30, panel_y_right + 50, right_x + panel_w - 30, panel_y_right + 50,
             fill="#e8a0c0", width=1)
 
-        self._draw_winners(lc, panel_y + 65, panel_w)
-        self._draw_current_session(rc, panel_y + 65)
+        self._draw_winners(lc, panel_y_left + 65, panel_w)
+        self._draw_current_session(rc, panel_y_right + 65)
 
     def _draw_winners(self, cx, start_y, panel_w):
         sessions = self._load()
@@ -91,7 +91,7 @@ class Leaderboard:
 
         if not sessions:
             self.canvas.create_text(cx, start_y + 80,
-                text="nothing here yet...\ngo make some chaos 💙",
+                text="nothing here yet...\ngo make some chaos cupcake",
                 font=("Cinzel", 13, "italic"), fill=styles.JINX_BLUE_MID,
                 justify="center")
             return
