@@ -41,8 +41,8 @@ class Leaderboard:
         panel_w_right = 650
         panel_h_left = 600
         panel_h_right = 400
-        left_x = 10 #30
-        right_x = 500 #700
+        left_x = 100
+        right_x = 500
         panel_y_left = 50
         panel_y_right = 200
 
