@@ -126,15 +126,22 @@ class Leaderboard:
                 text="no active session", font=("Cinzel", 13, "italic"), fill=pink, tags="session_item")
             return
 
-        duration_hrs = round((time.time() - self.session_tracker.session_start) / 3600, 1)
-        streak_hrs = round((time.time() - self.session_tracker.nudge.streak_start) / 3600, 1)
+        elapsed = time.time() - self.session_tracker.session_start
+        streak_elapsed = time.time() - self.session_tracker.nudge.streak_start
         distractions = self.session_tracker.distractions
+        
+        def fmt(secs):
+            h = int(secs // 3600)
+            m = int((secs % 3600) // 60)
+            s = int(secs % 60)
+            return f"{h}:{m:02d}:{s:02d}"
+        
         score = self.session_tracker._calculate_score(
-            int(duration_hrs * 60), int(streak_hrs * 60), distractions)
+            int(elapsed // 60), int(streak_elapsed // 60), distractions)
         
         rows = [
-            ("session time", f"{duration_hrs} hrs"),
-            ("focus streak", f"{streak_hrs} hrs"),
+            ("session time", fmt(elapsed)),
+            ("focus streak", fmt(streak_elapsed)),
             ("distractions", str(distractions)),
             ("score",        str(score)),
         ]
