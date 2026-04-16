@@ -197,7 +197,7 @@ class Nudge:
         field.setAlignment_(AppKit.NSTextAlignmentCenter)  # add this line
         field.setFont_(self._make_italic_font(size) if italic else NSFont.systemFontOfSize_(size))
         #field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color, 1.0))
-        field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color))
+        field.setTextColor_(NSColor.colorWithRed_green_blue_alpha_(*color[:3], 1.0))
         parent.addSubview_(field)
         return field
 
