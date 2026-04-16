@@ -111,7 +111,7 @@ class Leaderboard:
             ]
             for j, val in enumerate(values):
                 self.canvas.create_text(col_x[j], y,
-                    text=val, font=("Cinzel", 14), fill=color)
+                    text=val, font=("Cinzel", 18), fill=color)
 
     def _draw_current_session(self, cx, start_y):
         pink = "#ff69b4"
@@ -137,7 +137,7 @@ class Leaderboard:
         for i, (label, value) in enumerate(rows):
             y = start_y + 30 + i * 60
             self.canvas.create_text(cx, y,
-                text=label, font=("Cinzel", 12, "bold"), fill=pink)
+                text=label, font=("Cinzel", 18, "bold"), fill=pink)
             self.canvas.create_text(cx, y + 26,
                 text=value, font=("Cinzel", 22, "bold"), fill="white")
 
