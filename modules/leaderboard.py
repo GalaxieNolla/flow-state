@@ -69,7 +69,7 @@ class Leaderboard:
             font=("Cinzel", 22, "bold"), fill="#e8a0c0")
 
         # dividers
-        self.canvas.create_line(left_x + 190, panel_y_left + 50, left_x + panel_w_left - 190, panel_y_left + 50,
+        self.canvas.create_line(left_x + 190, panel_y_left + 60, left_x + panel_w_left - 190, panel_y_left + 50,
             fill=styles.JINX_BLUE, width=2)
         self.canvas.create_line(right_x + 80, panel_y_right + 70, right_x + panel_w_right - 80, panel_y_right + 70,
             fill="#e8a0c0", width=2)
