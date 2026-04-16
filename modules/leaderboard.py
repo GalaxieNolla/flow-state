@@ -39,21 +39,22 @@ class Leaderboard:
         # panel dimensions
         panel_w = 650
         panel_h = 400
-        left_x = 30
-        right_x = 700
-        panel_y = 100
+        left_x = 20 #30
+        right_x = 600 #700
+        panel_y_left = 100
+        panel_y_right = 100
 
         # load + place left panel
         left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
         left_img = left_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
         self.left_panel_img = ImageTk.PhotoImage(left_img)
-        self.canvas.create_image(left_x, panel_y, image=self.left_panel_img, anchor="nw")
+        self.canvas.create_image(left_x, panel_y_left, image=self.left_panel_img, anchor="nw")
 
         # load + place right panel
         right_img = Image.open(os.path.join(VISUALS_DIR, "right-pink.png")).convert("RGBA")
         right_img = right_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
         self.right_panel_img = ImageTk.PhotoImage(right_img)
-        self.canvas.create_image(right_x, panel_y, image=self.right_panel_img, anchor="nw")
+        self.canvas.create_image(right_x, panel_y_right, image=self.right_panel_img, anchor="nw")
 
         # center x of each panel
         lc = left_x + panel_w // 2
