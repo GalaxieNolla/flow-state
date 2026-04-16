@@ -8,8 +8,8 @@ class TaskSticky:
     def __init__(self, root):
         self.root = root
         self.window = None
-        self.font_normal = ("Helvetica", 18)
-        self.font_done = ("Helvetica", 18, "overstrike") # for strikethrough
+        self.font_normal = ("Cinzel", 18)
+        self.font_done = ("Cinzel", 18, "overstrike") # for strikethrough
 
     def open(self):
         if self.window and self.window.winfo_exists():
@@ -89,7 +89,7 @@ class TaskSticky:
         row.pack(fill="x", side="top", pady=2)
 
         # bullet pt
-        bullet_btn = tk.Label(row, text="○", font=("Helvetica", 22), 
+        bullet_btn = tk.Label(row, text="○", font=("Cinzel", 22), 
                               fg="#a78bfa", bg="#120921", cursor="hand2", #fg="#c37aff"
                               padx=5, pady=5) 
         bullet_btn.pack(side="left", padx=(5, 10)) 
