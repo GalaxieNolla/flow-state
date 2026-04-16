@@ -39,7 +39,7 @@ class Leaderboard:
         # panel dimensions
         panel_w_left = 800
         panel_w_right = 500
-        panel_h_left = 550
+        panel_h_left = 530
         panel_h_right = 400
         left_x = -100
         right_x = 600
