@@ -43,8 +43,8 @@ class Leaderboard:
         panel_h_right = 400
         left_x = -100
         right_x = 500
-        panel_y_left = 50
-        panel_y_right = 200
+        panel_y_left = 30
+        panel_y_right = 180
 
         # load + place left panel
         left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
