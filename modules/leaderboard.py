@@ -37,8 +37,10 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
         # panel dimensions
-        panel_w = 650
-        panel_h = 400
+        panel_w_left = 650
+        panel_w_right = 650
+        panel_h_left = 500
+        panel_h_left = 400
         left_x = 10 #30
         right_x = 500 #700
         panel_y_left = 100
@@ -46,19 +48,19 @@ class Leaderboard:
 
         # load + place left panel
         left_img = Image.open(os.path.join(VISUALS_DIR, "left-blue.png")).convert("RGBA")
-        left_img = left_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
+        left_img = left_img.resize((panel_w_left, panel_h_left), Image.Resampling.LANCZOS)
         self.left_panel_img = ImageTk.PhotoImage(left_img)
         self.canvas.create_image(left_x, panel_y_left, image=self.left_panel_img, anchor="nw")
 
         # load + place right panel
         right_img = Image.open(os.path.join(VISUALS_DIR, "right-pink.png")).convert("RGBA")
-        right_img = right_img.resize((panel_w, panel_h), Image.Resampling.LANCZOS)
+        right_img = right_img.resize((panel_w_right, panel_h_right), Image.Resampling.LANCZOS)
         self.right_panel_img = ImageTk.PhotoImage(right_img)
         self.canvas.create_image(right_x, panel_y_right, image=self.right_panel_img, anchor="nw")
 
         # center x of each panel
-        lc = left_x + panel_w // 2
-        rc = right_x + panel_w // 2
+        lc = left_x + panel_w_left // 2
+        rc = right_x + panel_w_right // 2
 
         # headers
         self.canvas.create_text(lc, panel_y_left + 30, text="✦ Winner's Circle ✦",
@@ -67,15 +69,15 @@ class Leaderboard:
             font=("Cinzel", 22, "bold"), fill="#e8a0c0")
 
         # dividers
-        self.canvas.create_line(left_x + 20, panel_y_left + 50, left_x + panel_w - 150, panel_y_left + 50,
+        self.canvas.create_line(left_x + 20, panel_y_left + 50, left_x + panel_w_left - 150, panel_y_left + 50,
             fill=styles.JINX_BLUE, width=1)
-        self.canvas.create_line(right_x + 20, panel_y_right + 70, right_x + panel_w - 150, panel_y_right + 70,
+        self.canvas.create_line(right_x + 20, panel_y_right + 70, right_x + panel_w_right - 150, panel_y_right + 70,
             fill="#e8a0c0", width=1)
 
-        self._draw_winners(lc, panel_y_left + 65, panel_w)
+        self._draw_winners(lc, panel_y_left + 65, panel_w_left)
         self._draw_current_session(rc, panel_y_right + 65)
 
-    def _draw_winners(self, cx, start_y, panel_w):
+    def _draw_winners(self, cx, start_y, panel_w_left):
         sessions = self._load()
         col_spacing = 68
         cols = ["#", "date", "hrs", "streak", "dist", "score"]
