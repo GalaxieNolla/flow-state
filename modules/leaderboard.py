@@ -75,7 +75,10 @@ class Leaderboard:
             fill="#ff69b4", width=2)
 
         self._draw_winners(lc, panel_y_left + 85, panel_w_left)
+        self._rc = rc
+        self._panel_y_right = panel_y_right
         self._draw_current_session(rc, panel_y_right + 65)
+        self._start_session_ticker()
 
     def _draw_winners(self, cx, start_y, panel_w_left):
         sessions = self._load()
@@ -120,7 +123,7 @@ class Leaderboard:
 
         if not self.session_tracker:
             self.canvas.create_text(cx, start_y + 60,
-                text="no active session", font=("Cinzel", 13, "italic"), fill=pink)
+                text="no active session", font=("Cinzel", 13, "italic"), fill=pink, tags="session_item")
             return
 
         duration_hrs = round((time.time() - self.session_tracker.session_start) / 3600, 1)
@@ -139,24 +142,31 @@ class Leaderboard:
         for i, (label, value) in enumerate(rows):
             y = start_y + 30 + i * 60
             self.canvas.create_text(cx, y,
-                text=label, font=("Cinzel", 18), fill=pink)
+                text=label, font=("Cinzel", 18), fill=pink, tags="session_item")
             self.canvas.create_text(cx, y + 26,
-                text=value, font=("Cinzel", 22, "bold"), fill="white")
+                text=value, font=("Cinzel", 22, "bold"), fill="white", tags="session_item")
 
         # refresh — clickable text
         refresh_y = start_y + 280
         refresh = self.canvas.create_text(cx, refresh_y,
-            text="↻ refresh", font=("Cinzel", 12), fill=pink)
+            text="↻ refresh", font=("Cinzel", 12), fill=pink, tags="session_item")
         self.canvas.tag_bind(refresh, "<Button-1>", lambda e: self._refresh())
 
     def _refresh(self):
         if self.window and self.window.winfo_exists():
-            self.window.destroy()
-            self.window = None
-            self.open()
+            for item in self.canvas.find_withtag("session_item"):
+                self.canvas.delete(item)
+            self._draw_current_session(self._rc, self._panel_y_right + 65)
 
     def _load(self):
         if not os.path.exists(SESSIONS_FILE):
             return []
         with open(SESSIONS_FILE, "r") as f:
             return json.load(f)
+
+    def _start_session_ticker(self):
+        if self.window and self.window.winfo_exists():
+            for item in self.canvas.find_withtag("session_item"):
+                self.canvas.delete(item)
+            self._draw_current_session(self._rc, self._panel_y_right + 65)
+            self.window.after(1000, self._start_session_ticker)
