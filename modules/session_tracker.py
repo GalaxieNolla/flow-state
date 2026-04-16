@@ -36,7 +36,7 @@ class SessionTracker:
         duration_hrs = round((time.time() - self.session_start) / 3600, 1)
         
         streak_mins = int((time.time() - self.nudge.streak_start) / 60)
-        score = self._calculate_score(duration_mins, streak_mins, self.distractions)
+        score = self._calculate_score(duration_hrs, streak_mins, self.distractions)
 
         session = {
             "date": datetime.now().strftime("%b %d, %Y"),
