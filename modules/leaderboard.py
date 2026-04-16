@@ -131,7 +131,7 @@ class Leaderboard:
         distractions = self.session_tracker.distractions
         score = self.session_tracker._calculate_score(
             int(duration_hrs * 60), int(streak_hrs * 60), distractions)
-
+        
         rows = [
             ("session time", f"{duration_hrs} hrs"),
             ("focus streak", f"{streak_hrs} hrs"),
@@ -169,4 +169,4 @@ class Leaderboard:
             for item in self.canvas.find_withtag("session_item"):
                 self.canvas.delete(item)
             self._draw_current_session(self._rc, self._panel_y_right + 65)
-            self.window.after(1000, self._start_session_ticker)
+            self.root.after(1000, self._start_session_ticker)  # use self.root not self.window
