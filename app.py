@@ -104,16 +104,13 @@ class FlowApp:
                 
             idle_time = round(self.monitor.get_idle_time())
 
-            if self.monitor.is_distraction():
-                current_app, window_title = self.monitor.get_active_info()
-                site_name = next((s for s in ["youtube", "netflix", "twitter", "instagram",
-                                           "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
-                              if s in window_title.lower() or s in current_app.lower()), "this site")
-                if not self.nudge.is_distracted:
-                    self.session_tracker.record_distraction()
-                self.nudge.show(site_name)
-            else:
-                self.nudge.hide()
+            distraction = self.monitor.is_distraction()
+                if distraction:
+                    if not self.nudge.is_distracted:
+                        self.session_tracker.record_distraction()
+                    self.nudge.show(distraction)
+                else:
+                    self.nudge.hide()
                 
         except Exception as e:
             print(f"Internal Error: {e}") # This lets you see the error in terminal instead of freezing
