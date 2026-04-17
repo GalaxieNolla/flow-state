@@ -5,14 +5,10 @@ from AppKit import NSWorkspace
 import Quartz.CoreGraphics as CG
 
 BROWSER_APPS = ["Google Chrome", "Safari", "Firefox"]
-distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
-# Exceptions check -- berkeley, school, lecture, etc. or music
-exception = any(word in window_title.lower() for word in 
-                ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
-                 "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
 
 class ActivityMonitor:
     def __init__(self):
+        self.on_distraction = None
         self.last_activity = time.time()
         self.mouse_listener = mouse.Listener(on_move=self.update_activity, on_click=self.update_activity)
         self.key_listener = keyboard.Listener(on_press=self.update_activity)
@@ -31,8 +27,15 @@ class ActivityMonitor:
         current_app, window_title = self.get_active_info()
         current_app = str(current_app).lower() # update both to be lowercase str, case sensitive
         window_title = str(window_title).lower()
+
+        distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
+        # Exceptions check -- berkeley, school, lecture, etc. or music
+        exception = any(word in window_title.lower() for word in 
+                        ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
+                         "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
         
-        is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
+        distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
+        is_exception = any(word in window_title for word in exception_keywords)
         return is_distracting and not is_exception
 
     def get_browser_title(self, app_name):
