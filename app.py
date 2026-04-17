@@ -112,8 +112,12 @@ class FlowApp:
             else:
                 self.nudge.hide()
                 
-        except Exception as e:
+        '''except Exception as e:
             print(f"Internal Error: {e}") # This lets you see the error in terminal instead of freezing
+            return'''
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
             return
 
 if __name__ == "__main__":
