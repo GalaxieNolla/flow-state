@@ -34,7 +34,7 @@ class ActivityMonitor:
                         ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
                          "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
 
-        is_exception = any(word in window_title for word in exception_keywords)
+        is_exception = any(word in window_title for word in exception)
         if is_exception:
             return None
     
