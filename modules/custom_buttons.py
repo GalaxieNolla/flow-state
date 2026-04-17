@@ -14,8 +14,11 @@ def create_mode_button(canvas, x, y, text, command):
     active_i = ImageTk.PhotoImage(Image.open(active_path).convert("RGBA").resize(size, Image.Resampling.LANCZOS))
 
     bg_id = canvas.create_image(x, y, image=inactive_i, anchor="center")
-    
     text_id = canvas.create_text(x, y, text=text, fill="white", font=("Cinzel", 24, "bold"), justify="center")
+
+    tag = f"btn_{x}_{y}"
+    canvas.addtag_withtag(tag, bg_id)
+    canvas.addtag_withtag(tag, text_id)
 
     def on_hover(e):
         canvas.itemconfig(bg_id, image=active_i)
@@ -25,12 +28,9 @@ def create_mode_button(canvas, x, y, text, command):
         canvas.itemconfig(bg_id, image=inactive_i)
         canvas.itemconfig(text_id, fill="white")
 
-    canvas.tag_bind(bg_id, "<Button-1>", lambda e: command())
-    canvas.tag_bind(text_id, "<Button-1>", lambda e: command())
-    
-    canvas.tag_bind(bg_id, "<Enter>", on_hover)
-    canvas.tag_bind(text_id, "<Enter>", on_hover)
-    canvas.tag_bind(bg_id, "<Leave>", on_leave)
+    canvas.tag_bind(tag, "<Button-1>", lambda e: command())
+    canvas.tag_bind(tag, "<Enter>", on_hover)
+    canvas.tag_bind(tag, "<Leave>", on_leave)
     
     # Keep references
     if not hasattr(canvas, 'all_refs'):
