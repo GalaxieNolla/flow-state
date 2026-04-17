@@ -5,6 +5,11 @@ from AppKit import NSWorkspace
 import Quartz.CoreGraphics as CG
 
 BROWSER_APPS = ["Google Chrome", "Safari", "Firefox"]
+distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
+# Exceptions check -- berkeley, school, lecture, etc. or music
+exception = any(word in window_title.lower() for word in 
+                ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
+                 "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
 
 class ActivityMonitor:
     def __init__(self):
@@ -16,9 +21,19 @@ class ActivityMonitor:
 
     def update_activity(self, *args):
         self.last_activity = time.time()
+        if self.on_distraction and self.is_distraction():
+            self.on_distraction()
 
     def get_idle_time(self):
         return time.time() - self.last_activity
+
+    def is_distraction(self):
+        current_app, window_title = self.get_active_info()
+        current_app = str(current_app).lower() # update both to be lowercase str, case sensitive
+        window_title = str(window_title).lower()
+        
+        is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
+        return is_distracting and not is_exception
 
     def get_browser_title(self, app_name):
         scripts = {
