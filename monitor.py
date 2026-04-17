@@ -35,7 +35,7 @@ class ActivityMonitor:
                          "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
         
         distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
-        is_exception = any(word in window_title for word in exception_keywords)
+        is_exception = any(word in window_title for word in exception)
         return is_distracting and not is_exception
 
     def get_browser_title(self, app_name):
