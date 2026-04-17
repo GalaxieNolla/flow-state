@@ -33,10 +33,13 @@ class ActivityMonitor:
         exception = any(word in window_title.lower() for word in 
                         ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
                          "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
-        
+
         distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
         is_exception = any(word in window_title for word in exception)
-        return is_distracting and not is_exception
+        if distraction and is_exception:
+            return None 
+        else: 
+            return next((s for s in distraction_sites if s in current_app or s in window_title), None)
 
     def get_browser_title(self, app_name):
         scripts = {
