@@ -25,21 +25,21 @@ class SessionTracker:
         try:
             idle = self.monitor.get_idle_time()
             if idle > 1800:  # 30 min idle
-                self.save_session()
+                self.save_session(idle_secs=idle) #don't count sleep or when idle > 30 min
                 self.session_start = time.time()
                 self.distractions = 0
         except:
             pass
         self._idle_check_job = self.root.after(60_000, self._poll_idle)
 
-    def save_session(self):
-        duration_hrs = round((time.time() - self.session_start) / 3600, 1)
-        
-        streak_mins = int((time.time() - self.nudge.streak_start) / 60)
+    def save_session(self, idle_secs=0):
+        actual_end = time.time() - idle_secs
+        duration_hrs = round(max(0, actual_end - self.session_start) / 3600, 1) # no negative duration
+        streak_mins = int((actual_end - self.nudge.streak_start) / 60)
         score = self._calculate_score(duration_hrs, streak_mins, self.distractions)
 
         session = {
-            "date": datetime.now().strftime("%b %d, %Y"),
+            "date": datetime.fromtimestamp(actual_end).strftime("%b %d, %Y"),
             "duration_hrs": duration_hrs,
             "longest_streak": streak_mins,
             "distractions": self.distractions,
