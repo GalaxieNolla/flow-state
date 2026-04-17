@@ -33,9 +33,7 @@ class ActivityMonitor:
         exception = any(word in window_title.lower() for word in 
                         ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
                          "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
-
-        is_exception = any(word in window_title for word in exception)
-        if is_exception:
+        if exception:
             return None
     
         return next((s for s in distraction_sites if s in current_app or s in window_title), None)
