@@ -103,23 +103,11 @@ class FlowApp:
                 return
                 
             idle_time = round(self.monitor.get_idle_time())
-            current_app, window_title = self.monitor.get_active_info() #from monitor.py
-            current_app = str(current_app).lower() # update both to be lowercase str, case sensitive
-            window_title = str(window_title).lower()
     
             # ADD THIS LINE TO DEBUG: -- see if the monitor detects your 'distractions'
             # print(f"I see you are using: {current_app}")
-            
-            distraction_sites = ["youtube", "netflix", "twitter", "instagram", "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
-    
-            # Exceptions check -- berkeley, school, lecture, etc. or music
-            exception = any(word in window_title.lower() for word in 
-                            ["berkeley", "cal", "school", "lecture", "cs", "compsci", "polysci", "ds", "data science", "datasci", 
-                             "classical", "music", "lofi", "instrumental", "spotify", "bcourses", "zoom", "pomodoro"])
-            
-            is_distraction = any(site in current_app for site in distraction_sites) or any(site in window_title for site in distraction_sites)
 
-            if is_distraction and not exception:
+            if self.monitor.is_distraction and not exception:
                 site_name = next((s for s in distraction_sites if s in window_title or s in current_app), "this site")
                 self.nudge.show(site_name)
                 if not self.nudge.is_distracted:  # only count new distractions
