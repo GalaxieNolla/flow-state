@@ -103,15 +103,15 @@ class FlowApp:
                 return
                 
             idle_time = round(self.monitor.get_idle_time())
-    
-            # ADD THIS LINE TO DEBUG: -- see if the monitor detects your 'distractions'
-            # print(f"I see you are using: {current_app}")
 
-            if self.monitor.is_distraction and not exception:
-                site_name = next((s for s in distraction_sites if s in window_title or s in current_app), "this site")
-                self.nudge.show(site_name)
-                if not self.nudge.is_distracted:  # only count new distractions
+            if self.monitor.is_distraction():
+                current_app, window_title = self.monitor.get_active_info()
+                site_name = next((s for s in ["youtube", "netflix", "twitter", "instagram",
+                                           "tiktok", "ebay", "etsy", "reddit", "messages", "discord"]
+                              if s in window_title.lower() or s in current_app.lower()), "this site")
+                if not self.nudge.is_distracted:
                     self.session_tracker.record_distraction()
+                self.nudge.show(site_name)
             else:
                 self.nudge.hide()
                 
