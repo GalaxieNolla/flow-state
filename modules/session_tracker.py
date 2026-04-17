@@ -19,7 +19,8 @@ class SessionTracker:
         self._poll_idle()
 
     def record_distraction(self):
-        self.distractions += 1 if self.monitor.is_distraction()
+        if self.monitor.is_distraction():
+            self.distractions += 1
 
     def _poll_idle(self):
         try:
