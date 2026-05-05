@@ -208,44 +208,131 @@ class TaskSticky:
             self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
     def start_drag(self, event, row):
+        """
+        Begin drag: store row and create a placeholder.
+        """
         self.drag_row = row
+        # Get all task rows (excluding input frame)
+        self.drag_rows = self.get_task_rows()
+        self.drag_start_index = self.drag_rows.index(row)
+        # Create a placeholder frame (darkened rectangle)
+        self.placeholder = tk.Frame(self.main_container, bg="#4a4a6a", height=40)  # greyish rectangle
+        self.placeholder.place_forget()
+        # Store mouse offset
         self.drag_start_y = event.y_root
-        # Store OG index
-        rows = self.get_task_rows()
-        self.drag_original_index = rows.index(row)
+        # Bind global motion and release to main container
+        self.main_container.bind("<B1-Motion>", self.on_drag_global)
+        self.main_container.bind("<ButtonRelease-1>", self.end_drag_global)
+        # Change cursor
+        self.main_container.config(cursor="fleur")
 
-    def on_drag(self, event, row):
-        if not hasattr(self, 'drag_row') or self.drag_row != row:
+    def on_drag_global(self, event):
+        """
+        Move placeholder to show where the dragged row will land.
+        """
+        if not hasattr(self, 'drag_row'):
             return
-        delta_y = event.y_root - self.drag_start_y
-        if abs(delta_y) < 10:
+        # Get mouse y relative to main_container
+        mouse_y = event.widget.winfo_pointery() - self.main_container.winfo_rooty()
+        # Get all task rows EXCEPT dragging one
+        rows = [r for r in self.drag_rows if r != self.drag_row]
+        # Find target index
+        target_index = 0
+        for i, r in enumerate(rows):
+            top = r.winfo_y()
+            bottom = top + r.winfo_height()
+            if mouse_y < top:
+                target_index = i
+                break
+            elif top <= mouse_y <= bottom:
+                mid = (top + bottom) / 2
+                target_index = i if mouse_y < mid else i+1
+                break
+            else:
+                target_index = i+1
+        else: # If mouse below all rows
+            target_index = len(rows)
+        self.show_placeholder_at_index(target_index)
+
+    def show_placeholder_at_index(self, index):
+        """
+        Place a darkened rectangle at the insertion point.
+        """
+        if not hasattr(self, 'placeholder'):
             return
-        rows = self.get_task_rows()
-        current_idx = rows.index(row)
-        new_idx = current_idx
-        if delta_y > 0 and current_idx < len(rows) - 1:
-            new_idx = current_idx + 1
-        elif delta_y < 0 and current_idx > 0:
-            new_idx = current_idx - 1
-        if new_idx != current_idx:
-            # Swap rows in container
-            rows[current_idx], rows[new_idx] = rows[new_idx], rows[current_idx]
-            for r in rows:
+        rows = [r for r in self.drag_rows if r != self.drag_row]
+        if not rows:
+            y_pos = 5
+        elif index == 0: # Before first row
+            y_pos = rows[0].winfo_y() - 5
+        elif index >= len(rows): # After last row
+            y_pos = rows[-1].winfo_y() + rows[-1].winfo_height() + 5
+        else: # Between rows
+            prev_row = rows[index-1]
+            y_pos = prev_row.winfo_y() + prev_row.winfo_height() + 5
+        width = self.main_container.winfo_width() - 20
+        self.placeholder.place(in_=self.main_container, x=10, y=y_pos, width=width, height=35)
+
+    def end_drag_global(self, event):
+        """
+        Drop the dragged row at the placeholder position.
+        """
+        if not hasattr(self, 'drag_row'):
+            self.cleanup_drag()
+            return
+        # Determine target index from placeholder position
+        if hasattr(self, 'placeholder') and self.placeholder.winfo_ismapped():
+            placeholder_y = self.placeholder.winfo_y()
+            rows = [r for r in self.drag_rows if r != self.drag_row]
+            target_index = 0
+            for i, r in enumerate(rows):
+                top = r.winfo_y()
+                bottom = top + r.winfo_height()
+                if placeholder_y < top:
+                    break
+                elif top <= placeholder_y <= bottom:
+                    target_index = i
+                    break
+                else:
+                    target_index = i+1
+            # Reorder rows
+            new_rows = self.drag_rows.copy()
+            new_rows.remove(self.drag_row)
+            new_rows.insert(target_index, self.drag_row)
+            # Repack all rows in new order
+            for r in new_rows:
                 r.pack_forget()
-            for r in rows:
                 r.pack(fill="x", side="top", pady=2)
-            # Re-pack input frame at bottom
+            # Ensure input frame is at bottom
             if self.input_frame is not None:
                 self.input_frame.pack_forget()
                 self.input_frame.pack(fill="x", side="top", pady=5)
-            self.drag_start_y = event.y_root
             self.save_tasks()
+        self.cleanup_drag()
 
-    def end_drag(self, event, row):
+    def cleanup_drag(self):
+        """Remove drag state and placeholder."""
         if hasattr(self, 'drag_row'):
             del self.drag_row
-            del self.drag_start_y
-            del self.drag_original_index
+        if hasattr(self, 'drag_rows'):
+            del self.drag_rows
+        if hasattr(self, 'drag_start_index'):
+            del self.drag_start_index
+        if hasattr(self, 'placeholder') and self.placeholder.winfo_exists():
+            self.placeholder.destroy()
+        self.main_container.unbind("<B1-Motion>")
+        self.main_container.unbind("<ButtonRelease-1>")
+        self.main_container.config(cursor="")
+    
+    def get_task_rows(self):
+        """Return list of task rows (excluding input frame)."""
+        rows = []
+        for child in self.main_container.winfo_children():
+            if isinstance(child, tk.Frame):
+                if self.input_frame is not None and child == self.input_frame:
+                    continue
+                rows.append(child)
+        return rows
 
     def get_task_rows(self):
         rows = []
