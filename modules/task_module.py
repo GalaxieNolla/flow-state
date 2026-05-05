@@ -246,27 +246,14 @@ class TaskSticky:
         priority_order = {"High": 0, "Medium": 1, "Low": 2, "None": 3}
         rows.sort(key=lambda r: priority_order.get(getattr(r, "priority", "None"), 3))
 
-        '''# Re-pack input frame at the bottom if it exists #DEBUGGING
-        for row in rows:
-            row.pack_forget()
-        if self.input_frame is not None:
-            self.input_frame.pack_forget()
-        # repack in order
-        for row in rows:
-            row.pack(fill="x", side="top", pady=2)
-            self.input_frame.pack(fill="x", side="top", pady=5)
-        
-        # pack input at bottom
-        if self.input_frame is not None:
-            self.input_frame.pack(fill="x", side="bottom", pady=5)
-        '''
         for row in rows:
             row.pack_forget()
             row.pack(fill="x", side="top", pady=2)
         # Re-pack input frame at the bottom if it exists
         if self.input_frame is not None:
             self.input_frame.pack_forget()
-            self.input_frame.pack(fill="x", side="top", pady=5)
+            #self.input_frame.pack(fill="x", side="top", pady=5) # KEEP IF WANT TASKS TO POPULATE AT TOP
+            self.input_frame.pack(fill="x", side="bottom", pady=5)
             
         self.save_tasks()
     
