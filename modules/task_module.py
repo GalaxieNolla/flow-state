@@ -150,8 +150,6 @@ class TaskSticky:
 
         # Make row draggable
         row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
-        row.bind("<B1-Motion>", lambda e, r=row: self.on_drag(e, r))
-        row.bind("<ButtonRelease-1>", lambda e, r=row: self.end_drag(e, r))
         # Change cursor to hand when hovering
         row.bind("<Enter>", lambda e, r=row: r.config(cursor="hand2"))
         row.bind("<Leave>", lambda e, r=row: r.config(cursor=""))
