@@ -88,7 +88,7 @@ class TaskSticky:
         # Pack to main_container so it stays relative to the tasks
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
         # self.input_frame.pack(fill="x", side="top", pady=5) #<-- USE IF WANT TASKS TO POPULATE AT THE TOP
-        self.input_frame.pack(fill="x", side="bottom", pady=5)
+        self.input_frame.pack(fill="x", side="top", pady=5)
 
         plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(5, 10))
@@ -253,7 +253,7 @@ class TaskSticky:
         if self.input_frame is not None:
             self.input_frame.pack_forget()
             #self.input_frame.pack(fill="x", side="top", pady=5) # KEEP IF WANT TASKS TO POPULATE AT TOP
-            self.input_frame.pack(fill="x", side="bottom", pady=5)
+            self.input_frame.pack(fill="x", side="top", pady=5)
             
         self.save_tasks()
     
