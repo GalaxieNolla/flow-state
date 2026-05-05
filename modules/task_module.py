@@ -10,6 +10,7 @@ class TaskSticky:
         self.window = None
         self.font_normal = ("Cinzel", 18)
         self.font_done = ("Cinzel", 18, "overstrike") # for strikethrough
+        self.instruction_font = ("Cinzel", 10, "italic") # for instructions :3
 
     def open(self):
         if self.window and self.window.winfo_exists():
@@ -30,6 +31,17 @@ class TaskSticky:
         self.load_tasks()
         self.setup_input_line()
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)  # save when closed
+
+        # give user the instructions for to-do list
+        self.instruction_label = tk.Label(
+        self.window, 
+        text="💡 Right-click a task to delete • Left-click bullet to strikethrough",
+        font=self.instruction_font,
+        fg="#6b4c8a",
+        bg="#120921",
+        pady=5
+        )
+        self.instruction_label.pack(side="bottom", fill="x")
 
     def save_tasks(self):
         tasks = []
