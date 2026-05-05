@@ -77,7 +77,6 @@ class TaskSticky:
             tasks = json.load(f)
         for task in tasks:
             self.create_task_row(task["text"], done=task.get("done", False), priority=task.get("priority", "None"))
-        self.sort_tasks()
 
     def on_close(self):
         print("Saving tasks...") #TO DEBUG
@@ -148,6 +147,15 @@ class TaskSticky:
     def create_task_row(self, text, done=False, priority="None"):
         row = tk.Frame(self.main_container, bg=self.priority_colors[priority]["bg"])
         row.pack(fill="x", side="top", pady=2)
+
+        # Make row draggable
+        row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
+        row.bind("<B1-Motion>", lambda e, r=row: self.on_drag(e, r))
+        row.bind("<ButtonRelease-1>", lambda e, r=row: self.end_drag(e, r))
+        # Change cursor to hand when hovering
+        row.bind("<Enter>", lambda e, r=row: r.config(cursor="hand2"))
+        row.bind("<Leave>", lambda e, r=row: r.config(cursor=""))
+        
         row.priority = priority  # store on row widget
         row.task_text = text
     
@@ -199,6 +207,55 @@ class TaskSticky:
             self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
+    def start_drag(self, event, row):
+    self.drag_row = row
+    self.drag_start_y = event.y_root
+    # Store OG index
+    rows = self.get_task_rows()
+    self.drag_original_index = rows.index(row)
+
+    def on_drag(self, event, row):
+        if not hasattr(self, 'drag_row') or self.drag_row != row:
+            return
+        delta_y = event.y_root - self.drag_start_y
+        if abs(delta_y) < 10:
+            return
+        rows = self.get_task_rows()
+        current_idx = rows.index(row)
+        new_idx = current_idx
+        if delta_y > 0 and current_idx < len(rows) - 1:
+            new_idx = current_idx + 1
+        elif delta_y < 0 and current_idx > 0:
+            new_idx = current_idx - 1
+        if new_idx != current_idx:
+            # Swap rows in container
+            rows[current_idx], rows[new_idx] = rows[new_idx], rows[current_idx]
+            for r in rows:
+                r.pack_forget()
+            for r in rows:
+                r.pack(fill="x", side="top", pady=2)
+            # Re-pack input frame at bottom
+            if self.input_frame is not None:
+                self.input_frame.pack_forget()
+                self.input_frame.pack(fill="x", side="top", pady=5)
+            self.drag_start_y = event.y_root
+            self.save_tasks()
+
+    def end_drag(self, event, row):
+        if hasattr(self, 'drag_row'):
+            del self.drag_row
+            del self.drag_start_y
+            del self.drag_original_index
+
+    def get_task_rows(self):
+        rows = []
+        for child in self.main_container.winfo_children():
+            if isinstance(child, tk.Frame):
+                if self.input_frame is not None and child == self.input_frame:
+                    continue
+                rows.append(child)
+        return rows
+    
     def cycle_priority(self, row, btn):
         """
         Cycle priority: None -> Low -> Medium -> High -> None
@@ -225,36 +282,9 @@ class TaskSticky:
         
         btn.config(bg=colors["bg"])
         self.save_tasks()
-        self.sort_tasks()  # reorder rows based on priority
 
     def delete_row(self, row):
         row.destroy()
-        self.save_tasks()
-    
-    def sort_tasks(self):
-        """
-        Re-sort all task rows by priority: High > Medium > Low > None
-        """
-        rows = []
-        for child in self.main_container.winfo_children():
-            if isinstance(child, tk.Frame):
-                if self.input_frame is not None and child == self.input_frame:
-                    continue
-                rows.append(child)
-        
-        # Define sort key
-        priority_order = {"High": 0, "Medium": 1, "Low": 2, "None": 3}
-        rows.sort(key=lambda r: priority_order.get(getattr(r, "priority", "None"), 3))
-
-        for row in rows:
-            row.pack_forget()
-            row.pack(fill="x", side="top", pady=2)
-        # Re-pack input frame at the bottom if it exists
-        if self.input_frame is not None:
-            self.input_frame.pack_forget()
-            #self.input_frame.pack(fill="x", side="top", pady=5) # KEEP IF WANT TASKS TO POPULATE AT TOP
-            self.input_frame.pack(fill="x", side="top", pady=5)
-            
         self.save_tasks()
     
     def toggle_strike(self, entry_widget, circle_widget):
