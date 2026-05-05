@@ -12,6 +12,16 @@ class TaskSticky:
         self.font_done = ("Cinzel", 18, "overstrike") # for strikethrough
         self.instruction_font = ("Cinzel", 10, "italic") # for instructions :3
 
+        # priority sorting
+        self.priority_levels = ["None", "Low", "Medium", "High"]
+        self.priority_colors = {
+            "None": {"bullet": "#c37aff", "bg": "#120921", "entry_fg": "#c37aff"},
+            "Low": {"bullet": "#6a9fb5", "bg": "#1a2a36", "entry_fg": "#aaccdd"},
+            "Medium": {"bullet": "#e5b567", "bg": "#2a2416", "entry_fg": "#f5d98f"},
+            "High": {"bullet": "#e35f5f", "bg": "#2e1a1a", "entry_fg": "#ffaaaa"},
+            "LongTerm": {"bullet": "#b381d3", "bg": "#2a1f33", "entry_fg": "#dcb5ff"},  # extra
+        }
+
     def open(self):
         if self.window and self.window.winfo_exists():
             self.window.lift()
@@ -53,8 +63,9 @@ class TaskSticky:
                 if isinstance(widget, tk.Entry):
                     text = widget.get().strip()
                     done = "overstrike" in str(widget.cget("font"))
+                    priority = getattr(row, "priority", "None")
                     if text:
-                        tasks.append({"text": text, "done": done})
+                        tasks.append({"text": text, "done": done, "priority": priority})
         with open(saved_sticky, "w") as f:
             json.dump(tasks, f)
 
@@ -64,7 +75,7 @@ class TaskSticky:
         with open(saved_sticky, "r") as f:
             tasks = json.load(f)
         for task in tasks:
-            self.create_task_row(task["text"], done=task.get("done", False))
+            self.create_task_row(task["text"], done=task.get("done", False), priority=task.get("priority", "None"))
 
     def on_close(self):
         print("Saving tasks...") #TO DEBUG
@@ -96,7 +107,7 @@ class TaskSticky:
         self.create_task_row(text) # Add row to the container
         self.setup_input_line()    # New + dir under row
 
-    def create_task_row(self, text, done=False):
+    '''def create_task_row(self, text, done=False):
         row = tk.Frame(self.main_container, bg="#120921")
         row.pack(fill="x", side="top", pady=2)
 
@@ -129,8 +140,109 @@ class TaskSticky:
         # Hover
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
         task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
+        task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))'''
+
+    def create_task_row(self, text, done=False, priority="None"):
+        row = tk.Frame(self.main_container, bg=self.priority_colors[priority]["bg"])
+        row.pack(fill="x", side="top", pady=2)
+        row.priority = priority  # store on row widget
+        row.task_text = text
+    
+        # Bullet (left)
+        bullet_btn = tk.Label(row, text="○", font=("Cinzel", 22),
+                              fg=self.priority_colors[priority]["bullet"], bg=self.priority_colors[priority]["bg"],
+                              cursor="hand2", padx=5, pady=5)
+        bullet_btn.pack(side="left", padx=(5, 10))
+    
+        # Entry (middle)
+        task_edit = tk.Entry(row, font=self.font_normal, bg=self.priority_colors[priority]["bg"],
+                             fg=self.priority_colors[priority]["entry_fg"], bd=0,
+                             insertbackground="white", highlightthickness=1,
+                             highlightbackground="#a78bfa")
+        task_edit.insert(0, text)
+        task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
+        task_edit.row = row  # link back
+    
+        # Priority selector (right side) - a label that looks like a button with triangle
+        priority_btn = tk.Label(row, text="▼ None", font=("Cinzel", 9, "bold"),
+                                fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
+                                cursor="hand2", padx=5)
+        priority_btn.pack(side="right", padx=(0, 10))
+        priority_btn.current = priority
+        priority_btn.row = row
+    
+        # Bind click to cycle priority
+        priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
+    
+        # Strikethrough toggle (left bullet)
+        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn))
+    
+        # Right-click to delete row
+        for widget in (row, bullet_btn, task_edit, priority_btn):
+            widget.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
+    
+        # Hover
+        task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
+        task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
+    
+        # Save task text on focus out
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
+    
+        if done:
+            self.toggle_strike(task_edit, bullet_btn)  # apply strikethrough if loaded as done
+    
+        # After creating, re-sort all tasks (so priority order is maintained)
+        self.sort_tasks()
+
+    def cycle_priority(self, row, btn):
+        """
+        Cycle priority: None -> Low -> Medium -> High -> None
+        """
+        current = row.priority
+        levels = self.priority_levels
+        next_idx = (levels.index(current) + 1) % len(levels)
+        new_priority = levels[next_idx]
+        row.priority = new_priority
+        btn.config(text=f"▼ {new_priority}")
         
+        # Update colors of row and widgets
+        colors = self.priority_colors[new_priority]
+        row.config(bg=colors["bg"])
+        
+        for child in row.winfo_children():
+            if isinstance(child, tk.Label):
+                if "text" in str(child.cget("text")) and child != btn:  # bullet label
+                    child.config(fg=colors["bullet"], bg=colors["bg"])
+                else:  # priority button itself
+                    child.config(bg=colors["bg"])
+            elif isinstance(child, tk.Entry):
+                child.config(bg=colors["bg"], fg=colors["entry_fg"])
+        
+        btn.config(bg=colors["bg"])
+        self.save_tasks()
+        self.sort_tasks()  # reorder rows based on priority
+
+    def delete_row(self, row):
+        row.destroy()
+        self.save_tasks()
+    
+    def sort_tasks(self):
+        """
+        Re-sort all task rows by priority: High > Medium > Low > None
+        """
+        rows = [child for child in self.main_container.winfo_children()
+                if isinstance(child, tk.Frame) and child != self.input_frame]
+        
+        # Define sort key
+        priority_order = {"High": 0, "Medium": 1, "Low": 2, "None": 3}
+        rows.sort(key=lambda r: priority_order.get(getattr(r, "priority", "None"), 3))
+        
+        # Repack in order
+        for row in rows:
+            row.pack_forget()
+            row.pack(fill="x", side="top", pady=2)
+        self.save_tasks()
+    
     def toggle_strike(self, entry_widget, circle_widget):
         current_font = entry_widget.cget("font")
         if "overstrike" in str(current_font):
