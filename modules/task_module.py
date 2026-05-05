@@ -208,11 +208,11 @@ class TaskSticky:
             self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
     def start_drag(self, event, row):
-    self.drag_row = row
-    self.drag_start_y = event.y_root
-    # Store OG index
-    rows = self.get_task_rows()
-    self.drag_original_index = rows.index(row)
+        self.drag_row = row
+        self.drag_start_y = event.y_root
+        # Store OG index
+        rows = self.get_task_rows()
+        self.drag_original_index = rows.index(row)
 
     def on_drag(self, event, row):
         if not hasattr(self, 'drag_row') or self.drag_row != row:
