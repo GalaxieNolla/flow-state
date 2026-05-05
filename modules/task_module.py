@@ -35,7 +35,7 @@ class TaskSticky:
         # give user the instructions for to-do list
         self.instruction_label = tk.Label(
         self.window, 
-        text="💡 Right-click a task to delete • Left-click bullet to strikethrough",
+        text="Delete: Right-click task • Complete: Left-click bullet",
         font=self.instruction_font,
         fg="#6b4c8a",
         bg="#120921",
