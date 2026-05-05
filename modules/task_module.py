@@ -194,10 +194,10 @@ class TaskSticky:
         if done:
             self.toggle_strike(task_edit, bullet_btn)  # apply strikethrough if loaded as done
 
-        # Ensure input frame stays at bottom
+        '''# Ensure input frame stays at bottom DEBUG
         if self.input_frame is not None:
             self.input_frame.pack_forget()
-            self.input_frame.pack(fill="x", side="bottom", pady=5)
+            self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
     def cycle_priority(self, row, btn):
         """
