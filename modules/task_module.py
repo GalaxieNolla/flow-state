@@ -87,7 +87,8 @@ class TaskSticky:
     def setup_input_line(self):
         # Pack to main_container so it stays relative to the tasks
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
-        self.input_frame.pack(fill="x", side="top", pady=5)
+        # self.input_frame.pack(fill="x", side="top", pady=5) #<-- USE IF WANT TASKS TO POPULATE AT THE TOP
+        self.input_frame.pack(fill="x", side="bottom", pady=5)
 
         plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(5, 10))
@@ -193,6 +194,11 @@ class TaskSticky:
         if done:
             self.toggle_strike(task_edit, bullet_btn)  # apply strikethrough if loaded as done
 
+        # Ensure input frame stays at bottom
+        if self.input_frame is not None:
+            self.input_frame.pack_forget()
+            self.input_frame.pack(fill="x", side="bottom", pady=5)
+
     def cycle_priority(self, row, btn):
         """
         Cycle priority: None -> Low -> Medium -> High -> None
@@ -240,15 +246,28 @@ class TaskSticky:
         priority_order = {"High": 0, "Medium": 1, "Low": 2, "None": 3}
         rows.sort(key=lambda r: priority_order.get(getattr(r, "priority", "None"), 3))
 
+        '''# Re-pack input frame at the bottom if it exists #DEBUGGING
+        for row in rows:
+            row.pack_forget()
+        if self.input_frame is not None:
+            self.input_frame.pack_forget()
+        # repack in order
+        for row in rows:
+            row.pack(fill="x", side="top", pady=2)
+            self.input_frame.pack(fill="x", side="top", pady=5)
+        
+        # pack input at bottom
+        if self.input_frame is not None:
+            self.input_frame.pack(fill="x", side="bottom", pady=5)
+        '''
+        for row in rows:
+            row.pack_forget()
+            row.pack(fill="x", side="top", pady=2)
         # Re-pack input frame at the bottom if it exists
         if self.input_frame is not None:
             self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="top", pady=5)
-        
-        # Repack in order
-        for row in rows:
-            row.pack_forget()
-            row.pack(fill="x", side="top", pady=2)
+            
         self.save_tasks()
     
     def toggle_strike(self, entry_widget, circle_widget):
