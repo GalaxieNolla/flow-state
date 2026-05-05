@@ -8,6 +8,7 @@ class TaskSticky:
     def __init__(self, root):
         self.root = root
         self.window = None
+        self.input_frame = None
         self.font_normal = ("Cinzel", 18)
         self.font_done = ("Cinzel", 18, "overstrike") # for strikethrough
         self.instruction_font = ("Cinzel", 10, "italic") # for instructions :3
@@ -56,7 +57,7 @@ class TaskSticky:
     def save_tasks(self):
         tasks = []
         for row in self.main_container.winfo_children():
-            if row == self.input_frame:
+            if (self.input_frame is not None and row == self.input_frame) or not isinstance(row, tk.Frame):
                 continue
             # find the Entry widget in the row
             for widget in row.winfo_children():
@@ -76,6 +77,7 @@ class TaskSticky:
             tasks = json.load(f)
         for task in tasks:
             self.create_task_row(task["text"], done=task.get("done", False), priority=task.get("priority", "None"))
+        self.sort_tasks()
 
     def on_close(self):
         print("Saving tasks...") #TO DEBUG
@@ -190,9 +192,6 @@ class TaskSticky:
     
         if done:
             self.toggle_strike(task_edit, bullet_btn)  # apply strikethrough if loaded as done
-    
-        # After creating, re-sort all tasks (so priority order is maintained)
-        self.sort_tasks()
 
     def cycle_priority(self, row, btn):
         """
@@ -230,12 +229,21 @@ class TaskSticky:
         """
         Re-sort all task rows by priority: High > Medium > Low > None
         """
-        rows = [child for child in self.main_container.winfo_children()
-                if isinstance(child, tk.Frame) and child != self.input_frame]
+        rows = []
+        for child in self.main_container.winfo_children():
+            if isinstance(child, tk.Frame):
+                if self.input_frame is not None and child == self.input_frame:
+                    continue
+                rows.append(child)
         
         # Define sort key
         priority_order = {"High": 0, "Medium": 1, "Low": 2, "None": 3}
         rows.sort(key=lambda r: priority_order.get(getattr(r, "priority", "None"), 3))
+
+        # Re-pack input frame at the bottom if it exists
+        if self.input_frame is not None:
+            self.input_frame.pack_forget()
+            self.input_frame.pack(fill="x", side="top", pady=5)
         
         # Repack in order
         for row in rows:
