@@ -34,7 +34,7 @@ class TaskSticky:
         self.window.configure(bg="#120921")
         self.window.attributes("-topmost", True)
 
-        # Main container that holds the growing list
+        # Main container 
         self.main_container = tk.Frame(self.window, bg="#120921")
         self.main_container.pack(fill="both", expand=True, padx=5, pady=15)
 
@@ -43,7 +43,7 @@ class TaskSticky:
         self.setup_input_line()
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)  # save when closed
 
-        # give user the instructions for to-do list
+        # footnote instructions for task to-do list
         self.instruction_label = tk.Label(
             self.window,
             text="[Delete: Right-click task • Complete: Left-click bullet]",
@@ -144,18 +144,17 @@ class TaskSticky:
 
         # ── Bindings ──────────────────────────────────────────────────────────
 
-        # Strikethrough: bullet left-click only
+        # Strikethrough w/ left-click
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
 
-        # Priority cycle: priority_btn left-click only
         priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
 
-        # Drag: row background and entry only (not bullet/priority so their clicks still fire)
+        # Drag
         row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
-        task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
+        task_edit.bind("<B1-Motion>", lambda e, r=row: self.start_drag(e, r)) #hopefully fix binding issue for delete
 
-        # Delete on right-click — defined as a closure so `row` is captured correctly
         def _delete(e, r=row):
+            print("DELETE FIRED")  # DEBUG FOR DELETE
             if r.winfo_exists():
                 r.destroy()
                 self.save_tasks()
@@ -200,9 +199,9 @@ class TaskSticky:
         # Placeholder: dark purple gap shown where row will land
         self.drag_placeholder = tk.Frame(self.main_container, bg="#2a1060",
                                          height=row.winfo_height() or 44)
-        self.drag_placeholder.is_placeholder = True  # so get_task_rows() skips it
+        self.drag_placeholder.is_placeholder = True  # so get_task_rows() skips
 
-        # Ghost: floating semi-transparent label that follows the cursor
+        # Ghost
         text = row.task_edit.get() if hasattr(row, 'task_edit') else ""
         colors = self.priority_colors[row.priority]
         win_width = self.window.winfo_width() - 10
@@ -220,7 +219,6 @@ class TaskSticky:
             anchor="w", padx=20, pady=8
         ).pack(fill="x")
 
-        # Set size AND position together after the label is packed
         self.drag_ghost.geometry(f"{win_width}x44+{win_x}+{self.drag_start_y - 22}")
 
     def _move_ghost(self, y_root):
@@ -233,7 +231,6 @@ class TaskSticky:
         if not hasattr(self, 'drag_row') or self.drag_row is None:
             return
 
-        # Don't activate until mouse has moved enough (prevents phantom drag on plain clicks)
         if not self.drag_active and abs(event.y_root - self.drag_start_y) < 8:
             return
 
