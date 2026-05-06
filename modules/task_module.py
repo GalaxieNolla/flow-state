@@ -48,6 +48,7 @@ class TaskSticky:
             if row and isinstance(row, tk.Frame) and row != self.input_frame and not getattr(row, 'is_placeholder', False) and row in self.get_task_rows():
                 row.destroy()
                 self.save_tasks()
+            print("RIGHT CLICK", e.widget)
         
         self.window.bind("<Button-3>", _global_right_click)
         
@@ -136,9 +137,8 @@ class TaskSticky:
 
         # Entry (middle)
         task_edit = tk.Entry(row, font=self.font_normal, bg=self.priority_colors[priority]["bg"],
-                             fg=self.priority_colors[priority]["entry_fg"], bd=0,
-                             insertbackground="white", highlightthickness=1,
-                             highlightbackground="#a78bfa")
+                     fg=self.priority_colors[priority]["entry_fg"], bd=0,
+                     insertbackground="white", highlightthickness=0)
         row.task_edit = task_edit
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
@@ -165,6 +165,10 @@ class TaskSticky:
 
         # Save on focus out
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
+
+        # Hover highlight
+        task_edit.bind("<Enter>", lambda e: task_edit.config(highlightthickness=1, highlightbackground="#a78bfa"))
+        task_edit.bind("<Leave>", lambda e: task_edit.config(highlightthickness=0))
 
         if done:
             self.toggle_strike(task_edit, bullet_btn, row)
