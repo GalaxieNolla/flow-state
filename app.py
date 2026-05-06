@@ -70,14 +70,14 @@ class FlowApp:
             256, 280,
             text="Select a mode...",
             font=("Cinzel", 20, "bold"),
-            fill="#eb94ed"
+            fill="#c6c3fe"
         )
 
         # Footer toggle
         self.mode_toggle_id = self.canvas.create_text(
             256, 490,
             text="switch mode",
-            font=styles.FONT_FOOTER,
+            font=("Georgia", 8, "italic"),
             fill="#b2d2fc"
         )
         self.canvas.tag_bind(self.mode_toggle_id, "<Button-1>",
