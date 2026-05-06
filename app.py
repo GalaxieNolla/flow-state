@@ -27,6 +27,8 @@ class FlowApp:
         # ── Canvas ────────────────────────────────────────────────────────────
         self.canvas = tk.Canvas(root, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
+        self.root.configure(bg="#0a0514")
+        self.canvas.configure(bg="#0a0514")
 
         # Background
         self.bg_image = ImageTk.PhotoImage(
