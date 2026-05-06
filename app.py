@@ -171,7 +171,7 @@ class FlowApp:
             self.canvas.coords(bg_id, x, y)
             self.canvas.coords(txt_id, x, y)
             # Scale font size with window
-            font_size = max(14, int(24 * scale))  # 24 is your base font size
+            font_size = max(14, int(30 * scale))  # 30 as base font size
             self.canvas.itemconfig(txt_id, font=("Cinzel", font_size, "bold"))
             self.canvas.all_refs.extend([inactive_i, active_i])
             
