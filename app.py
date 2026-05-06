@@ -35,7 +35,7 @@ class FlowApp:
             Image.open("visuals/arcane background.webp").resize((512, 512))
         )
         self.bg_item = self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
-        self.root.bind("<Configure>", self._on_resize)
+        self.root.bind("<Configure>", self._on_resize, add=True)
 
         # Dim overlay (when in timer time :3)
         self.dim_overlay = self.canvas.create_rectangle(
