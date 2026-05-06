@@ -162,7 +162,7 @@ class FlowApp:
         time_x, time_y = int(w * 0.27),   int(h * 0.28)
         task_x, task_y = int(w * 0.73),   int(h * 0.28)
     
-        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, x, y):
+        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y):
             scale = h / 650
             w_px = max(160, int(base_size[0] * scale))
             h_px = max(50,  int(base_size[1] * scale))
