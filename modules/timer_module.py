@@ -47,15 +47,18 @@ class StudyTimer:
         )
 
     # ── Helpers ───────────────────────────────────────────────────────────────
-
-    def _place(self, widget, **kwargs):
-        """Place a widget on canvas and track it for cleanup."""
-        win_id = self.canvas.create_window(**kwargs, window=widget)
+    def _place(self, widget, x, y):
+        """
+        Place widget on canvas & track.
+        """
+        win_id = self.canvas.create_window(x, y, window=widget)
         self.ui_widgets.append((widget, win_id))
         return win_id
 
     def _clear_ui(self):
-        """Remove all setup/control widgets from canvas."""
+        """
+        Remove all buttons & labels from main screen
+        """
         for widget, win_id in self.ui_widgets:
             try:
                 self.canvas.delete(win_id)
