@@ -214,6 +214,7 @@ class TaskSticky:
         Begin drag: store the row and initial mouse position.
         """
         self.drag_row = row
+        self.drag_rows = self.get_task_rows()
         self.drag_start_y = event.y_root
         self.drag_threshold = 10  # Minimum pixels to move before reordering
         # Change cursor
@@ -336,14 +337,14 @@ class TaskSticky:
         btn.config(bg=colors["bg"])
         self.save_tasks()
 
-    def darken_color(self, hex_color, factor=0.4):
+    def darken_color(self, hex_color, factor=0.3):
         """
         Return desaturated/darkened version for completed tasks.
         """
         hex_color = hex_color.lstrip('#')
         r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
         # Grayscale intensity
-        gray = int(r * 0.3 + g * 0.59 + b * 0.11)
+        grey = int(r * 0.299 + g * 0.587 + b * 0.114)
         # paint mixing <3
         r = int(r * factor + gray * (1 - factor))
         g = int(g * factor + gray * (1 - factor))
