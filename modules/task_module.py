@@ -150,7 +150,6 @@ class TaskSticky:
 
         # Make row draggable
         row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
-        task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
         # Change cursor when hover
         row.bind("<Enter>", lambda e, r=row: r.config(cursor="hand2"))
         row.bind("<Leave>", lambda e, r=row: r.config(cursor=""))
@@ -173,6 +172,7 @@ class TaskSticky:
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
         task_edit.row = row  # link back
+        task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
     
         # Priority selector (right side) - a label that looks like a button with triangle
         priority_btn = tk.Label(row, text="▼ None", font=("Cinzel", 9, "bold"),
@@ -335,17 +335,6 @@ class TaskSticky:
         
         btn.config(bg=colors["bg"])
         self.save_tasks()
-
-    def darken_color(self, hex_color, factor=0.4):
-        """
-        Return a darker/greyer version of text when task is completed
-        """
-        hex_color = hex_color.lstrip('#')
-        r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
-        r = int(r * factor + (1 - factor) * 50)
-        g = int(g * factor + (1 - factor) * 50)
-        b = int(b * factor + (1 - factor) * 50)
-        return f"#{r:02x}{g:02x}{b:02x}"
 
     def darken_color(self, hex_color, factor=0.4):
         """
