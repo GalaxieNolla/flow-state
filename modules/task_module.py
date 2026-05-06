@@ -43,12 +43,13 @@ class TaskSticky:
         self.setup_input_line()
 
         def _global_right_click(e):
+            print("RIGHT CLICK HIT", e.widget, type(e.widget))
             widget = e.widget
             row = widget if isinstance(widget, tk.Frame) and not getattr(widget, 'is_placeholder', False) else getattr(widget, 'master', None)
+            print("ROW FOUND:", row, "in get_task_rows:", row in self.get_task_rows() if row else "N/A")
             if row and isinstance(row, tk.Frame) and row != self.input_frame and not getattr(row, 'is_placeholder', False) and row in self.get_task_rows():
                 row.destroy()
                 self.save_tasks()
-            print("RIGHT CLICK", e.widget)
         
         self.window.bind("<Button-3>", _global_right_click)
         
