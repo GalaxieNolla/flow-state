@@ -92,19 +92,14 @@ class FlowApp:
         """
         Switch to timer setup view.
         """
-        self.is_task_mode = False
-
-        # Hide main landing page buttons
-        self._set_main_menu_visible(False)
-
-        # Dim background
-        self.canvas.itemconfig(self.dim_overlay, state="normal")
+        self.is_task_mode = False        
+        self._set_main_menu_visible(False) # Hide main landing page buttons
+        self.canvas.itemconfig(self.dim_overlay, state="normal") # Dim background
         self.canvas.tag_raise(self.dim_overlay)
-
-        # Display timer UI
-        self.timer_manager.show_setup()
+        #self.timer_manager.show_setup() # Display timer UI
 
         self.canvas.itemconfig(self.mode_toggle_id, text="switch mode (current: time-based)")
+        self.root.after(50, self.timer_manager.show_setup)    
 
     def return_to_menu(self):
         """
