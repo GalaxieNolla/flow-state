@@ -48,13 +48,13 @@ class FlowApp:
 
         # ── Main Menu Buttons ─────────────────────────────────────────────────
         self.leaderboard_btn_id, self.leaderboard_txt_id, self.leaderboard_active_pil, self.leaderboard_inactive_pil = create_mode_button(
-            self.canvas, 256, 100, "Leaderboard", self.leaderboard.open
+            self.canvas, 256, 100, "Leaderboard", self.leaderboard.open, 300, 90 #larger width bc longer word
         )
         self.time_btn_id, self.time_txt_id, self.time_active_pil, self.time_inactive_pil = create_mode_button(
-            self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode()
+            self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode(), 270, 90
         )
         self.task_btn_id, self.task_txt_id, self.task_active_pil, self.task_inactive_pil = create_mode_button(
-            self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open()
+            self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open(), 270, 90
         )
 
         # Mode selction
