@@ -14,7 +14,6 @@ class FlowApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Flow State")
-        self.root.geometry("512x512")
         self.root.attributes("-topmost", True)
 
         self.monitor = ActivityMonitor()
@@ -25,14 +24,15 @@ class FlowApp:
         self.leaderboard = Leaderboard(self.root, self.session_tracker)
 
         # ── Canvas ────────────────────────────────────────────────────────────
-        self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
+        self.canvas = tk.Canvas(root, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         # Background
         self.bg_image = ImageTk.PhotoImage(
             Image.open("visuals/arcane background.webp").resize((512, 512))
         )
-        self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+        self.bg_item = self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+        self.root.bind("<Configure>", self._on_resize)
 
         # Dim overlay (when in timer time :3)
         self.dim_overlay = self.canvas.create_rectangle(
@@ -131,6 +131,17 @@ class FlowApp:
         except Exception:
             import traceback
             traceback.print_exc()
+    
+    # ── MISC ──────────────────────────────────────────────────────────────────
+
+    def _on_resize(self, event):
+        if event.widget == self.root:
+            w, h = event.width, event.height
+            img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
+            self.bg_image = ImageTk.PhotoImage(img)
+            self.canvas.itemconfig(self.bg_item, image=self.bg_image)
+            # Also resize dim overlay
+            self.canvas.coords(self.dim_overlay, 0, 0, w, h)
 
 if __name__ == "__main__":
     root = tk.Tk()
