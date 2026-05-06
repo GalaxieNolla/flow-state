@@ -157,7 +157,7 @@ class FlowApp:
         state = "normal" if visible else "hidden"
         for item in [self.lb_btn, self.lb_txt, #leaderboard
                      self.time_btn, self.time_txt, #time
-                     self.task_btn, self.task_txt #task
+                     self.task_btn, self.task_txt, #task
                      self.time_desc, self.task_desc]: #descriptions of options
             self.canvas.itemconfig(item, state=state)
         self.canvas.itemconfig(self.select_label_win, state=state)
