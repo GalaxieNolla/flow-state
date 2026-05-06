@@ -18,7 +18,7 @@ def create_mode_button(canvas, x, y, text, command, width, height):
 
     bg_id   = canvas.create_image(x, y, image=inactive_i, anchor="center")
     text_id = canvas.create_text(x, y, text=text, fill="white",
-                                 font=("Cinzel", 50, "bold"), justify="center")
+                                 font=("Cinzel", 30, "bold"), justify="center")
 
     tag = f"btn_{x}_{y}"
     canvas.addtag_withtag(tag, bg_id)
