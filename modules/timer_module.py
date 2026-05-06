@@ -3,10 +3,8 @@ from visuals import styles
 from PIL import Image, ImageTk
 
 class StudyTimer:
-    def __init__(self, root, status_label, container, canvas):
+    def __init__(self, root, canvas, app):
         self.root = root
-        self.status_label = status_label
-        self.container = container
         self.canvas = canvas
 
         # Timer state
