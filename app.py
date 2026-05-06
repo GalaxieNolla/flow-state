@@ -66,10 +66,23 @@ class FlowApp:
             'task': {'active': None, 'inactive': None},
         }
 
-        # Create time, task, and leaderboard buttons
+        # Create runes beneath the time & task buttons
         self.mc_time = Arcane(self.canvas, self.time_btn, self.time_txt, color="blue")
         self.mc_task = Arcane(self.canvas, self.task_btn, self.task_txt, color="purple")
-        self.mc_lb   = Arcane(self.canvas, self.lb_btn,   self.lb_txt,   color="purple")
+
+        # Titles
+        self.sub_title_label = self.canvas.create_text(
+            256, 50,
+            text="We are entering ...",
+            font=("Cinzel", 12, "bold"),
+            fill="#402867"
+        )
+        self.main_title_label = self.canvas.create_text(
+            256, 50,
+            text="Flow State",
+            font=("Cinzel", 50, "bold"),
+            fill="#ddd1ff"
+        )
         
         # Mode selction
         self.select_label_win = self.canvas.create_text(
