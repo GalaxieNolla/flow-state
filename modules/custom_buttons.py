@@ -10,8 +10,8 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     inactive_pil = Image.open(os.path.join(visuals_dir, "inactive.png")).convert("RGBA")
 
     size_act = (width, height)
-    size_in = (width - 170, height - 30)
-    current_size = [width - 170, height - 30]
+    size_in = (width - 120, height - 50)
+    current_size = [width - 120, height - 50]
 
     inactive_i = ImageTk.PhotoImage(inactive_pil.resize(size_in, Image.Resampling.LANCZOS))
     active_i   = ImageTk.PhotoImage(active_pil.resize(size_act, Image.Resampling.LANCZOS))
