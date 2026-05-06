@@ -1,6 +1,6 @@
 import tkinter as tk
 from monitor import ActivityMonitor
-from PIL import Image, ImageTk  # for images
+from PIL import Image, ImageTk
 from visuals import styles
 from modules.task_module import TaskSticky
 from modules.timer_module import StudyTimer
@@ -16,94 +16,111 @@ class FlowApp:
         self.root.title("Flow State")
         self.root.geometry("512x512")
         self.root.attributes("-topmost", True)
-        
+
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
         self.nudge = Nudge(self.root, self.monitor)
-        
         self.session_tracker = SessionTracker(self.monitor, self.nudge)
         self.session_tracker.start(self.root)
         self.leaderboard = Leaderboard(self.root, self.session_tracker)
 
-        # create canvas
+        # ── Canvas ────────────────────────────────────────────────────────────
         self.canvas = tk.Canvas(root, width=512, height=512, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
-        self.leaderboard_btn = create_mode_button(self.canvas, 256, 220, "Leaderboard", self.leaderboard.open)
 
-        # load & display image
-        self.bg_image = ImageTk.PhotoImage(Image.open("visuals/arcane background.webp").resize((512, 512)))
+        # Background
+        self.bg_image = ImageTk.PhotoImage(
+            Image.open("visuals/arcane background.webp").resize((512, 512))
+        )
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        self.status_label = tk.Label(root, text="Select a mode...", font=("Cinzel", 22, "bold italic"), bg="#120921", fg="#c37aff", highlightthickness=0)
-        # OPT: try out bg="#110820", fg="#c37aff" if want to change colors
-        self.canvas.create_window(256, 256, window=self.status_label)
+        # Dim overlay (when in timer time :3)
+        self.dim_overlay = self.canvas.create_rectangle(
+            0, 0, 512, 512,
+            fill="#0a0514", stipple="gray50",
+            state="hidden"
+        )
 
-        # set up containers
-        self.main_container = tk.Frame(self.root, bg="#120921")
-        self.main_container.pack(fill="both", expand=True)
-        
-        # Refer to modules
+        # ── Modules ───────────────────────────────────────────────────────────
         self.task_manager = TaskSticky(self.root)
-        self.timer_manager = StudyTimer(self.root, self.status_label, self.main_container, self.canvas)
+        self.timer_manager = StudyTimer(self.root, self.canvas, self)
 
-        # switch modes
-        '''self.mode_toggle = tk.Button(root, text="switch mode", font=("Cinzel", 10, "italic"), command=lambda: self.set_mode(not self.is_task_mode),
-                                     bd=0, bg="#110820", fg="#7a7a7a",
-                                     activebackground="#110820", activeforeground="#c37aff", highlightthickness=0)
-        self.canvas.create_window(256, 490, window=self.mode_toggle)'''
-        self.mode_toggle = tk.Label(root, text="switch mode", font=styles.FONT_FOOTER)
-        styles.apply_ghost_style(self.mode_toggle, command=lambda: self.set_mode(not self.is_task_mode))
+        # ── Main Menu Buttons ─────────────────────────────────────────────────
+        self.leaderboard_btn_id = create_mode_button(
+            self.canvas, 256, 100, "Leaderboard", self.leaderboard.open
+        )
+        self.time_btn_id = create_mode_button(
+            self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode()
+        )
+        self.task_btn_id = create_mode_button(
+            self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open()
+        )
+
+        # Mode selction
+        self.select_label = tk.Label(
+            root, text="Select a mode...",
+            font=("Cinzel", 18, "bold"),
+            bg="#120921", fg="#c37aff",
+            highlightthickness=0
+        )
+        self.select_label_win = self.canvas.create_window(256, 280, window=self.select_label)
+
+        # Footer toggle
+        self.mode_toggle = tk.Label(
+            root, text="switch mode", font=styles.FONT_FOOTER
+        )
+        styles.apply_ghost_style(
+            self.mode_toggle,
+            command=lambda: self.enter_timer_mode() if self.is_task_mode else self.task_manager.open()
+        )
         self.canvas.create_window(256, 490, window=self.mode_toggle)
 
-        # Set up buttons
-        self.leaderboard_btn = create_mode_button(self.canvas, 256, 100, "Leaderboard", self.leaderboard.open) #top center
-        self.time_btn = create_mode_button(self.canvas, 140, 180, "Time-Based", lambda: self.set_mode(False)) #side by side
-        self.task_btn = create_mode_button(self.canvas, 372, 180, "Task-Based", lambda: self.set_mode(True))
-
-        # Update
-        self.update_button_colors()
         self.update_ui()
 
-    def set_mode(self, mode_bool):
-        self.is_task_mode = mode_bool
-        self.update_button_colors()
-        
-        if self.is_task_mode:
-            self.status_label.pack_forget()
-            self.canvas.create_window(256, 256, window=self.status_label) 
-            self.task_manager.open()
-        else:
-            self.setup_time_mode() 
-            
-        current = "task-based" if self.is_task_mode else "time-based"
-        self.mode_toggle.config(text=f"switch mode (current: {current})", fg="#7a7a7a")
+    # ── Navigation ────────────────────────────────────────────────────────────
 
-    def setup_time_mode(self):
-        # clear main container
-        self.main_container.pack_forget() 
-        
-        # move status to bottom
-        self.status_label.pack_forget() 
-        self.status_label.config(font=("Cinzel", 14, "italic")) # Slightly smaller for the bottom
-        self.status_label.pack(side="bottom", pady=20)
+    def enter_timer_mode(self):
+        """
+        Switch to timer setup view.
+        """
+        self.is_task_mode = False
 
+        # Hide main landing page buttons
+        self._set_main_menu_visible(False)
+
+        # Dim background
+        self.canvas.itemconfig(self.dim_overlay, state="normal")
+        self.canvas.tag_raise(self.dim_overlay)
+
+        # Display timer UI
         self.timer_manager.show_setup()
-    
-    def update_button_colors(self):
-        pass
-            
-    def toggle_logic(self):
-        self.set_mode(not self.is_task_mode)
-            
+
+        self.mode_toggle.config(text="switch mode (current: time-based)", fg="#7a7a7a")
+
+    def return_to_menu(self):
+        """
+        Return to main menu from timer
+        """
+        self.timer_manager.stop()
+        self.canvas.itemconfig(self.dim_overlay, state="hidden") #restore overlap
+        self._set_main_menu_visible(True) #display main menu
+
+        self.mode_toggle.config(text="switch mode", fg="#7a7a7a")
+
+    def _set_main_menu_visible(self, visible):
+        state = "normal" if visible else "hidden"
+        for tag in ["btn_140_180", "btn_372_180", "btn_256_100"]:
+            for item in self.canvas.find_withtag(tag):
+                self.canvas.itemconfig(item, state=state)
+        self.canvas.itemconfig(self.select_label_win, state=state)
+
+    # ── UI Loop ───────────────────────────────────────────────────────────────
+
     def update_ui(self):
-        self.root.after(500, self.update_ui) # Update afterwards
-        try: 
-            # stop loop if window is closed
+        self.root.after(500, self.update_ui)
+        try:
             if not self.root.winfo_exists():
                 return
-                
-            idle_time = round(self.monitor.get_idle_time())
-
             distraction = self.monitor.is_distraction()
             if distraction:
                 if not self.nudge.is_distracted:
@@ -111,11 +128,9 @@ class FlowApp:
                     self.nudge.show(distraction)
             else:
                 self.nudge.hide()
-                
-        except Exception as e:
+        except Exception:
             import traceback
             traceback.print_exc()
-            return
 
 if __name__ == "__main__":
     root = tk.Tk()
