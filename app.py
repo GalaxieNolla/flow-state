@@ -69,8 +69,8 @@ class FlowApp:
         self.select_label_win = self.canvas.create_text(
             256, 280,
             text="Select a mode...",
-            font=("Cinzel", 18, "bold"),
-            fill="#c37aff"
+            font=("Cinzel", 20, "bold"),
+            fill="#432c7f"
         )
 
         # Footer toggle
@@ -78,7 +78,7 @@ class FlowApp:
             256, 490,
             text="switch mode",
             font=styles.FONT_FOOTER,
-            fill="#7a7a7a"
+            fill="#b2d2fc"
         )
         self.canvas.tag_bind(self.mode_toggle_id, "<Button-1>",
             lambda e: self.enter_timer_mode() if self.is_task_mode else self.task_manager.open())
