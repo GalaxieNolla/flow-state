@@ -55,13 +55,13 @@ class FlowApp:
         cx = w // 2
         
         self.lb_btn, self.lb_txt, self.lb_active, self.lb_inactive, self.lb_base, self.lb_cur = create_mode_button(
-            self.canvas, cx, int(h * 0.65), "Leaderboard", self.leaderboard.open, 340, 130
+            self.canvas, cx, int(h * 0.75), "Leaderboard", self.leaderboard.open, 340, 130
         )
         self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur = create_mode_button(
-            self.canvas, int(w * 0.27), int(h * 0.78), "Time-Based", lambda: self.enter_timer_mode(), 290, 130
+            self.canvas, int(w * 0.27), int(h * 0.62), "Time-Based", lambda: self.enter_timer_mode(), 290, 130
         )
         self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur = create_mode_button(
-            self.canvas, int(w * 0.73), int(h * 0.78), "Task-Based", lambda: self.task_manager.open(), 290, 130
+            self.canvas, int(w * 0.73), int(h * 0.62), "Task-Based", lambda: self.task_manager.open(), 290, 130
         )
         self.btn_images = {
             'lb':   {'active': None, 'inactive': None},
@@ -187,9 +187,9 @@ class FlowApp:
     
         # Button positions — defined FIRST so _rescale_btn can use them
         cx = w // 2
-        lb_x,   lb_y   = cx,              int(h * 0.65) # DEBUG0.15 previously
-        time_x, time_y = int(w * 0.27),   int(h * 0.28)
-        task_x, task_y = int(w * 0.73),   int(h * 0.28)
+        lb_x,   lb_y   = cx,              int(h * 0.75) # DEBUG0.15 previously
+        time_x, time_y = int(w * 0.27),   int(h * 0.62)
+        task_x, task_y = int(w * 0.73),   int(h * 0.62)
     
         def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y, key):
             scale = h / 650
