@@ -90,23 +90,23 @@ class FlowApp:
         # Description below buttons
         self.time_desc_title = self.canvas.create_text(
             int(w * 0.27), int(h * 0.68),
-            text="Pomodoro Style\nRace v Time",
-            font=("Cinzel", 10, "italic"), fill="#4a2d6a"
+            text="Pomodoro Style",
+            font=("Cinzel", 10, "italic"), fill="#a07bc0"
         )
         self.time_desc_2 = self.canvas.create_text(
             int(w * 0.27), int(h * 0.72),
-            text="Pomodoro Style\nRace v Time",
-            font=("Cinzel", 8, "italic"), fill="#4a2d6a"
+            text="Choose session time & rounds",
+            font=("Cinzel", 8, "italic"), fill="#a07bc0"
         )
         self.task_desc_title = self.canvas.create_text(
             int(w * 0.73), int(h * 0.68),
-            text="To-do List\nPriotize Tasks",
-            font=("Cinzel", 10, "italic"), fill="#4a2d6a"
+            text="To-do List",
+            font=("Cinzel", 10, "italic"), fill="#a07bc0"
         )
         self.task_desc_2 = self.canvas.create_text(
             int(w * 0.73), int(h * 0.72),
-            text="To-do List\nPriotize Tasks",
-            font=("Cinzel", 8, "italic"), fill="#4a2d6a"
+            text="Rank tasks by priority",
+            font=("Cinzel", 8, "italic"), fill="#a07bc0"
         )
         
         # Mode selction
