@@ -91,17 +91,17 @@ class FlowApp:
         self.time_desc = self.canvas.create_text(
             int(w * 0.27), int(h * 0.68),
             text="Pomodoro · choose session time & rounds",
-            font=("Cinzel", 8, "italic"), fill="#5a3d78"
+            font=("Cinzel", 8, "italic"), fill="#c9a0e8"
         )
         self.task_desc = self.canvas.create_text(
             int(w * 0.73), int(h * 0.68),
             text="To-do list · Rank tasks by priority",
-            font=("Cinzel", 8, "italic"), fill="#5a3d78"
+            font=("Cinzel", 8, "italic"), fill="#c9a0e8"
         )
         
         # Mode selction
         self.select_label_win = self.canvas.create_text(
-            256, 100,
+            256, 90,
             text="Select a mode to begin~",
             font=("Cinzel", 20, "bold"),
             fill="#c9a0e8"
