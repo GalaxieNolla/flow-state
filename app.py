@@ -82,10 +82,9 @@ class FlowApp:
         self.update_ui()
 
         # Force correct sizing on launch
-        self.root.update_idletasks()
-        self._on_resize(type('E', (), {
+        self.root.after(50, lambda: self._on_resize(type('E', (), {
             'widget': self.root, 'width': self.root.winfo_width(), 'height': self.root.winfo_height()
-        })())
+        })()))
 
     # ── Navigation ────────────────────────────────────────────────────────────
 
