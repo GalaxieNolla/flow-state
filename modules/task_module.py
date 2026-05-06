@@ -41,6 +41,16 @@ class TaskSticky:
         # Load when open
         self.load_tasks()
         self.setup_input_line()
+
+        def _global_right_click(e):
+            widget = e.widget
+            row = widget if isinstance(widget, tk.Frame) and not getattr(widget, 'is_placeholder', False) else getattr(widget, 'master', None)
+            if row and isinstance(row, tk.Frame) and row != self.input_frame and not getattr(row, 'is_placeholder', False) and row in self.get_task_rows():
+                row.destroy()
+                self.save_tasks()
+        
+        self.window.bind("<Button-3>", _global_right_click)
+        
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)  # save when closed
 
         # footnote instructions for task to-do list
@@ -134,8 +144,6 @@ class TaskSticky:
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
         task_edit.row = row
 
-        task_edit.bindtags((str(task_edit), "Entry", str(self.window), "all")) #help delete?
-
         # Priority selector (right)
         priority_btn = tk.Label(row, text=f"▼ {priority}", font=("Cinzel", 9, "bold"),
                                 fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
@@ -154,21 +162,6 @@ class TaskSticky:
         # Drag
         row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
         task_edit.bind("<B1-Motion>", lambda e, r=row: self.start_drag(e, r)) #hopefully fix binding issue for delete
-
-        def _delete(e, r=row):
-            print("DELETE FIRED")  # DEBUG FOR DELETE
-            if r.winfo_exists():
-                r.destroy()
-                self.save_tasks()
-            return "break"
-
-        row.bind("<Button-3>", _delete)
-        bullet_btn.bind("<Button-3>", _delete)
-        priority_btn.bind("<Button-3>", _delete)
-        
-        # entry: override binding 
-        task_edit.bind("<Button-3>", _delete, add=False)
-        task_edit.event_delete("<<PasteSelection>>")  # suppress built-in right-click
 
         # Save on focus out
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
