@@ -58,24 +58,26 @@ class FlowApp:
         )
 
         # Mode selction
-        self.select_label = tk.Label(
-            root, text="Select a mode...",
+        self.select_label_win = self.canvas.create_text(
+            256, 280,
+            text="Select a mode...",
             font=("Cinzel", 18, "bold"),
-            bg="#120921", fg="#c37aff",
-            bd=0, highlightthickness=0
+            fill="#c37aff"
         )
-        self.select_label_win = self.canvas.create_window(256, 280, window=self.select_label)
 
         # Footer toggle
-        self.mode_toggle = tk.Label(
-            root, text="switch mode", font=styles.FONT_FOOTER
+        self.mode_toggle_id = self.canvas.create_text(
+            256, 490,
+            text="switch mode",
+            font=styles.FONT_FOOTER,
+            fill="#7a7a7a"
         )
-        styles.apply_ghost_style(
-            self.mode_toggle,
-            command=lambda: self.enter_timer_mode() if self.is_task_mode else self.task_manager.open()
-        )
-        self.mode_toggle.config(highlightthickness=0, bd=0, relief="flat")
-        self.canvas.create_window(256, 490, window=self.mode_toggle)
+        self.canvas.tag_bind(self.mode_toggle_id, "<Button-1>",
+            lambda e: self.enter_timer_mode() if self.is_task_mode else self.task_manager.open())
+        self.canvas.tag_bind(self.mode_toggle_id, "<Enter>",
+            lambda e: self.canvas.itemconfig(self.mode_toggle_id, fill="#c37aff"))
+        self.canvas.tag_bind(self.mode_toggle_id, "<Leave>",
+            lambda e: self.canvas.itemconfig(self.mode_toggle_id, fill="#7a7a7a"))
 
         self.update_ui()
 
@@ -97,7 +99,7 @@ class FlowApp:
         # Display timer UI
         self.timer_manager.show_setup()
 
-        self.mode_toggle.config(text="switch mode (current: time-based)", fg="#7a7a7a")
+        self.canvas.itemconfig(self.mode_toggle_id, text="switch mode (current: time-based)")
 
     def return_to_menu(self):
         """
@@ -107,7 +109,7 @@ class FlowApp:
         self.canvas.itemconfig(self.dim_overlay, state="hidden") #restore overlap
         self._set_main_menu_visible(True) #display main menu
 
-        self.mode_toggle.config(text="switch mode", fg="#7a7a7a")
+        self.canvas.itemconfig(self.mode_toggle_id, text="switch mode")
 
     def _set_main_menu_visible(self, visible):
         state = "normal" if visible else "hidden"
@@ -176,8 +178,7 @@ class FlowApp:
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
     
         # Footer
-        all_items = self.canvas.find_all()
-        self.canvas.coords(all_items[-1], cx, int(h * 0.92))
+        self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
 
 if __name__ == "__main__":
     root = tk.Tk()
