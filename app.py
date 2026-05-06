@@ -58,10 +58,10 @@ class FlowApp:
             self.canvas, cx, int(h * 0.38), "Leaderboard", self.leaderboard.open, 300, 130
         )
         self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur = create_mode_button(
-            self.canvas, int(w * 0.27), int(h * 0.62), "Time-Based", lambda: self.enter_timer_mode(), 300, 130
+            self.canvas, int(w * 0.27), int(h * 0.62), "Time-Based", lambda: self.enter_timer_mode(), 280, 130
         )
         self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur = create_mode_button(
-            self.canvas, int(w * 0.73), int(h * 0.62), "Task-Based", lambda: self.task_manager.open(), 300, 130
+            self.canvas, int(w * 0.73), int(h * 0.62), "Task-Based", lambda: self.task_manager.open(), 280, 130
         )
         self.btn_images = {
             'lb':   {'active': None, 'inactive': None},
@@ -77,7 +77,7 @@ class FlowApp:
         self.sub_title_label = self.canvas.create_text(
             256, 10,
             text="We are entering ...",
-            font=("Cinzel", 12, "bold"),
+            font=("Cinzel", 15, "bold"),
             fill="#9b72c0"
         )
         self.main_title_label = self.canvas.create_text(
@@ -206,7 +206,8 @@ class FlowApp:
             self.canvas.itemconfig(bg_id, image=inactive_i)
             self.canvas.coords(bg_id, x, y)
             self.canvas.coords(txt_id, x, y)
-            font_size = max(14, int(30 * scale))
+            
+            font_size = max(14, int(36 * scale))
             self.canvas.itemconfig(txt_id, font=("Cinzel", font_size, "bold"))
             self.canvas.all_refs.extend([inactive_i, active_i])
             
