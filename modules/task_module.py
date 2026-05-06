@@ -29,6 +29,7 @@ class TaskSticky:
             return
 
         self.window = tk.Toplevel(self.root)
+        self.window.bind("<Button-3>", lambda e: "break")
         self.window.title("Tasks")
         self.window.geometry("350x450")
         self.window.configure(bg="#120921")
@@ -189,10 +190,6 @@ class TaskSticky:
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
     
         # Right-click to delete row
-        '''row.bind("<Button-3>", lambda e, r=row: self.delete_row(r)) #DEBUG DELETE
-        bullet_btn.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
-        task_edit.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
-        priority_btn.bind("<Button-3>", lambda e, r=row: self.delete_row(r))'''
         row.bind("<Button-3>", lambda e, r=row: self.delete_row(r) or "break")
         row.bind("<Button-3>", lambda e: "break", add="+")
     
