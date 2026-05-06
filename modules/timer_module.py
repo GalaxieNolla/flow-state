@@ -48,6 +48,13 @@ class StudyTimer:
         )
 
     # ── Widget helpers ────────────────────────────────────────────────────────
+    def _wh(self):
+    """
+    Return current canvas w & h.
+    """
+    w = self.canvas.winfo_width()
+    h = self.canvas.winfo_height()
+    return w, h
 
     def _place(self, widget, x, y):
         win_id = self.canvas.create_window(x, y, window=widget)
@@ -163,6 +170,9 @@ class StudyTimer:
         self._draw_setup_controls()
 
     def _draw_nav_bar(self):
+        w, h = self._wh()
+        cx = w // 2
+    
         menu_btn = tk.Label(
             self.root, text="← Menu",
             font=("Cinzel", 11, "bold"),
@@ -172,8 +182,8 @@ class StudyTimer:
         menu_btn.bind("<Enter>", lambda e: menu_btn.config(fg=styles.PURPLE_GLOW))
         menu_btn.bind("<Leave>", lambda e: menu_btn.config(fg="#6b4c8a"))
         menu_btn.bind("<Button-1>", lambda e: self.app.return_to_menu())
-        self._place(menu_btn, x=55, y=50)
-
+        self._place(menu_btn, x=int(w * 0.08), y=int(h * 0.07))
+    
         lb_btn = tk.Label(
             self.root, text="Leaderboard →",
             font=("Cinzel", 11, "bold"),
@@ -183,60 +193,52 @@ class StudyTimer:
         lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
         lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
         lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
-        self._place(lb_btn, x=450, y=50)
+        self._place(lb_btn, x=int(w * 0.7), y=int(h * 0.07))
 
     def _draw_setup_controls(self):
-        # Title
+        w, h = self._wh()
+        cx = w // 2
+    
         title = tk.Label(
             self.root, text="POMODORO",
             font=("Cinzel", 22, "bold"),
             fg=styles.PURPLE_GLOW, bg="#0a0514"
         )
-        self._place(title, x=256, y=180)
-
-        # Study time label
+        self._place(title, x=cx, y=int(h * 0.25))
+    
         time_label = tk.Label(
             self.root, text="STUDY TIME",
             font=("Cinzel", 9, "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
-        self._place(time_label, x=256, y=225)
-
-        # Preset buttons
+        self._place(time_label, x=cx, y=int(h * 0.32))
+    
         preset_frame = tk.Frame(self.root, bg="#0a0514")
         presets = [15, 25, 45, 60]
         self._preset_btns = {}
-
         for mins in presets:
             is_sel = mins == self.study_minutes
             btn = tk.Label(
-                preset_frame,
-                text=f"{mins}",
+                preset_frame, text=f"{mins}",
                 font=("Cinzel", 14, "bold"),
                 fg="#120921" if is_sel else "#4a3a6a",
                 bg=styles.PURPLE_GLOW if is_sel else "#1a0f2e",
-                width=3, pady=5,
-                cursor="hand2"
+                width=3, pady=5, cursor="hand2"
             )
             btn.pack(side="left", padx=5)
             self._preset_btns[mins] = btn
-
         for mins, btn in self._preset_btns.items():
             btn.bind("<Button-1>", lambda e, m=mins: self._select_time(m))
-
-        self._place(preset_frame, x=256, y=258)
-
-        # Rounds label
+        self._place(preset_frame, x=cx, y=int(h * 0.38))
+    
         rounds_label = tk.Label(
             self.root, text="ROUNDS",
             font=("Cinzel", 9, "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
-        self._place(rounds_label, x=256, y=298)
-
-        # Rounds selector
+        self._place(rounds_label, x=cx, y=int(h * 0.44))
+    
         rounds_frame = tk.Frame(self.root, bg="#0a0514")
-
         minus_btn = tk.Label(
             rounds_frame, text="−",
             font=("Cinzel", 16, "bold"),
@@ -245,14 +247,12 @@ class StudyTimer:
         )
         minus_btn.pack(side="left")
         minus_btn.bind("<Button-1>", lambda e: self._change_rounds(-1))
-
         self.rounds_display = tk.Label(
             rounds_frame, text=str(self.rounds_goal),
             font=("Cinzel", 16, "bold"),
             fg=styles.PURPLE_GLOW, bg="#0a0514", width=2
         )
         self.rounds_display.pack(side="left")
-
         plus_btn = tk.Label(
             rounds_frame, text="+",
             font=("Cinzel", 16, "bold"),
@@ -261,30 +261,26 @@ class StudyTimer:
         )
         plus_btn.pack(side="left")
         plus_btn.bind("<Button-1>", lambda e: self._change_rounds(1))
-
-        self._place(rounds_frame, x=256, y=328)
-
-        # Break info
+        self._place(rounds_frame, x=cx, y=int(h * 0.49))
+    
         self._break_info = tk.Label(
             self.root,
             text=f"5 min breaks  ·  15 min long break after {self.rounds_goal} rounds",
             font=("Cinzel", 8, "italic"),
             fg="#3d2b56", bg="#0a0514"
         )
-        self._place(self._break_info, x=256, y=358)
-
-        # Start button
+        self._place(self._break_info, x=cx, y=int(h * 0.54))
+    
         start_btn = tk.Label(
             self.root, text="▶   START",
             font=("Cinzel", 13, "bold"),
             fg="#120921", bg=styles.PURPLE_GLOW,
-            padx=22, pady=8,
-            cursor="hand2"
+            padx=22, pady=8, cursor="hand2"
         )
         start_btn.bind("<Button-1>", lambda e: self._start_session())
         start_btn.bind("<Enter>", lambda e: start_btn.config(bg="#b06eff"))
         start_btn.bind("<Leave>", lambda e: start_btn.config(bg=styles.PURPLE_GLOW))
-        self._place(start_btn, x=256, y=410)
+        self._place(start_btn, x=cx, y=int(h * 0.62))
 
     def _select_time(self, mins):
         self.study_minutes = mins
@@ -366,7 +362,6 @@ class StudyTimer:
             self._begin_study()
 
     # ── Controls ──────────────────────────────────────────────────────────────
-
     def _show_controls(self):
         for widget, win_id in self.ui_widgets:
             try:
@@ -375,11 +370,12 @@ class StudyTimer:
             except Exception:
                 pass
         self.ui_widgets.clear()
-
         self._draw_nav_bar()
-
+    
+        w, h = self._wh()
+        cx = w // 2
+    
         ctrl_frame = tk.Frame(self.root, bg="#0a0514")
-
         self.pause_btn = tk.Label(
             ctrl_frame, text="⏸",
             font=("Courier New", 22),
@@ -388,7 +384,6 @@ class StudyTimer:
         )
         self.pause_btn.pack(side="left")
         self.pause_btn.bind("<Button-1>", lambda e: self._toggle_pause())
-
         reset_btn = tk.Label(
             ctrl_frame, text="↺",
             font=("Courier New", 22),
@@ -397,7 +392,6 @@ class StudyTimer:
         )
         reset_btn.pack(side="left")
         reset_btn.bind("<Button-1>", lambda e: self.show_setup())
-
         skip_btn = tk.Label(
             ctrl_frame, text="⏭",
             font=("Courier New", 22),
@@ -406,9 +400,8 @@ class StudyTimer:
         )
         skip_btn.pack(side="left")
         skip_btn.bind("<Button-1>", lambda e: self._skip())
-
-        self._place(ctrl_frame, x=256, y=430)
-
+        self._place(ctrl_frame, x=cx, y=int(h * 0.65))
+    
         tasks_btn = tk.Label(
             self.root, text="📋 Tasks",
             font=("Cinzel", 10),
@@ -418,8 +411,8 @@ class StudyTimer:
         tasks_btn.bind("<Enter>", lambda e: tasks_btn.config(fg=styles.PURPLE_GLOW))
         tasks_btn.bind("<Leave>", lambda e: tasks_btn.config(fg="#6b4c8a"))
         tasks_btn.bind("<Button-1>", lambda e: self.app.task_manager.open())
-        self._place(tasks_btn, x=256, y=470)
-
+        self._place(tasks_btn, x=cx, y=int(h * 0.72))
+    
     def _toggle_pause(self):
         if self.is_paused:
             self.is_paused = False
