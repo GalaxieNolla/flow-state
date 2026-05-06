@@ -15,6 +15,7 @@ class FlowApp:
         self.root = root
         self.root.title("Flow State")
         self.root.attributes("-topmost", True)
+        self.root.minsize(500, 400) #must be smaller
 
         self.monitor = ActivityMonitor()
         self.is_task_mode = False
@@ -61,7 +62,7 @@ class FlowApp:
             root, text="Select a mode...",
             font=("Cinzel", 18, "bold"),
             bg="#120921", fg="#c37aff",
-            highlightthickness=0
+            bd=0, highlightthickness=0
         )
         self.select_label_win = self.canvas.create_window(256, 280, window=self.select_label)
 
@@ -73,6 +74,7 @@ class FlowApp:
             self.mode_toggle,
             command=lambda: self.enter_timer_mode() if self.is_task_mode else self.task_manager.open()
         )
+        self.mode_toggle.config(highlightthickness=0, bd=0, relief="flat")
         self.canvas.create_window(256, 490, window=self.mode_toggle)
 
         self.update_ui()
