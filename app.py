@@ -64,7 +64,7 @@ class FlowApp:
             'time': {'active': None, 'inactive': None},
             'task': {'active': None, 'inactive': None},
         }
-
+        
         # Mode selction
         self.select_label_win = self.canvas.create_text(
             256, 280,
