@@ -21,7 +21,7 @@ class TaskSticky:
             "Low":      {"bullet": "#c084f5", "bg": "#1a0f2e", "entry_fg": "#d9a8ff"},
             "Medium":   {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
             "High":     {"bullet": "#e8c96a", "bg": "#1c1608", "entry_fg": "#f5e09a"},
-            "Personal": {"bullet": "#7c4fd4", "bg": "#150d2a", "entry_fg": "#a87df5"},
+            "Personal": {"bullet": "#e040a0", "bg": "#2a0a1a", "entry_fg": "#f080c0"},
         }
 
     def open(self):
