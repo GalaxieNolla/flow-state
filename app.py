@@ -87,6 +87,18 @@ class FlowApp:
             fill="#ddd1ff"
         )
         
+        # Description below buttons
+        self.time_desc = self.canvas.create_text(
+            int(w * 0.27), int(h * 0.68),
+            text="Pomodoro · choose session time & rounds",
+            font=("Cinzel", 8, "italic"), fill="#5a3d78"
+        )
+        self.task_desc = self.canvas.create_text(
+            int(w * 0.73), int(h * 0.68),
+            text="To-do list · Rank tasks by priority",
+            font=("Cinzel", 8, "italic"), fill="#5a3d78"
+        )
+        
         # Mode selction
         self.select_label_win = self.canvas.create_text(
             256, 100,
@@ -145,7 +157,8 @@ class FlowApp:
         state = "normal" if visible else "hidden"
         for item in [self.lb_btn, self.lb_txt, #leaderboard
                      self.time_btn, self.time_txt, #time
-                     self.task_btn, self.task_txt]: #task
+                     self.task_btn, self.task_txt #task
+                     self.time_desc, self.task_desc]: #descriptions of options
             self.canvas.itemconfig(item, state=state)
         self.canvas.itemconfig(self.select_label_win, state=state)
 
@@ -223,6 +236,14 @@ class FlowApp:
         # title positions
         self.canvas.coords(self.sub_title_label, cx, int(h * 0.10)) 
         self.canvas.coords(self.main_title_label, cx, int(h * 0.18))
+
+        # time v task descriptions
+        self.canvas.coords(self.time_desc, int(w * 0.27), int(h * 0.68))
+        self.canvas.coords(self.task_desc, int(w * 0.73), int(h * 0.68))
+        
+        desc_scale = h / 650
+        self.canvas.itemconfig(self.time_desc, font=("Cinzel", max(7, int(9 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.task_desc, font=("Cinzel", max(7, int(9 * desc_scale)), "italic"))
 
         # footer & select mode title
         self.canvas.coords(self.select_label_win, cx, int(h * 0.45))
