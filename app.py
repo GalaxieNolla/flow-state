@@ -171,10 +171,11 @@ class FlowApp:
     
         def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y, key):
             scale = h / 650
-            w_px = max(160, int(base_size[0] * scale)) #recall size was in format (width, height) --> [0] = width
-            h_px = max(50,  int(base_size[1] * scale))
-            inactive_i = ImageTk.PhotoImage(inactive_pil.resize((w_px, h_px), Image.Resampling.LANCZOS))
-            active_i   = ImageTk.PhotoImage(active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS))
+            # update sizing
+            current_size[0] = max(160, int(base_size[0] * scale)) #recall size was in format (width, height) --> [0] = width
+            current_size[1] = max(50,  int(base_size[1] * scale))
+            inactive_i = ImageTk.PhotoImage(inactive_pil.resize((current_size[0], current_size[1]), Image.Resampling.LANCZOS))
+            active_i   = ImageTk.PhotoImage(active_pil.resize((current_size[0], current_size[1]), Image.Resampling.LANCZOS))
             
             # Store current resized images
             self.btn_images[key]['active']   = active_i
@@ -185,13 +186,6 @@ class FlowApp:
             self.canvas.coords(txt_id, x, y)
             font_size = max(14, int(30 * scale))
             self.canvas.itemconfig(txt_id, font=("Cinzel", font_size, "bold"))
-            
-            # Rebind hover using current images
-            self.canvas.tag_bind(bg_id, "<Enter>",
-                lambda e, k=key, b=bg_id: self.canvas.itemconfig(b, image=self.btn_images[k]['active']))
-            self.canvas.tag_bind(bg_id, "<Leave>",
-                lambda e, k=key, b=bg_id: self.canvas.itemconfig(b, image=self.btn_images[k]['inactive']))
-            
             self.canvas.all_refs.extend([inactive_i, active_i])
             
         _rescale_btn(self.lb_btn,   self.lb_txt,   self.lb_active,   self.lb_inactive,   self.lb_base,   self.lb_cur,   lb_x,   lb_y,   'lb')
