@@ -47,13 +47,13 @@ class FlowApp:
         self.timer_manager = StudyTimer(self.root, self.canvas, self)
 
         # ── Main Menu Buttons ─────────────────────────────────────────────────
-        self.leaderboard_btn_id, self.leaderboard_txt_id, self.leaderboard_active_pil, self.leaderboard_inactive_pil = create_mode_button(
+        self.leaderboard_btn_id, self.leaderboard_txt_id, self.leaderboard_active_pil, self.leaderboard_inactive_pil, self.leaderboard_base_size = create_mode_button(
             self.canvas, 256, 100, "Leaderboard", self.leaderboard.open, 300, 90 #larger width bc longer word
         )
-        self.time_btn_id, self.time_txt_id, self.time_active_pil, self.time_inactive_pil = create_mode_button(
+        self.time_btn_id, self.time_txt_id, self.time_active_pil, self.time_inactive_pil, self.time_base_size = create_mode_button(
             self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode(), 270, 90
         )
-        self.task_btn_id, self.task_txt_id, self.task_active_pil, self.task_inactive_pil = create_mode_button(
+        self.task_btn_id, self.task_txt_id, self.task_active_pil, self.task_inactive_pil, self.task_base_size = create_mode_button(
             self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open(), 270, 90
         )
 
@@ -149,35 +149,34 @@ class FlowApp:
         self.canvas.itemconfig(self.bg_item, image=self.bg_image)
         self.canvas.coords(self.dim_overlay, 0, 0, w, h)
     
-        # Scale button images to 17% of window width, fixed aspect ratio
-        btn_w = max(160, int(w * 0.17))
-        btn_h = max(60, int(btn_w * 90 / 220))  # maintain original 220:90 ratio
-        btn_size = (btn_w, btn_h)
+        # Button positions — defined FIRST so _rescale_btn can use them
+        cx = w // 2
+        lb_x,   lb_y   = cx,              int(h * 0.15)
+        time_x, time_y = int(w * 0.27),   int(h * 0.28)
+        task_x, task_y = int(w * 0.73),   int(h * 0.28)
     
-        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, x, y):
-            inactive_i = ImageTk.PhotoImage(inactive_pil.resize(btn_size, Image.Resampling.LANCZOS))
-            active_i   = ImageTk.PhotoImage(active_pil.resize(btn_size, Image.Resampling.LANCZOS))
+        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, x, y):
+            scale = h / 650
+            w_px = max(160, int(base_size[0] * scale))
+            h_px = max(50,  int(base_size[1] * scale))
+            inactive_i = ImageTk.PhotoImage(inactive_pil.resize((w_px, h_px), Image.Resampling.LANCZOS))
+            active_i   = ImageTk.PhotoImage(active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS))
             self.canvas.itemconfig(bg_id, image=inactive_i)
             self.canvas.coords(bg_id, x, y)
-            self.canvas.coords(txt_id, x, y)   # text always centered on same point
-            # Keep reference alive
+            self.canvas.coords(txt_id, x, y)
             self.canvas.all_refs.extend([inactive_i, active_i])
     
-        cx = w // 2
-        lb_x, lb_y   = cx,              int(h * 0.15)
-        time_x, time_y = int(w * 0.27), int(h * 0.28)
-        task_x, task_y = int(w * 0.73), int(h * 0.28)
-    
         _rescale_btn(self.leaderboard_btn_id, self.leaderboard_txt_id,
-                     self.leaderboard_active_pil, self.leaderboard_inactive_pil, lb_x, lb_y)
+                     self.leaderboard_active_pil, self.leaderboard_inactive_pil,
+                     self.leaderboard_base_size, lb_x, lb_y)
         _rescale_btn(self.time_btn_id, self.time_txt_id,
-                     self.time_active_pil, self.time_inactive_pil, time_x, time_y)
+                     self.time_active_pil, self.time_inactive_pil,
+                     self.time_base_size, time_x, time_y)
         _rescale_btn(self.task_btn_id, self.task_txt_id,
-                     self.task_active_pil, self.task_inactive_pil, task_x, task_y)
+                     self.task_active_pil, self.task_inactive_pil,
+                     self.task_base_size, task_x, task_y)
     
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
-    
-        # Footer
         self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
 
 if __name__ == "__main__":
