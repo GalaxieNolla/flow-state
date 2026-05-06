@@ -83,7 +83,7 @@ class FlowApp:
         self.main_title_label = self.canvas.create_text(
             256, 30,
             text="Flow State",
-            font=("Cinzel", 80, "bold"),
+            font=("Cinzel", 70, "bold"),
             fill="#ddd1ff"
         )
         
@@ -230,7 +230,7 @@ class FlowApp:
 
         # add these after the button rescaling:
         title_scale = h / 650
-        self.canvas.itemconfig(self.main_title_label, font=("Cinzel", max(28, int(50 * title_scale)), "bold"))
+        self.canvas.itemconfig(self.main_title_label, font=("Cinzel", max(28, int(70 * title_scale)), "bold"))
         self.canvas.itemconfig(self.sub_title_label,  font=("Cinzel", max(8,  int(10 * title_scale)), "bold"))
         self.canvas.itemconfig(self.select_label_win, font=("Cinzel", max(12, int(18 * title_scale)), "bold"))
 
