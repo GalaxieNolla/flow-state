@@ -186,7 +186,7 @@ class TaskSticky:
         priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
     
         # Strikethrough toggle (left bullet)
-        bullet_btn.bind("<Double-Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
+        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
     
         # Right-click to delete row
         row.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
