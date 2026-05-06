@@ -175,7 +175,7 @@ class TaskSticky:
         task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
     
         # Priority selector (right side) - a label that looks like a button with triangle
-        priority_btn = tk.Label(row, text="▼ None", font=("Cinzel", 9, "bold"),
+        priority_btn = tk.Label(row, text="▼ {priority}", font=("Cinzel", 9, "bold"), #OR NONE DEBUG
                                 fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
                                 cursor="hand2", padx=5)
         priority_btn.pack(side="right", padx=(0, 10))
