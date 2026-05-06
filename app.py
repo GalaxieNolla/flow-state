@@ -98,7 +98,7 @@ class FlowApp:
         # Footer toggle
         self.mode_toggle_id = self.canvas.create_text(
             256, 490,
-            text="switch mode",
+            text="[Click to switch mode]",
             font=("Georgia", 8, "italic"),
             fill="#b2d2fc"
         )
@@ -216,8 +216,8 @@ class FlowApp:
 
 
         # title positions
-        self.canvas.coords(self.title_label,    cx, int(h * 0.18)) 
-        self.canvas.coords(self.subtitle_label, cx, int(h * 0.27))
+        self.canvas.coords(self.sub_title_label, cx, int(h * 0.18)) 
+        self.canvas.coords(self.main_title_label, cx, int(h * 0.27))
 
         # footer & select mode title
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
