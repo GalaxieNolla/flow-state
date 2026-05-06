@@ -90,12 +90,12 @@ class FlowApp:
         # Description below buttons
         self.time_desc = self.canvas.create_text(
             int(w * 0.27), int(h * 0.68),
-            text="Pomodoro Style\nChoose session time & rounds",
+            text="Pomodoro Style\nRace v Time",
             font=("Cinzel", 10, "italic"), fill="white"
         )
         self.task_desc = self.canvas.create_text(
             int(w * 0.73), int(h * 0.68),
-            text="To-do List Style\nRank tasks by priority",
+            text="To-do List\nPriotize Tasks",
             font=("Cinzel", 10, "italic"), fill="white"
         )
         
@@ -242,8 +242,8 @@ class FlowApp:
         self.canvas.coords(self.task_desc, int(w * 0.73), int(h * 0.68))
         
         desc_scale = h / 650
-        self.canvas.itemconfig(self.time_desc, font=("Cinzel", max(7, int(20 * desc_scale)), "italic"))
-        self.canvas.itemconfig(self.task_desc, font=("Cinzel", max(7, int(20 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.time_desc, font=("Cinzel", max(7, int(15 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.task_desc, font=("Cinzel", max(7, int(15 * desc_scale)), "italic"))
 
         # footer & select mode title
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
@@ -252,8 +252,8 @@ class FlowApp:
         # add these after the button rescaling:
         title_scale = h / 650
         self.canvas.itemconfig(self.main_title_label, font=("Cinzel", max(28, int(70 * title_scale)), "bold"))
-        self.canvas.itemconfig(self.sub_title_label,  font=("Cinzel", max(20,  int(10 * title_scale)), "bold"))
-        self.canvas.itemconfig(self.select_label_win, font=("Cinzel", max(20, int(18 * title_scale)), "bold"))
+        self.canvas.itemconfig(self.sub_title_label,  font=("Cinzel", max(12,  int(10 * title_scale)), "bold"))
+        self.canvas.itemconfig(self.select_label_win, font=("Cinzel", max(15, int(18 * title_scale)), "bold"))
 
 if __name__ == "__main__":
     root = tk.Tk()
