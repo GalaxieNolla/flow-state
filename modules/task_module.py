@@ -87,7 +87,6 @@ class TaskSticky:
     def setup_input_line(self):
         # Pack to main_container so it stays relative to the tasks
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
-        # self.input_frame.pack(fill="x", side="top", pady=5) #<-- USE IF WANT TASKS TO POPULATE AT THE TOP
         self.input_frame.pack(fill="x", side="top", pady=5)
 
         plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c37aff", bg="#120921")
@@ -110,47 +109,10 @@ class TaskSticky:
         self.create_task_row(text) # Add row to the container
         self.setup_input_line()    # New + dir under row
 
-    '''def create_task_row(self, text, done=False):
-        row = tk.Frame(self.main_container, bg="#120921")
-        row.pack(fill="x", side="top", pady=2)
-
-        # bullet pt
-        bullet_btn = tk.Label(row, text="○", font=("Cinzel", 22), 
-                              fg="#a78bfa", bg="#120921", cursor="hand2", #fg="#c37aff"
-                              padx=5, pady=5) 
-        bullet_btn.pack(side="left", padx=(5, 10)) 
-
-        task_edit = tk.Entry(row, font=self.font_normal, bg="#120921", fg="#c37aff", 
-                             bd=0, insertbackground="white", highlightthickness=1, 
-                             highlightbackground="#a78bfa")
-                             #highlightbackground="#120921")
-        task_edit.insert(0, text)
-        task_edit.pack(side="left", fill="x", expand=True, padx=(0, 15))
-
-        if done:
-            task_edit.config(font=self.font_done, fg="#2d1b4d")
-            bullet_btn.config(text="●", fg="#2d1b4d")
-        
-        # Strike through
-        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn))
-
-        # Right-click to Delete
-        for btn in ["<Button-2>", "<Button-3>"]:
-            row.bind(btn, lambda e: row.destroy())
-            bullet_btn.bind(btn, lambda e: row.destroy())
-            task_edit.bind(btn, lambda e: row.destroy())
-
-        # Hover
-        task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
-        task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
-        task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))'''
-
     def create_task_row(self, text, done=False, priority="None"):
         row = tk.Frame(self.main_container, bg=self.priority_colors[priority]["bg"])
         row.pack(fill="x", side="top", pady=2)
 
-        # Make row draggable
-        row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
         # Change cursor when hover
         row.bind("<Enter>", lambda e, r=row: r.config(cursor="hand2"))
         row.bind("<Leave>", lambda e, r=row: r.config(cursor=""))
@@ -173,10 +135,9 @@ class TaskSticky:
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
         task_edit.row = row  # link back
-        task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
     
-        # Priority selector (right side) - a label that looks like a button with triangle
-        priority_btn = tk.Label(row, text=f"▼ {priority}", font=("Cinzel", 9, "bold"), #OR NONE DEBUG
+        # Priority selector (right side)
+        priority_btn = tk.Label(row, text=f"▼ {priority}", font=("Cinzel", 9, "bold"),
                                 fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
                                 cursor="hand2", padx=5)
         priority_btn.pack(side="right", padx=(0, 10))
@@ -188,10 +149,20 @@ class TaskSticky:
     
         # Strikethrough toggle (left bullet)
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
-    
-        # Right-click to delete row
-        for widget in (row, bullet_btn, task_edit, priority_btn):
-            widget.bind("<Button-3>", lambda e, r=row: self.delete_row(r) or "break")
+
+        # Drag: bind on row and task_edit (but NOT bullet_btn or priority_btn so their clicks still work)
+        row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
+        task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
+
+        # Right-click to delete — use a named function so "break" propagation is clean
+        def _delete(e, r=row):
+            self.delete_row(r)
+            return "break"
+
+        row.bind("<Button-3>", _delete)
+        bullet_btn.bind("<Button-3>", _delete)
+        task_edit.bind("<Button-3>", _delete)
+        priority_btn.bind("<Button-3>", _delete)
     
         # Hover
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
@@ -203,152 +174,150 @@ class TaskSticky:
         if done:
             self.toggle_strike(task_edit, bullet_btn, row)  # apply strikethrough if loaded as done
 
-        '''# Ensure input frame stays at bottom DEBUG
-        if self.input_frame is not None:
-            self.input_frame.pack_forget()
-            self.input_frame.pack(fill="x", side="bottom", pady=5)'''
+    # ── Drag & Drop ────────────────────────────────────────────────────────────
 
     def start_drag(self, event, row):
+        """Record start position. Ghost/placeholder created only after threshold."""
         self.drag_row = row
         self.drag_start_y = event.y_root
-        self.drag_dragging = False
-    
-        # Placeholder for possible row position
-        self.drag_placeholder = tk.Frame(
-            self.main_container,
-            bg="#2a1060",
-            height=row.winfo_height() or 40
-        )
-    
-        # Ghost / shadow row
-        text = row.task_edit.get() if hasattr(row, 'task_edit') else ""
-        self.drag_ghost = tk.Toplevel(self.window)
-        self.drag_ghost.overrideredirect(True)
-        self.drag_ghost.attributes("-alpha", 0.75)
-        self.drag_ghost.attributes("-topmost", True)
-        ghost_label = tk.Label(
-            self.drag_ghost,
-            text=text,
-            font=self.font_normal,
-            fg=self.priority_colors[row.priority]["entry_fg"],
-            bg=self.priority_colors[row.priority]["bg"],
-            padx=15, pady=8
-        )
-        ghost_label.pack()
-        # Position ghost at current mouse location
-        self._move_ghost(event.x_root, event.y_root)
-    
+        self.drag_active = False      # becomes True once mouse moves enough
+        self.drag_ghost = None
+        self.drag_placeholder = None
+        self.drag_insert_idx = None
+
         self.window.bind("<B1-Motion>", self.on_drag_global)
         self.window.bind("<ButtonRelease-1>", self.end_drag_global)
         return "break"
 
-    def _move_ghost(self, x_root, y_root):
-        if hasattr(self, 'drag_ghost') and self.drag_ghost.winfo_exists():
-            self.drag_ghost.geometry(f"+{x_root + 10}+{y_root - 15}")
+    def _ensure_drag_active(self, row):
+        """Lazily create ghost and placeholder on first real motion."""
+        if self.drag_active:
+            return
+        self.drag_active = True
+
+        # Placeholder: dark purple gap
+        self.drag_placeholder = tk.Frame(self.main_container, bg="#2a1060",
+                                         height=row.winfo_height() or 44)
+
+        # Ghost: floating semi-transparent copy that follows cursor
+        text = row.task_edit.get() if hasattr(row, 'task_edit') else ""
+        colors = self.priority_colors[row.priority]
+        win_width = self.window.winfo_width() - 10
+
+        self.drag_ghost = tk.Toplevel(self.window)
+        self.drag_ghost.overrideredirect(True)
+        self.drag_ghost.attributes("-alpha", 0.80)
+        self.drag_ghost.attributes("-topmost", True)
+        tk.Label(
+            self.drag_ghost, text=text,
+            font=self.font_normal,
+            fg=colors["entry_fg"], bg=colors["bg"],
+            width=0, anchor="w",
+            padx=20, pady=8
+        ).pack(fill="x")
+        self.drag_ghost.geometry(f"{win_width}x44")
+
+    def _move_ghost(self, y_root):
+        if self.drag_ghost and self.drag_ghost.winfo_exists():
+            win_x = self.window.winfo_rootx() + 5
+            self.drag_ghost.geometry(f"+{win_x}+{y_root - 22}")
 
     def on_drag_global(self, event):
-        if not hasattr(self, 'drag_row'):
+        if not hasattr(self, 'drag_row') or self.drag_row is None:
             return
-    
-        self.drag_dragging = True
-        self._move_ghost(event.x_root, event.y_root)
-    
+
+        # Don't activate until the mouse has moved enough (avoids phantom drags on clicks)
+        if not self.drag_active and abs(event.y_root - self.drag_start_y) < 8:
+            return
+
+        self._ensure_drag_active(self.drag_row)
+        self._move_ghost(event.y_root)
+
         rows = self.get_task_rows()
         if self.drag_row not in rows:
             return
-    
-        drag_idx = rows.index(self.drag_row)
-    
-        # Hide the real row while dragging; show placeholder in its place
-        self.drag_row.pack_forget()
-    
-        # Find where to insert placeholder based on mouse y relative to container
-        container_y = event.y_root - self.main_container.winfo_rooty()
-        insert_idx = drag_idx  # default: stay in place
-    
-        for i, r in enumerate(rows):
-            if r is self.drag_row:
-                continue
-            row_top = r.winfo_y()
-            row_mid = row_top + r.winfo_height() // 2
-            if container_y < row_mid:
+
+        other_rows = [r for r in rows if r is not self.drag_row]
+        container_top = self.main_container.winfo_rooty()
+        mouse_y = event.y_root - container_top
+
+        # Determine insert position
+        insert_idx = len(other_rows)
+        for i, r in enumerate(other_rows):
+            mid = r.winfo_y() + r.winfo_height() // 2
+            if mouse_y < mid:
                 insert_idx = i
                 break
-            else:
-                insert_idx = i + 1
-    
-        # Repack: insert placeholder at insert_idx among the other rows
-        other_rows = [r for r in rows if r is not self.drag_row]
+
+        # Skip full repack if position hasn't changed
+        if insert_idx == self.drag_insert_idx:
+            return
+        self.drag_insert_idx = insert_idx
+
+        # Unpack everything, repack with placeholder at insert position
+        self.drag_row.pack_forget()
         self.drag_placeholder.pack_forget()
-    
-        for i, r in enumerate(other_rows):
+        for r in other_rows:
             r.pack_forget()
-    
+
         for i, r in enumerate(other_rows):
             if i == insert_idx:
                 self.drag_placeholder.pack(fill="x", side="top", pady=2)
             r.pack(fill="x", side="top", pady=2)
-    
-        # If inserting at the end
         if insert_idx >= len(other_rows):
             self.drag_placeholder.pack(fill="x", side="top", pady=2)
-    
-        self.drag_insert_idx = insert_idx
-    
-        # Keep input frame at bottom
+
         if self.input_frame:
             self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="top", pady=5)
-    
+
         return "break"
 
     def end_drag_global(self, event):
-        if not hasattr(self, 'drag_row'):
+        if not hasattr(self, 'drag_row') or self.drag_row is None:
             return
-    
-        rows = self.get_task_rows()
-        drag_idx = rows.index(self.drag_row) if self.drag_row in rows else 0
-        insert_idx = getattr(self, 'drag_insert_idx', drag_idx)
-    
-        # Remove placeholder, re-insert drag_row at correct position
-        self.drag_placeholder.pack_forget()
-        other_rows = [r for r in rows if r is not self.drag_row]
-    
-        for r in other_rows:
-            r.pack_forget()
-    
-        for i, r in enumerate(other_rows):
-            if i == insert_idx:
+
+        if self.drag_active:
+            rows = self.get_task_rows()
+            insert_idx = self.drag_insert_idx if self.drag_insert_idx is not None else len(rows)
+            other_rows = [r for r in rows if r is not self.drag_row]
+
+            self.drag_placeholder.pack_forget()
+            self.drag_row.pack_forget()
+            for r in other_rows:
+                r.pack_forget()
+
+            for i, r in enumerate(other_rows):
+                if i == insert_idx:
+                    self.drag_row.pack(fill="x", side="top", pady=2)
+                r.pack(fill="x", side="top", pady=2)
+            if insert_idx >= len(other_rows):
                 self.drag_row.pack(fill="x", side="top", pady=2)
-            r.pack(fill="x", side="top", pady=2)
-    
-        if insert_idx >= len(other_rows):
-            self.drag_row.pack(fill="x", side="top", pady=2)
-    
-        # Destroy ghost
-        if hasattr(self, 'drag_ghost') and self.drag_ghost.winfo_exists():
-            self.drag_ghost.destroy()
-    
-        if self.input_frame:
-            self.input_frame.pack_forget()
-            self.input_frame.pack(fill="x", side="top", pady=5)
-    
+
+            if self.drag_ghost and self.drag_ghost.winfo_exists():
+                self.drag_ghost.destroy()
+
+            if self.input_frame:
+                self.input_frame.pack_forget()
+                self.input_frame.pack(fill="x", side="top", pady=5)
+
+            self.save_tasks()
+
         self.cleanup_drag()
-        self.save_tasks()
         return "break"
 
     def cleanup_drag(self):
-        for attr in ('drag_row', 'drag_start_y', 'drag_dragging',
-                     'drag_insert_idx', 'drag_placeholder', 'drag_ghost', 'drag_rows'):
-            if hasattr(self, attr):
-                delattr(self, attr)
+        self.drag_row = None
+        self.drag_active = False
+        self.drag_ghost = None
+        self.drag_placeholder = None
+        self.drag_insert_idx = None
+        self.drag_start_y = None
         self.window.unbind("<B1-Motion>")
         self.window.unbind("<ButtonRelease-1>")
-    
+
     def get_task_rows(self):
-        """
-        Return list of task rows (excluding input frame).
-        """
+        """Return list of task rows (excluding input frame)."""
         rows = []
         for child in self.main_container.winfo_children():
             if isinstance(child, tk.Frame):
@@ -356,11 +325,11 @@ class TaskSticky:
                     continue
                 rows.append(child)
         return rows
-    
+
+    # ── Priority ───────────────────────────────────────────────────────────────
+
     def cycle_priority(self, row, btn):
-        """
-        Cycle priority: None -> Low -> Medium -> High -> None
-        """
+        """Cycle priority: None -> Low -> Medium -> High -> None"""
         current = row.priority
         levels = self.priority_levels
         next_idx = (levels.index(current) + 1) % len(levels)
@@ -395,9 +364,7 @@ class TaskSticky:
         self.save_tasks()
 
     def darken_color(self, hex_color, factor=0.3):
-        """
-        Return desaturated/darkened version for completed tasks.
-        """
+        """Return desaturated/darkened version for completed tasks."""
         hex_color = hex_color.lstrip('#')
         r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
         # Grayscale intensity
