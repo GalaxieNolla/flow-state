@@ -25,7 +25,7 @@ class FlowApp:
         self.leaderboard = Leaderboard(self.root, self.session_tracker)
 
         # ── Canvas ────────────────────────────────────────────────────────────
-        self.canvas = tk.Canvas(root, highlightthickness=0)
+        self.canvas = tk.Canvas(root, highlightthickness=0, bd=0, bg="#0a0514")
         self.canvas.pack(fill="both", expand=True)
         self.root.configure(bg="#0a0514")
         self.canvas.configure(bg="#0a0514")
