@@ -83,7 +83,7 @@ class FlowApp:
         self.main_title_label = self.canvas.create_text(
             256, 30,
             text="Flow State",
-            font=("Cinzel", 60, "bold"),
+            font=("Cinzel", 80, "bold"),
             fill="#ddd1ff"
         )
         
