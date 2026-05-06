@@ -213,7 +213,13 @@ class FlowApp:
         _rescale_btn(self.lb_btn,   self.lb_txt,   self.lb_active,   self.lb_inactive,   self.lb_base,   self.lb_cur,   lb_x,   lb_y,   'lb')
         _rescale_btn(self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur, time_x, time_y, 'time')
         _rescale_btn(self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur, task_x, task_y, 'task')
-            
+
+
+        # title positions
+        self.canvas.coords(self.title_label,    cx, int(h * 0.18)) 
+        self.canvas.coords(self.subtitle_label, cx, int(h * 0.27))
+
+        # footer & select mode title
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
         self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
 
