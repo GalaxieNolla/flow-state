@@ -27,11 +27,26 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     canvas.addtag_withtag(tag, text_id)
 
     def on_hover(e):
-        canvas.itemconfig(bg_id, image=active_i)
+        # Get current displayed size from the inactive image already on canvas
+        cur_w = inactive_i.width()
+        cur_h = inactive_i.height()
+        scaled_active = ImageTk.PhotoImage(
+            active_pil.resize((cur_w, cur_h), Image.Resampling.LANCZOS)
+        )
+        canvas.itemconfig(bg_id, image=scaled_active)
         canvas.itemconfig(text_id, fill=styles.PURPLE_GLOW)
+        # Keep reference alive
+        canvas._hover_ref = scaled_active
+
     def on_leave(e):
-        canvas.itemconfig(bg_id, image=inactive_i)
+        cur_w = inactive_i.width()
+        cur_h = inactive_i.height()
+        scaled_inactive = ImageTk.PhotoImage(
+            inactive_pil.resize((cur_w, cur_h), Image.Resampling.LANCZOS)
+        )
+        canvas.itemconfig(bg_id, image=scaled_inactive)
         canvas.itemconfig(text_id, fill="white")
+        canvas._hover_ref = scaled_inactive
 
     canvas.tag_bind(tag, "<Button-1>", lambda e: command())
     canvas.tag_bind(tag, "<Enter>", on_hover)
