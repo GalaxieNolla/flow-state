@@ -29,7 +29,6 @@ class TaskSticky:
             return
 
         self.window = tk.Toplevel(self.root)
-        self.window.bind("<Button-3>", lambda e: "break")
         self.window.title("Tasks")
         self.window.geometry("350x450")
         self.window.configure(bg="#120921")
@@ -46,12 +45,12 @@ class TaskSticky:
 
         # give user the instructions for to-do list
         self.instruction_label = tk.Label(
-        self.window, 
-        text="[Delete: Right-click task • Complete: Left-click bullet]",
-        font=("Georgia", 10, "italic"),
-        fg="#6b4c8a",
-        bg="#120921",
-        pady=5
+            self.window,
+            text="[Delete: Right-click task • Complete: Left-click bullet]",
+            font=("Georgia", 10, "italic"),
+            fg="#6b4c8a",
+            bg="#120921",
+            pady=5
         )
         self.instruction_label.pack(side="bottom", fill="x")
 
@@ -60,7 +59,8 @@ class TaskSticky:
         for row in self.main_container.winfo_children():
             if (self.input_frame is not None and row == self.input_frame) or not isinstance(row, tk.Frame):
                 continue
-            # find the Entry widget in the row
+            if getattr(row, 'is_placeholder', False):
+                continue
             for widget in row.winfo_children():
                 if isinstance(widget, tk.Entry):
                     text = widget.get().strip()
@@ -80,52 +80,50 @@ class TaskSticky:
             self.create_task_row(task["text"], done=task.get("done", False), priority=task.get("priority", "None"))
 
     def on_close(self):
-        print("Saving tasks...") #TO DEBUG
+        print("Saving tasks...")
         self.save_tasks()
         self.window.destroy()
-        
+
     def setup_input_line(self):
-        # Pack to main_container so it stays relative to the tasks
         self.input_frame = tk.Frame(self.main_container, bg="#120921")
         self.input_frame.pack(fill="x", side="top", pady=5)
 
         plus_label = tk.Label(self.input_frame, text=" +", font=self.font_normal, fg="#c37aff", bg="#120921")
         plus_label.pack(side="left", padx=(5, 10))
 
-        self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921", 
+        self.new_entry = tk.Entry(self.input_frame, font=self.font_normal, bg="#120921",
                                   fg="#c37aff", bd=0, insertbackground="white",
                                   highlightthickness=1, highlightbackground="#c37aff", highlightcolor="#c37aff")
         self.new_entry.pack(side="left", fill="x", expand=True, padx=(0, 15))
         self.new_entry.focus_set()
-        
+
         self.new_entry.bind("<Return>", lambda e: self.commit_task())
 
     def commit_task(self):
         text = self.new_entry.get().strip()
         if not text:
             return
-
-        self.input_frame.destroy() # Remove old +
-        self.create_task_row(text) # Add row to the container
-        self.setup_input_line()    # New + dir under row
+        self.input_frame.destroy()
+        self.create_task_row(text)
+        self.setup_input_line()
 
     def create_task_row(self, text, done=False, priority="None"):
         row = tk.Frame(self.main_container, bg=self.priority_colors[priority]["bg"])
         row.pack(fill="x", side="top", pady=2)
 
-        # Change cursor when hover
         row.bind("<Enter>", lambda e, r=row: r.config(cursor="hand2"))
         row.bind("<Leave>", lambda e, r=row: r.config(cursor=""))
-        
-        row.priority = priority  # store on row widget
+
+        row.priority = priority
         row.task_text = text
-    
+
         # Bullet (left)
         bullet_btn = tk.Label(row, text="○", font=("Cinzel", 22),
-                              fg=self.priority_colors[priority]["bullet"], bg=self.priority_colors[priority]["bg"],
+                              fg=self.priority_colors[priority]["bullet"],
+                              bg=self.priority_colors[priority]["bg"],
                               cursor="hand2", padx=5, pady=5)
         bullet_btn.pack(side="left", padx=(5, 10))
-    
+
         # Entry (middle)
         task_edit = tk.Entry(row, font=self.font_normal, bg=self.priority_colors[priority]["bg"],
                              fg=self.priority_colors[priority]["entry_fg"], bd=0,
@@ -134,45 +132,49 @@ class TaskSticky:
         row.task_edit = task_edit
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
-        task_edit.row = row  # link back
-    
-        # Priority selector (right side)
+        task_edit.row = row
+
+        # Priority selector (right)
         priority_btn = tk.Label(row, text=f"▼ {priority}", font=("Cinzel", 9, "bold"),
                                 fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
                                 cursor="hand2", padx=5)
         priority_btn.pack(side="right", padx=(0, 10))
         priority_btn.current = priority
         priority_btn.row = row
-    
-        # Bind click to cycle priority
-        priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
-    
-        # Strikethrough toggle (left bullet)
+
+        # ── Bindings ──────────────────────────────────────────────────────────
+
+        # Strikethrough: bullet left-click only
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
 
-        # Drag: bind on row and task_edit (but NOT bullet_btn or priority_btn so their clicks still work)
+        # Priority cycle: priority_btn left-click only
+        priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
+
+        # Drag: row background and entry only (not bullet/priority so their clicks still fire)
         row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
         task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
 
-        # Right-click to delete — use a named function so "break" propagation is clean
+        # Delete on right-click — defined as a closure so `row` is captured correctly
         def _delete(e, r=row):
-            self.delete_row(r)
+            if r.winfo_exists():
+                r.destroy()
+                self.save_tasks()
             return "break"
 
         row.bind("<Button-3>", _delete)
         bullet_btn.bind("<Button-3>", _delete)
         task_edit.bind("<Button-3>", _delete)
         priority_btn.bind("<Button-3>", _delete)
-    
-        # Hover
+
+        # Hover highlight on entry
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
         task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
-    
-        # Save task text on focus out
+
+        # Save on focus out
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
-    
+
         if done:
-            self.toggle_strike(task_edit, bullet_btn, row)  # apply strikethrough if loaded as done
+            self.toggle_strike(task_edit, bullet_btn, row)
 
     # ── Drag & Drop ────────────────────────────────────────────────────────────
 
@@ -180,7 +182,7 @@ class TaskSticky:
         """Record start position. Ghost/placeholder created only after threshold."""
         self.drag_row = row
         self.drag_start_y = event.y_root
-        self.drag_active = False      # becomes True once mouse moves enough
+        self.drag_active = False
         self.drag_ghost = None
         self.drag_placeholder = None
         self.drag_insert_idx = None
@@ -195,38 +197,43 @@ class TaskSticky:
             return
         self.drag_active = True
 
-        # Placeholder: dark purple gap
+        # Placeholder: dark purple gap shown where row will land
         self.drag_placeholder = tk.Frame(self.main_container, bg="#2a1060",
                                          height=row.winfo_height() or 44)
+        self.drag_placeholder.is_placeholder = True  # so get_task_rows() skips it
 
-        # Ghost: floating semi-transparent copy that follows cursor
+        # Ghost: floating semi-transparent label that follows the cursor
         text = row.task_edit.get() if hasattr(row, 'task_edit') else ""
         colors = self.priority_colors[row.priority]
         win_width = self.window.winfo_width() - 10
+        win_x = self.window.winfo_rootx() + 5
 
         self.drag_ghost = tk.Toplevel(self.window)
         self.drag_ghost.overrideredirect(True)
         self.drag_ghost.attributes("-alpha", 0.80)
         self.drag_ghost.attributes("-topmost", True)
+
         tk.Label(
             self.drag_ghost, text=text,
             font=self.font_normal,
             fg=colors["entry_fg"], bg=colors["bg"],
-            width=0, anchor="w",
-            padx=20, pady=8
+            anchor="w", padx=20, pady=8
         ).pack(fill="x")
-        self.drag_ghost.geometry(f"{win_width}x44")
+
+        # Set size AND position together after the label is packed
+        self.drag_ghost.geometry(f"{win_width}x44+{win_x}+{self.drag_start_y - 22}")
 
     def _move_ghost(self, y_root):
         if self.drag_ghost and self.drag_ghost.winfo_exists():
             win_x = self.window.winfo_rootx() + 5
-            self.drag_ghost.geometry(f"+{win_x}+{y_root - 22}")
+            win_width = self.window.winfo_width() - 10
+            self.drag_ghost.geometry(f"{win_width}x44+{win_x}+{y_root - 22}")
 
     def on_drag_global(self, event):
         if not hasattr(self, 'drag_row') or self.drag_row is None:
             return
 
-        # Don't activate until the mouse has moved enough (avoids phantom drags on clicks)
+        # Don't activate until mouse has moved enough (prevents phantom drag on plain clicks)
         if not self.drag_active and abs(event.y_root - self.drag_start_y) < 8:
             return
 
@@ -241,7 +248,7 @@ class TaskSticky:
         container_top = self.main_container.winfo_rooty()
         mouse_y = event.y_root - container_top
 
-        # Determine insert position
+        # Determine insert position based on midpoints of other rows
         insert_idx = len(other_rows)
         for i, r in enumerate(other_rows):
             mid = r.winfo_y() + r.winfo_height() // 2
@@ -317,13 +324,16 @@ class TaskSticky:
         self.window.unbind("<ButtonRelease-1>")
 
     def get_task_rows(self):
-        """Return list of task rows (excluding input frame)."""
+        """Return task rows, excluding input frame and drag placeholder."""
         rows = []
         for child in self.main_container.winfo_children():
-            if isinstance(child, tk.Frame):
-                if self.input_frame is not None and child == self.input_frame:
-                    continue
-                rows.append(child)
+            if not isinstance(child, tk.Frame):
+                continue
+            if self.input_frame is not None and child == self.input_frame:
+                continue
+            if getattr(child, 'is_placeholder', False):
+                continue
+            rows.append(child)
         return rows
 
     # ── Priority ───────────────────────────────────────────────────────────────
@@ -335,31 +345,28 @@ class TaskSticky:
         next_idx = (levels.index(current) + 1) % len(levels)
         new_priority = levels[next_idx]
         row.priority = new_priority
-        # Check if task is currently strikethrough
         is_striked = "overstrike" in str(row.task_edit.cget("font")) if hasattr(row, 'task_edit') else False
         btn.config(text=f"▼ {new_priority}")
 
-        # Update colors of row and widgets
         colors = self.priority_colors[new_priority]
         row.config(bg=colors["bg"])
-        
-        # If task is strikethrough, use greyed colors
+
         if is_striked:
             text_color = self.darken_color(colors["entry_fg"], 0.4)
             bullet_color = self.darken_color(colors["bullet"], 0.4)
         else:
             text_color = colors["entry_fg"]
             bullet_color = colors["bullet"]
-        
+
         for child in row.winfo_children():
             if isinstance(child, tk.Label):
                 if child.cget("text") in ("○", "●"):
                     child.config(fg=bullet_color, bg=colors["bg"])
-                else:  # priority button
+                else:
                     child.config(bg=colors["bg"])
             elif isinstance(child, tk.Entry):
                 child.config(bg=colors["bg"], fg=text_color)
-        
+
         btn.config(bg=colors["bg"])
         self.save_tasks()
 
@@ -367,34 +374,25 @@ class TaskSticky:
         """Return desaturated/darkened version for completed tasks."""
         hex_color = hex_color.lstrip('#')
         r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
-        # Grayscale intensity
         grey = int(r * 0.299 + g * 0.587 + b * 0.114)
         # paint mixing <3
         r = int(r * factor + grey * (1 - factor))
         g = int(g * factor + grey * (1 - factor))
         b = int(b * factor + grey * (1 - factor))
         return f"#{r:02x}{g:02x}{b:02x}"
-    
-    def delete_row(self, row):
-        row.destroy()
-        self.save_tasks()
-        return "break"
-    
+
     def toggle_strike(self, entry_widget, circle_widget, row):
-        """
-        Toggle strikethrough on a task. When striked, text and bullet become a
-        darker/greyer version of the priority's original color.
-        """
+        """Toggle strikethrough. Striked text/bullet become darkened priority color."""
         current_font = entry_widget.cget("font")
         priority = getattr(row, "priority", "None")
         original_fg = self.priority_colors[priority]["entry_fg"]
         original_bullet = self.priority_colors[priority]["bullet"]
         grey_color = self.darken_color(original_fg, 0.4)
-        
-        if "overstrike" in str(current_font): # Remove strikethrough: revert to original colors
+
+        if "overstrike" in str(current_font):
             entry_widget.config(font=self.font_normal, fg=original_fg)
             circle_widget.config(text="○", fg=original_bullet)
-        else: # Apply strikethrough: use darkened colors
+        else:
             entry_widget.config(font=self.font_done, fg=grey_color)
             circle_widget.config(text="●", fg=grey_color)
 
