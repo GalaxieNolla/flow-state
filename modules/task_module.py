@@ -346,9 +346,9 @@ class TaskSticky:
         # Grayscale intensity
         grey = int(r * 0.299 + g * 0.587 + b * 0.114)
         # paint mixing <3
-        r = int(r * factor + gray * (1 - factor))
-        g = int(g * factor + gray * (1 - factor))
-        b = int(b * factor + gray * (1 - factor))
+        r = int(r * factor + grey * (1 - factor))
+        g = int(g * factor + grey * (1 - factor))
+        b = int(b * factor + grey * (1 - factor))
         return f"#{r:02x}{g:02x}{b:02x}"
     
     def delete_row(self, row):
