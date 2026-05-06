@@ -140,12 +140,14 @@ class FlowApp:
             traceback.print_exc()
     
     # ── MISC ──────────────────────────────────────────────────────────────────
-
+    
     def _on_resize(self, event):
         if event.widget != self.root:
             return
         w, h = event.width, event.height
-    
+
+        self.canvas.config(width=w, height=h)
+        
         # Background
         img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
