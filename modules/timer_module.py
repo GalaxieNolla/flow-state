@@ -49,12 +49,12 @@ class StudyTimer:
 
     # ── Widget helpers ────────────────────────────────────────────────────────
     def _wh(self):
-    """
-    Return current canvas w & h.
-    """
-    w = self.canvas.winfo_width()
-    h = self.canvas.winfo_height()
-    return w, h
+        """
+        Return current canvas w & h.
+        """
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+        return w, h
 
     def _place(self, widget, x, y):
         win_id = self.canvas.create_window(x, y, window=widget)
