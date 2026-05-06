@@ -47,13 +47,13 @@ class FlowApp:
         self.timer_manager = StudyTimer(self.root, self.canvas, self)
 
         # ── Main Menu Buttons ─────────────────────────────────────────────────
-        self.leaderboard_btn_id, self.leaderboard_txt_id, self.leaderboard_active_pil, self.leaderboard_inactive_pil, self.leaderboard_base_size = create_mode_button(
-            self.canvas, 256, 100, "Leaderboard", self.leaderboard.open, 340, 130 #larger width bc longer word
+        self.lb_btn, self.lb_txt, self.lb_active, self.lb_inactive, self.lb_base, self.lb_cur = create_mode_button(
+            self.canvas, 256, 100, "Leaderboard", self.leaderboard.open, 340, 130
         )
-        self.time_btn_id, self.time_txt_id, self.time_active_pil, self.time_inactive_pil, self.time_base_size = create_mode_button(
+        self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur = create_mode_button(
             self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode(), 290, 130
         )
-        self.task_btn_id, self.task_txt_id, self.task_active_pil, self.task_inactive_pil, self.task_base_size = create_mode_button(
+        self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur = create_mode_button(
             self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open(), 290, 130
         )
 
