@@ -34,7 +34,7 @@ class FlowApp:
 
         # Background
         self.bg_image = ImageTk.PhotoImage(
-            Image.open("visuals/arcane background.webp").resize((512, 512))
+            Image.open("visuals/arcane background.png").resize((512, 512))
         )
         self.bg_item = self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
         self.root.bind("<Configure>", self._on_resize, add=True)
