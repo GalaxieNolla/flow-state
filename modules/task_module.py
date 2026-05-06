@@ -176,7 +176,7 @@ class TaskSticky:
         task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
     
         # Priority selector (right side) - a label that looks like a button with triangle
-        priority_btn = tk.Label(row, text="▼ {priority}", font=("Cinzel", 9, "bold"), #OR NONE DEBUG
+        priority_btn = tk.Label(row, text=f"▼ {priority}", font=("Cinzel", 9, "bold"), #OR NONE DEBUG
                                 fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
                                 cursor="hand2", padx=5)
         priority_btn.pack(side="right", padx=(0, 10))
@@ -190,8 +190,8 @@ class TaskSticky:
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
     
         # Right-click to delete row
-        row.bind("<Button-3>", lambda e, r=row: self.delete_row(r) or "break")
-        row.bind("<Button-3>", lambda e: "break", add="+")
+        for widget in (row, bullet_btn, task_edit, priority_btn):
+            widget.bind("<Button-3>", lambda e, r=row: self.delete_row(r) or "break")
     
         # Hover
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
@@ -209,88 +209,146 @@ class TaskSticky:
             self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
     def start_drag(self, event, row):
-        """
-        Begin drag: store the row and initial mouse position.
-        """
         self.drag_row = row
-        self.drag_rows = self.get_task_rows()
         self.drag_start_y = event.y_root
-        self.drag_threshold = 10  # Minimum pixels to move before reordering
-        # Change cursor
-        self.main_container.config(cursor="fleur")
-        # Bind global motion and release
-        self.main_container.bind("<B1-Motion>", self.on_drag_global)
-        self.main_container.bind("<ButtonRelease-1>", self.end_drag_global)
-        # Prevent default event handling
+        self.drag_dragging = False
+    
+        # Placeholder for possible row position
+        self.drag_placeholder = tk.Frame(
+            self.main_container,
+            bg="#2a1060",
+            height=row.winfo_height() or 40
+        )
+    
+        # Ghost / shadow row
+        text = row.task_edit.get() if hasattr(row, 'task_edit') else ""
+        self.drag_ghost = tk.Toplevel(self.window)
+        self.drag_ghost.overrideredirect(True)
+        self.drag_ghost.attributes("-alpha", 0.75)
+        self.drag_ghost.attributes("-topmost", True)
+        ghost_label = tk.Label(
+            self.drag_ghost,
+            text=text,
+            font=self.font_normal,
+            fg=self.priority_colors[row.priority]["entry_fg"],
+            bg=self.priority_colors[row.priority]["bg"],
+            padx=15, pady=8
+        )
+        ghost_label.pack()
+        # Position ghost at current mouse location
+        self._move_ghost(event.x_root, event.y_root)
+    
+        self.window.bind("<B1-Motion>", self.on_drag_global)
+        self.window.bind("<ButtonRelease-1>", self.end_drag_global)
         return "break"
+
+    def _move_ghost(self, x_root, y_root):
+        if hasattr(self, 'drag_ghost') and self.drag_ghost.winfo_exists():
+            self.drag_ghost.geometry(f"+{x_root + 10}+{y_root - 15}")
 
     def on_drag_global(self, event):
-        """
-        Move the row up/down as the mouse moves, swapping with neighbors.
-        """
         if not hasattr(self, 'drag_row'):
             return
-        # Get current mouse y position
-        current_y = event.y_root
-        delta_y = current_y - self.drag_start_y
-        if abs(delta_y) < self.drag_threshold:
-            return
-        # Get all task rows (excluding input frame)
+    
+        self.drag_dragging = True
+        self._move_ghost(event.x_root, event.y_root)
+    
         rows = self.get_task_rows()
         if self.drag_row not in rows:
-            self.cleanup_drag()
             return
-        current_index = rows.index(self.drag_row)
-        # Determine direction: moving up or down
-        if delta_y > 0 and current_index < len(rows) - 1:
-            # Moving down: swap with next row
-            target_index = current_index + 1
-            self.swap_rows(rows, current_index, target_index)
-            self.drag_start_y = event.y_root  # Reset start to prevent repeated swaps
-        elif delta_y < 0 and current_index > 0:
-            # Moving up: swap with previous row
-            target_index = current_index - 1
-            self.swap_rows(rows, current_index, target_index)
-            self.drag_start_y = event.y_root
-        return "break"
-
-    def swap_rows(self, rows, idx1, idx2):
-        """
-        Swap two rows visually and in the container, then re-pack input frame.
-        """
-        # Swap in list
-        rows[idx1], rows[idx2] = rows[idx2], rows[idx1]
-        # Repack all rows in new order
-        for r in rows:
+    
+        drag_idx = rows.index(self.drag_row)
+    
+        # Hide the real row while dragging; show placeholder in its place
+        self.drag_row.pack_forget()
+    
+        # Find where to insert placeholder based on mouse y relative to container
+        container_y = event.y_root - self.main_container.winfo_rooty()
+        insert_idx = drag_idx  # default: stay in place
+    
+        for i, r in enumerate(rows):
+            if r is self.drag_row:
+                continue
+            row_top = r.winfo_y()
+            row_mid = row_top + r.winfo_height() // 2
+            if container_y < row_mid:
+                insert_idx = i
+                break
+            else:
+                insert_idx = i + 1
+    
+        # Repack: insert placeholder at insert_idx among the other rows
+        other_rows = [r for r in rows if r is not self.drag_row]
+        self.drag_placeholder.pack_forget()
+    
+        for i, r in enumerate(other_rows):
             r.pack_forget()
+    
+        for i, r in enumerate(other_rows):
+            if i == insert_idx:
+                self.drag_placeholder.pack(fill="x", side="top", pady=2)
             r.pack(fill="x", side="top", pady=2)
-        # Ensure input frame stays at bottom
-        if self.input_frame is not None:
+    
+        # If inserting at the end
+        if insert_idx >= len(other_rows):
+            self.drag_placeholder.pack(fill="x", side="top", pady=2)
+    
+        self.drag_insert_idx = insert_idx
+    
+        # Keep input frame at bottom
+        if self.input_frame:
             self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="top", pady=5)
-        self.save_tasks()
+    
+        return "break"
 
     def end_drag_global(self, event):
-        """
-        Clean up drag state.
-        """
+        if not hasattr(self, 'drag_row'):
+            return
+    
+        rows = self.get_task_rows()
+        drag_idx = rows.index(self.drag_row) if self.drag_row in rows else 0
+        insert_idx = getattr(self, 'drag_insert_idx', drag_idx)
+    
+        # Remove placeholder, re-insert drag_row at correct position
+        self.drag_placeholder.pack_forget()
+        other_rows = [r for r in rows if r is not self.drag_row]
+    
+        for r in other_rows:
+            r.pack_forget()
+    
+        for i, r in enumerate(other_rows):
+            if i == insert_idx:
+                self.drag_row.pack(fill="x", side="top", pady=2)
+            r.pack(fill="x", side="top", pady=2)
+    
+        if insert_idx >= len(other_rows):
+            self.drag_row.pack(fill="x", side="top", pady=2)
+    
+        # Destroy ghost
+        if hasattr(self, 'drag_ghost') and self.drag_ghost.winfo_exists():
+            self.drag_ghost.destroy()
+    
+        if self.input_frame:
+            self.input_frame.pack_forget()
+            self.input_frame.pack(fill="x", side="top", pady=5)
+    
         self.cleanup_drag()
+        self.save_tasks()
         return "break"
 
     def cleanup_drag(self):
-        """
-        Remove drag state and restore cursor.
-        """
-        if hasattr(self, 'drag_row'):
-            del self.drag_row
-        if hasattr(self, 'drag_start_y'):
-            del self.drag_start_y
-        self.main_container.unbind("<B1-Motion>")
-        self.main_container.unbind("<ButtonRelease-1>")
-        self.main_container.config(cursor="")
+        for attr in ('drag_row', 'drag_start_y', 'drag_dragging',
+                     'drag_insert_idx', 'drag_placeholder', 'drag_ghost', 'drag_rows'):
+            if hasattr(self, attr):
+                delattr(self, attr)
+        self.window.unbind("<B1-Motion>")
+        self.window.unbind("<ButtonRelease-1>")
     
     def get_task_rows(self):
-        """Return list of task rows (excluding input frame)."""
+        """
+        Return list of task rows (excluding input frame).
+        """
         rows = []
         for child in self.main_container.winfo_children():
             if isinstance(child, tk.Frame):
