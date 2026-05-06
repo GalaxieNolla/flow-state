@@ -3,9 +3,10 @@ import tkinter as tk
 from PIL import Image, ImageTk
 from visuals import styles
 
-def create_mode_button(canvas, x, y, text, command):
+def create_mode_button(canvas, x, y, text, command, width, height):
     visuals_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "visuals", "images")
-    size = (270, 90)
+    # e.g. size = (270, 90)
+    size = (width, height)
 
     active_path = os.path.join(visuals_dir, "active.png")
     inactive_path = os.path.join(visuals_dir, "inactive.png")
