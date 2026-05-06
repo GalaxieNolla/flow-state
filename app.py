@@ -75,21 +75,21 @@ class FlowApp:
 
         # Titles
         self.sub_title_label = self.canvas.create_text(
-            256, 50,
+            256, 10,
             text="We are entering ...",
-            font=("Cinzel", 0, "bold"),
+            font=("Cinzel", 10, "bold"),
             fill="#6b4a8a"
         )
         self.main_title_label = self.canvas.create_text(
-            256, 100,
+            256, 30,
             text="Flow State",
-            font=("Cinzel", 10, "bold"),
+            font=("Cinzel", 50, "bold"),
             fill="#ddd1ff"
         )
         
         # Mode selction
         self.select_label_win = self.canvas.create_text(
-            256, 320,
+            256, 100,
             text="Select a mode to begin~",
             font=("Cinzel", 20, "bold"),
             fill="#7a4fa0"
