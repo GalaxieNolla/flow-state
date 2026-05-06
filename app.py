@@ -150,11 +150,13 @@ class FlowApp:
         # DEBUG print(f"ROOT: {w}x{h} | CANVAS: {self.canvas.winfo_width()}x{self.canvas.winfo_height()}")
 
         self.canvas.config(width=w, height=h)
+        self.root.update_idletasks() # geo b4 drawing
         
         # Background
         img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.bg_item, image=self.bg_image)
+        self.canvas.coords(self.bg_item, 0, 0) # essentially, left corner = pivot 
         self.canvas.coords(self.dim_overlay, 0, 0, w, h)
     
         # Button positions — defined FIRST so _rescale_btn can use them
