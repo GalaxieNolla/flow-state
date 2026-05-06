@@ -150,7 +150,8 @@ class TaskSticky:
 
         # Make row draggable
         row.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
-        # Change cursor to hand when hovering
+        task_edit.bind("<Button-1>", lambda e, r=row: self.start_drag(e, r))
+        # Change cursor when hover
         row.bind("<Enter>", lambda e, r=row: r.config(cursor="hand2"))
         row.bind("<Leave>", lambda e, r=row: r.config(cursor=""))
         
@@ -168,6 +169,7 @@ class TaskSticky:
                              fg=self.priority_colors[priority]["entry_fg"], bd=0,
                              insertbackground="white", highlightthickness=1,
                              highlightbackground="#a78bfa")
+        row.task_edit = task_edit
         task_edit.insert(0, text)
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
         task_edit.row = row  # link back
@@ -184,11 +186,13 @@ class TaskSticky:
         priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
     
         # Strikethrough toggle (left bullet)
-        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
+        bullet_btn.bind("<Double-Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
     
         # Right-click to delete row
-        for widget in (row, bullet_btn, task_edit, priority_btn):
-            widget.bind("<Button-3>", lambda e, r=row: self.delete_row(r) or "break")
+        row.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
+        bullet_btn.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
+        task_edit.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
+        priority_btn.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
     
         # Hover
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
@@ -304,21 +308,30 @@ class TaskSticky:
         next_idx = (levels.index(current) + 1) % len(levels)
         new_priority = levels[next_idx]
         row.priority = new_priority
+        # Check if task is currently strikethrough
+        is_striked = "overstrike" in str(row.task_edit.cget("font")) if hasattr(row, 'task_edit') else False
         btn.config(text=f"▼ {new_priority}")
-        
+
         # Update colors of row and widgets
         colors = self.priority_colors[new_priority]
         row.config(bg=colors["bg"])
         
+        # If task is strikethrough, use greyed colors
+        if is_striked:
+            text_color = self.darken_color(colors["entry_fg"], 0.4)
+            bullet_color = self.darken_color(colors["bullet"], 0.4)
+        else:
+            text_color = colors["entry_fg"]
+            bullet_color = colors["bullet"]
+        
         for child in row.winfo_children():
             if isinstance(child, tk.Label):
-                # Check if it's the bullet label (text is "○" or "●")
                 if child.cget("text") in ("○", "●"):
-                    child.config(fg=colors["bullet"], bg=colors["bg"])
-                else:  # priority button itself
+                    child.config(fg=bullet_color, bg=colors["bg"])
+                else:  # priority button
                     child.config(bg=colors["bg"])
             elif isinstance(child, tk.Entry):
-                child.config(bg=colors["bg"], fg=colors["entry_fg"])
+                child.config(bg=colors["bg"], fg=text_color)
         
         btn.config(bg=colors["bg"])
         self.save_tasks()
@@ -333,10 +346,25 @@ class TaskSticky:
         g = int(g * factor + (1 - factor) * 50)
         b = int(b * factor + (1 - factor) * 50)
         return f"#{r:02x}{g:02x}{b:02x}"
+
+    def darken_color(self, hex_color, factor=0.4):
+        """
+        Return desaturated/darkened version for completed tasks.
+        """
+        hex_color = hex_color.lstrip('#')
+        r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+        # Grayscale intensity
+        gray = int(r * 0.3 + g * 0.59 + b * 0.11)
+        # paint mixing <3
+        r = int(r * factor + gray * (1 - factor))
+        g = int(g * factor + gray * (1 - factor))
+        b = int(b * factor + gray * (1 - factor))
+        return f"#{r:02x}{g:02x}{b:02x}"
     
     def delete_row(self, row):
         row.destroy()
         self.save_tasks()
+        return "break"
     
     def toggle_strike(self, entry_widget, circle_widget, row):
         """
