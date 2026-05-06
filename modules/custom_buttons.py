@@ -9,11 +9,12 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     active_pil  = Image.open(os.path.join(visuals_dir, "active.png")).convert("RGBA")
     inactive_pil = Image.open(os.path.join(visuals_dir, "inactive.png")).convert("RGBA")
 
-    size = (width, height)
-    current_size = [width, height]
+    size_act = (width, height)
+    size_in = (width - 40, height - 10)
+    current_size = [width - 40, height - 10]
 
-    inactive_i = ImageTk.PhotoImage(inactive_pil.resize(size, Image.Resampling.LANCZOS))
-    active_i   = ImageTk.PhotoImage(active_pil.resize(size, Image.Resampling.LANCZOS))
+    inactive_i = ImageTk.PhotoImage(inactive_pil.resize(size_in, Image.Resampling.LANCZOS))
+    active_i   = ImageTk.PhotoImage(active_pil.resize(size_act, Image.Resampling.LANCZOS))
 
     bg_id   = canvas.create_image(x, y, image=inactive_i, anchor="center")
     text_id = canvas.create_text(x, y, text=text, fill="white",
@@ -31,7 +32,6 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     canvas.all_refs.extend([active_i, inactive_i])
 
     def on_hover(e):
-        print("hover size:", current_size)
         w_px, h_px = current_size
         scaled_active = ImageTk.PhotoImage(
             active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS)
