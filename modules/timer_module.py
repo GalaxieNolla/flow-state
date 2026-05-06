@@ -17,14 +17,14 @@ class StudyTimer:
         self.is_paused = False
         self.after_id = None
         self.center_image = None
-        self.ui_widgets = []  # track all placed widgets for cleanup
+        self.ui_widgets = []  # track widgets
 
         # Pomodoro config (defaults)
         self.study_minutes = 25
         self.rounds_goal = 4
         self.current_round = 0  # completed study rounds
 
-        # Short break = 5min, long break = 15min (standard pomodoro)
+        # Short break = 5min, long break = 15min (standard)
         self.short_break_mins = 5
         self.long_break_mins = 15
 
@@ -49,18 +49,15 @@ class StudyTimer:
         )
 
     # ── Helpers ───────────────────────────────────────────────────────────────
-    def _place(self, widget, x, y):
-        """
-        Place a widget on canvas and track it for cleanup.
-        """
-        win_id = self.canvas.create_window(x, y, window=widget)
+
+    def _place(self, widget, **kwargs):
+        """Place a widget on canvas and track it for cleanup."""
+        win_id = self.canvas.create_window(**kwargs, window=widget)
         self.ui_widgets.append((widget, win_id))
         return win_id
-    
+
     def _clear_ui(self):
-        """
-        Remove all setup/control widgets from canvas.
-        """
+        """Remove all setup/control widgets from canvas."""
         for widget, win_id in self.ui_widgets:
             try:
                 self.canvas.delete(win_id)
@@ -209,7 +206,7 @@ class StudyTimer:
 
     def _begin_break(self):
         self.is_break = True
-        # Long break :D
+        # Long break after completing all rounds
         if self.current_round >= self.rounds_goal:
             secs = self.long_break_mins * 60
             label = f"LONG BREAK"
@@ -344,9 +341,7 @@ class StudyTimer:
     # ── Visuals ───────────────────────────────────────────────────────────────
 
     def _draw_visuals(self):
-        """
-        Draw the dark circle background behind the clock.
-        """
+        """Draw the dark circle background behind the clock."""
         self.canvas.delete("timer_bg")
         self.canvas.create_oval(
             165, 265, 347, 447,
@@ -396,9 +391,7 @@ class StudyTimer:
         self.canvas.tag_raise(self.round_dots_id)
 
     def _update_round_dots(self):
-        """
-        Show dots: filled for completed rounds, empty for remaining.
-        """
+        """Show dots: filled for completed rounds, empty for remaining."""
         filled = "●" * self.current_round
         empty = "○" * max(0, self.rounds_goal - self.current_round)
         self.canvas.itemconfig(self.round_dots_id, text=filled + empty)
