@@ -8,6 +8,7 @@ from modules.custom_buttons import create_mode_button
 from modules.nudge import Nudge
 from modules.session_tracker import SessionTracker
 from modules.leaderboard import Leaderboard
+from modules.arcane import Arcane
 import os
 
 class FlowApp:
@@ -64,6 +65,11 @@ class FlowApp:
             'time': {'active': None, 'inactive': None},
             'task': {'active': None, 'inactive': None},
         }
+
+        # Create time, task, and leaderboard buttons
+        self.mc_time = Arcane(self.canvas, self.time_btn, self.time_txt, color="blue")
+        self.mc_task = Arcane(self.canvas, self.task_btn, self.task_txt, color="purple")
+        self.mc_lb   = Arcane(self.canvas, self.lb_btn,   self.lb_txt,   color="purple")
         
         # Mode selction
         self.select_label_win = self.canvas.create_text(
