@@ -59,6 +59,11 @@ class FlowApp:
         self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur = create_mode_button(
             self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open(), 290, 130
         )
+        self.btn_images = {
+            'lb':   {'active': None, 'inactive': None},
+            'time': {'active': None, 'inactive': None},
+            'task': {'active': None, 'inactive': None},
+        }
 
         # Mode selction
         self.select_label_win = self.canvas.create_text(
@@ -149,7 +154,7 @@ class FlowApp:
         self.canvas.all_refs = [] # clear 
         # DEBUG print(f"ROOT: {w}x{h} | CANVAS: {self.canvas.winfo_width()}x{self.canvas.winfo_height()}")
 
-        self.canvas.config(width=w, height=h)
+        self.canvas.config(width=w, height=h) #can remove this line w/o any resizing errors (?)
         
         # Background
         img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
@@ -164,24 +169,35 @@ class FlowApp:
         time_x, time_y = int(w * 0.27),   int(h * 0.28)
         task_x, task_y = int(w * 0.73),   int(h * 0.28)
     
-        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y):
+        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y, key):
             scale = h / 650
-            w_px = max(160, int(base_size[0] * scale))
+            w_px = max(160, int(base_size[0] * scale)) #recall size was in format (width, height) --> [0] = width
             h_px = max(50,  int(base_size[1] * scale))
             inactive_i = ImageTk.PhotoImage(inactive_pil.resize((w_px, h_px), Image.Resampling.LANCZOS))
             active_i   = ImageTk.PhotoImage(active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS))
+            
+            # Store current resized images
+            self.btn_images[key]['active']   = active_i
+            self.btn_images[key]['inactive'] = inactive_i
+            
             self.canvas.itemconfig(bg_id, image=inactive_i)
             self.canvas.coords(bg_id, x, y)
             self.canvas.coords(txt_id, x, y)
-            # Scale font size with window
-            font_size = max(14, int(30 * scale))  # 30 as base font size
+            font_size = max(14, int(30 * scale))
             self.canvas.itemconfig(txt_id, font=("Cinzel", font_size, "bold"))
+            
+            # Rebind hover using current images
+            self.canvas.tag_bind(bg_id, "<Enter>",
+                lambda e, k=key, b=bg_id: self.canvas.itemconfig(b, image=self.btn_images[k]['active']))
+            self.canvas.tag_bind(bg_id, "<Leave>",
+                lambda e, k=key, b=bg_id: self.canvas.itemconfig(b, image=self.btn_images[k]['inactive']))
+            
             self.canvas.all_refs.extend([inactive_i, active_i])
             
-        _rescale_btn(self.lb_btn, self.lb_txt, self.lb_active, self.lb_inactive, self.lb_base, self.lb_cur, lb_x, lb_y)
-        _rescale_btn(self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur, time_x, time_y)
-        _rescale_btn(self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur, task_x, task_y)
-    
+        _rescale_btn(self.lb_btn,   self.lb_txt,   self.lb_active,   self.lb_inactive,   self.lb_base,   self.lb_cur,   lb_x,   lb_y,   'lb')
+        _rescale_btn(self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur, time_x, time_y, 'time')
+        _rescale_btn(self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur, task_x, task_y, 'task')
+            
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
         self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
 
