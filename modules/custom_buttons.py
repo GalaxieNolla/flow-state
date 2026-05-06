@@ -10,7 +10,7 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     inactive_pil = Image.open(os.path.join(visuals_dir, "inactive.png")).convert("RGBA")
 
     size = (width, height)
-    current_size = [width, height]  # mutable — updated by _rescale_btn on resize
+    current_size = [0, 0]
 
     inactive_i = ImageTk.PhotoImage(inactive_pil.resize(size, Image.Resampling.LANCZOS))
     active_i   = ImageTk.PhotoImage(active_pil.resize(size, Image.Resampling.LANCZOS))
@@ -32,6 +32,8 @@ def create_mode_button(canvas, x, y, text, command, width, height):
 
     def on_hover(e):
         w_px, h_px = current_size
+        if w_px == 0:
+            return
         scaled_active = ImageTk.PhotoImage(
             active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS)
         )
@@ -41,6 +43,8 @@ def create_mode_button(canvas, x, y, text, command, width, height):
 
     def on_leave(e):
         w_px, h_px = current_size
+        if w_px == 0:
+            return
         scaled_inactive = ImageTk.PhotoImage(
             inactive_pil.resize((w_px, h_px), Image.Resampling.LANCZOS)
         )
