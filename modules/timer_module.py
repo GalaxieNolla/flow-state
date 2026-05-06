@@ -8,6 +8,7 @@ class StudyTimer:
         self.root = root
         self.canvas = canvas
         self.app = app
+        self._resize_id = None
 
         # Timer state
         self.seconds_left = 0
@@ -92,6 +93,7 @@ class StudyTimer:
         self.is_paused = False
         self._clear_ui()
         self._hide_clock()
+        self.root.unbind("<Configure>") #prev stagnant binding
 
     # ── Progress Bar ──────────────────────────────────────────────────────────
 
@@ -170,6 +172,21 @@ class StudyTimer:
         self._draw_nav_bar()
         self._draw_setup_controls()
 
+        self.root.bind("<Configure>", self._on_setup_resize) #resizing semantics
+
+    def _on_setup_resize(self, event):
+        if event.widget != self.root:
+            return
+        if self._resize_id:
+            self.root.after_cancel(self._resize_id)
+        self._resize_id = self.root.after(80, self._redraw_setup)
+
+    def _redraw_setup(self):
+        self._resize_id = None
+        self._clear_ui()
+        self._draw_nav_bar()
+        self._draw_setup_controls()
+    
     def _draw_nav_bar(self):
         w, h = self._wh()
         cx = w // 2
@@ -302,6 +319,7 @@ class StudyTimer:
     # ── Session flow ──────────────────────────────────────────────────────────
 
     def _start_session(self):
+        self.root.unbind("<Configure>") 
         self._clear_ui()
         self.current_round = 0
         self.is_break = False
