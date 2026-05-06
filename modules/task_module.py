@@ -51,7 +51,7 @@ class TaskSticky:
                 row.destroy()
                 self.save_tasks()
         
-        self.window.bind("<Button-3>", _global_right_click)
+        self.window.bind("<Button-2>", _global_right_click)
         
         self.window.protocol("WM_DELETE_WINDOW", self.on_close)  # save when closed
 
