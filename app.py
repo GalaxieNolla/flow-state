@@ -37,7 +37,7 @@ class FlowApp:
         # Dim overlay (when in timer time :3)
         self.dim_overlay = self.canvas.create_rectangle(
             0, 0, 512, 512,
-            fill="#0a0514", stipple="gray50",
+            fill="#0a0514", stipple="gray75",
             state="hidden"
         )
 
