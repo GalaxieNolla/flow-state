@@ -214,7 +214,7 @@ class TaskSticky:
         self.drag_rows = self.get_task_rows()
         self.drag_start_index = self.drag_rows.index(row)
         # Create a placeholder frame (darkened rectangle)
-        self.placeholder = tk.Frame(self.main_container, bg="#4a4a6a", height=40)  # greyish rectangle
+        self.placeholder = tk.Frame(self.main_container, bg="#5a4a6a", height=40)  # purple greyish rectangleee
         self.placeholder.place_forget()
         # Store mouse offset
         self.drag_start_y = event.y_root
@@ -318,21 +318,13 @@ class TaskSticky:
             del self.drag_start_index
         if hasattr(self, 'placeholder') and self.placeholder.winfo_exists():
             self.placeholder.destroy()
+            del self.placeholder
         self.main_container.unbind("<B1-Motion>")
         self.main_container.unbind("<ButtonRelease-1>")
         self.main_container.config(cursor="")
     
     def get_task_rows(self):
         """Return list of task rows (excluding input frame)."""
-        rows = []
-        for child in self.main_container.winfo_children():
-            if isinstance(child, tk.Frame):
-                if self.input_frame is not None and child == self.input_frame:
-                    continue
-                rows.append(child)
-        return rows
-
-    def get_task_rows(self):
         rows = []
         for child in self.main_container.winfo_children():
             if isinstance(child, tk.Frame):
