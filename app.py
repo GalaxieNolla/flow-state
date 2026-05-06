@@ -212,8 +212,8 @@ class FlowApp:
         # Button positions — defined FIRST so _rescale_btn can use them
         cx = w // 2
         lb_x,   lb_y   = cx,              int(h * 0.32) # DEBUG0.15 previously
-        time_x, time_y = int(w * 0.27),   int(h * 0.62)
-        task_x, task_y = int(w * 0.73),   int(h * 0.62)
+        time_x, time_y = int(w * 0.27),   int(h * 0.65)
+        task_x, task_y = int(w * 0.73),   int(h * 0.65)
     
         def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y, key):
             scale = h / 650
@@ -253,16 +253,16 @@ class FlowApp:
         self.canvas.coords(self.task_desc_title, int(w * 0.73), int(h * 0.68))
         
         desc_scale = h / 650
-        self.canvas.itemconfig(self.time_desc_title, font=("Cinzel", max(14, int(15 * desc_scale)), "italic"))
-        self.canvas.itemconfig(self.task_desc_title, font=("Cinzel", max(14, int(15 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.time_desc_title, font=("Cinzel", max(12, int(15 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.task_desc_title, font=("Cinzel", max(12, int(15 * desc_scale)), "italic"))
 
         # descr pt 2
         self.canvas.coords(self.time_desc_2, int(w * 0.27), int(h * 0.72))
-        self.canvas.coords(self.task_desc_2, int(w * 0.73), int(h * 0.68))
+        self.canvas.coords(self.task_desc_2, int(w * 0.73), int(h * 0.72))
         
         desc_scale = h / 650
-        self.canvas.itemconfig(self.time_desc_2, font=("Cinzel", max(10, int(15 * desc_scale)), "italic"))
-        self.canvas.itemconfig(self.task_desc_2, font=("Cinzel", max(10, int(15 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.time_desc_2, font=("Cinzel", max(9, int(15 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.task_desc_2, font=("Cinzel", max(9, int(15 * desc_scale)), "italic"))
 
         # footer & select mode title
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
