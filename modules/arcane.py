@@ -13,6 +13,7 @@ class Arcane:
         self.bg_id = bg_id
         self.txt_id = txt_id
         self.tag = f"mc_{id(self)}"
+        self.scale = 1.0 # to help readjust for screen resize
 
         # blue = time-based, purple = task-based
         if color == "blue":
@@ -121,10 +122,13 @@ class Arcane:
             stipple = "gray50"
         else:
             stipple = ""
-
-        self._draw_ring(cx, cy, 130, self.angle1,  stipple, a)
-        self._draw_ring(cx, cy, 95,  self.angle2,  stipple, a)
-        self._draw_ring(cx, cy, 60,  self.angle3,  stipple, a)
+            
+        r_outer = int(130 * self.scale)
+        r_mid   = int(95  * self.scale)
+        r_inner = int(60  * self.scale)
+        self._draw_ring(cx, cy, r_outer, self.angle1, stipple, a)
+        self._draw_ring(cx, cy, r_mid,   self.angle2, stipple, a)
+        self._draw_ring(cx, cy, r_inner, self.angle3, stipple, a)
 
         # Raise button above circle
         self.canvas.tag_raise(self.bg_id)
