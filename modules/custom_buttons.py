@@ -31,9 +31,8 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     canvas.all_refs.extend([active_i, inactive_i])
 
     def on_hover(e):
+        print("hover size:", current_size)
         w_px, h_px = current_size
-        if w_px == 0:
-            return
         scaled_active = ImageTk.PhotoImage(
             active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS)
         )
@@ -43,8 +42,6 @@ def create_mode_button(canvas, x, y, text, command, width, height):
 
     def on_leave(e):
         w_px, h_px = current_size
-        if w_px == 0:
-            return
         scaled_inactive = ImageTk.PhotoImage(
             inactive_pil.resize((w_px, h_px), Image.Resampling.LANCZOS)
         )
