@@ -37,7 +37,7 @@ def create_mode_button(canvas, x, y, text, command, width, height):
             active_pil.resize((w_px, h_px), Image.Resampling.LANCZOS)
         )
         canvas.itemconfig(bg_id, image=scaled_active)
-        canvas.itemconfig(text_id, fill=styles.PURPLE_GLOW)
+        canvas.itemconfig(text_id, fill="white")
         canvas._btn_refs[bg_id] = scaled_active
 
     def on_leave(e):
