@@ -14,12 +14,12 @@ class TaskSticky:
         self.instruction_font = ("Cinzel", 10, "italic") # for instructions :3
 
         # priority sorting
-        self.priority_levels = ["None", "Low", "Medium", "High"]
+        self.priority_levels = ["None", "Low", "Medium", "High", "Long-Term"]
         # HEXTECH inspired colors
         self.priority_colors = {
             "None":     {"bullet": "#9b6dff", "bg": "#120921", "entry_fg": "#9b6dff"},
-            "Low":      {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
-            "Medium":   {"bullet": "#c084f5", "bg": "#1a0f2e", "entry_fg": "#d9a8ff"},
+            "Low":      {"bullet": "#c084f5", "bg": "#1a0f2e", "entrly_fg": "#d9a8ff"},
+            "Medium":   {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
             "High":     {"bullet": "#e8c96a", "bg": "#1c1608", "entry_fg": "#f5e09a"},
             "LongTerm": {"bullet": "#7c4fd4", "bg": "#150d2a", "entry_fg": "#a87df5"},
         }
@@ -44,10 +44,8 @@ class TaskSticky:
         self.setup_input_line()
 
         def _global_right_click(e):
-            print("RIGHT CLICK HIT", e.widget, type(e.widget))
             widget = e.widget
             row = widget if isinstance(widget, tk.Frame) and not getattr(widget, 'is_placeholder', False) else getattr(widget, 'master', None)
-            print("ROW FOUND:", row, "in get_task_rows:", row in self.get_task_rows() if row else "N/A")
             if row and isinstance(row, tk.Frame) and row != self.input_frame and not getattr(row, 'is_placeholder', False) and row in self.get_task_rows():
                 row.destroy()
                 self.save_tasks()
@@ -336,7 +334,9 @@ class TaskSticky:
     # ── Priority ───────────────────────────────────────────────────────────────
 
     def cycle_priority(self, row, btn):
-        """Cycle priority: None -> Low -> Medium -> High -> None"""
+        """
+        Cycle priority: None -> Low -> Medium -> High --> Longterm -> None
+        """
         current = row.priority
         levels = self.priority_levels
         next_idx = (levels.index(current) + 1) % len(levels)
@@ -368,7 +368,9 @@ class TaskSticky:
         self.save_tasks()
 
     def darken_color(self, hex_color, factor=0.3):
-        """Return desaturated/darkened version for completed tasks."""
+        """
+        Return desaturated/darkened version for completed tasks.
+        """
         hex_color = hex_color.lstrip('#')
         r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
         grey = int(r * 0.299 + g * 0.587 + b * 0.114)
@@ -379,7 +381,9 @@ class TaskSticky:
         return f"#{r:02x}{g:02x}{b:02x}"
 
     def toggle_strike(self, entry_widget, circle_widget, row):
-        """Toggle strikethrough. Striked text/bullet become darkened priority color."""
+        """
+        Toggle strikethrough. Striked text/bullet become darkened priority color.
+        """
         current_font = entry_widget.cget("font")
         priority = getattr(row, "priority", "None")
         original_fg = self.priority_colors[priority]["entry_fg"]
