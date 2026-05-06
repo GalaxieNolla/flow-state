@@ -205,7 +205,7 @@ class TaskSticky:
             self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
-        def start_drag(self, event, row):
+    def start_drag(self, event, row):
         """
         Begin drag: store the row and initial mouse position.
         """
