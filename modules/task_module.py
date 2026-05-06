@@ -17,10 +17,10 @@ class TaskSticky:
         self.priority_levels = ["None", "Low", "Medium", "High"]
         self.priority_colors = {
             "None": {"bullet": "#c37aff", "bg": "#120921", "entry_fg": "#c37aff"},
-            "Low": {"bullet": "#6a9fb5", "bg": "#1a2a36", "entry_fg": "#aaccdd"},
-            "Medium": {"bullet": "#e5b567", "bg": "#2a2416", "entry_fg": "#f5d98f"},
-            "High": {"bullet": "#e35f5f", "bg": "#2e1a1a", "entry_fg": "#ffaaaa"},
-            "LongTerm": {"bullet": "#b381d3", "bg": "#2a1f33", "entry_fg": "#dcb5ff"},  # extra
+            "Low": {"bullet": "#5bc8af", "bg": "#0f2a28", "entry_fg": "#8eded0"},
+            "Medium": {"bullet": "#e8825a", "bg": "#2a1a0f", "entry_fg": "#f5aa88"},
+            "High": {"bullet": "#d45a8a", "bg": "#2a0f1a", "entry_fg": "#f598bb"},
+            "LongTerm": {"bullet": "#b381d3", "bg": "#2a1f33", "entry_fg": "#dcb5ff"},
         }
 
     def open(self):
