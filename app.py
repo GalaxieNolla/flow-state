@@ -179,7 +179,7 @@ class FlowApp:
         self.canvas.config(width=w, height=h) #can remove this line w/o any resizing errors (?)
         
         # Background
-        img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
+        img = Image.open("visuals/arcane background.png").resize((w, h), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(img)
         self.canvas.itemconfig(self.bg_item, image=self.bg_image)
         self.canvas.coords(self.bg_item, 0, 0) # essentially, left corner = pivot 
