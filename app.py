@@ -29,6 +29,7 @@ class FlowApp:
         self.canvas.pack(fill="both", expand=True)
         self.root.configure(bg="#0a0514")
         self.canvas.configure(bg="#0a0514")
+        self.canvas.all_refs = [] # properly initialize
 
         # Background
         self.bg_image = ImageTk.PhotoImage(
@@ -145,7 +146,8 @@ class FlowApp:
         if event.widget != self.root:
             return
         w, h = event.width, event.height
-        print(f"ROOT: {w}x{h} | CANVAS: {self.canvas.winfo_width()}x{self.canvas.winfo_height()}")
+        self.canvas.all_refs = [] # clear 
+        # DEBUG print(f"ROOT: {w}x{h} | CANVAS: {self.canvas.winfo_width()}x{self.canvas.winfo_height()}")
 
         self.canvas.config(width=w, height=h)
         
