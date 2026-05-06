@@ -46,13 +46,13 @@ class FlowApp:
         self.timer_manager = StudyTimer(self.root, self.canvas, self)
 
         # ── Main Menu Buttons ─────────────────────────────────────────────────
-        self.leaderboard_btn_id = create_mode_button(
+        self.leaderboard_btn_id, self.leaderboard_txt_id, self.leaderboard_active_pil, self.leaderboard_inactive_pil = create_mode_button(
             self.canvas, 256, 100, "Leaderboard", self.leaderboard.open
         )
-        self.time_btn_id = create_mode_button(
+        self.time_btn_id, self.time_txt_id, self.time_active_pil, self.time_inactive_pil = create_mode_button(
             self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode()
         )
-        self.task_btn_id = create_mode_button(
+        self.task_btn_id, self.task_txt_id, self.task_active_pil, self.task_inactive_pil = create_mode_button(
             self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open()
         )
 
@@ -135,27 +135,47 @@ class FlowApp:
     # ── MISC ──────────────────────────────────────────────────────────────────
 
     def _on_resize(self, event):
-        if event.widget == self.root:
-            w, h = event.width, event.height
-            
-            # Background
-            img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
-            self.bg_image = ImageTk.PhotoImage(img)
-            self.canvas.itemconfig(self.bg_item, image=self.bg_image)
-            self.canvas.coords(self.dim_overlay, 0, 0, w, h)
+        if event.widget != self.root:
+            return
+        w, h = event.width, event.height
     
-            # Main menu items (i.e. buttons)
-            cx = w // 2
-            self.canvas.coords(self.leaderboard_btn_id, cx, int(h * 0.15))
-            self.canvas.coords(self.time_btn_id, int(w * 0.27), int(h * 0.28))
-            self.canvas.coords(self.task_btn_id, int(w * 0.73), int(h * 0.28))
-            self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
+        # Background
+        img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
+        self.bg_image = ImageTk.PhotoImage(img)
+        self.canvas.itemconfig(self.bg_item, image=self.bg_image)
+        self.canvas.coords(self.dim_overlay, 0, 0, w, h)
     
-            # footer
-            self.canvas.coords(
-                self.canvas.find_withtag("all")[-1],  # mode toggle window
-                cx, int(h * 0.92)
-            )
+        # Scale button images to 17% of window width, fixed aspect ratio
+        btn_w = max(160, int(w * 0.17))
+        btn_h = max(60, int(btn_w * 90 / 220))  # maintain original 220:90 ratio
+        btn_size = (btn_w, btn_h)
+    
+        def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, x, y):
+            inactive_i = ImageTk.PhotoImage(inactive_pil.resize(btn_size, Image.Resampling.LANCZOS))
+            active_i   = ImageTk.PhotoImage(active_pil.resize(btn_size, Image.Resampling.LANCZOS))
+            self.canvas.itemconfig(bg_id, image=inactive_i)
+            self.canvas.coords(bg_id, x, y)
+            self.canvas.coords(txt_id, x, y)   # text always centered on same point
+            # Keep reference alive
+            self.canvas.all_refs.extend([inactive_i, active_i])
+    
+        cx = w // 2
+        lb_x, lb_y   = cx,              int(h * 0.15)
+        time_x, time_y = int(w * 0.27), int(h * 0.28)
+        task_x, task_y = int(w * 0.73), int(h * 0.28)
+    
+        _rescale_btn(self.leaderboard_btn_id, self.leaderboard_txt_id,
+                     self.leaderboard_active_pil, self.leaderboard_inactive_pil, lb_x, lb_y)
+        _rescale_btn(self.time_btn_id, self.time_txt_id,
+                     self.time_active_pil, self.time_inactive_pil, time_x, time_y)
+        _rescale_btn(self.task_btn_id, self.task_txt_id,
+                     self.task_active_pil, self.task_inactive_pil, task_x, task_y)
+    
+        self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
+    
+        # Footer
+        all_items = self.canvas.find_all()
+        self.canvas.coords(all_items[-1], cx, int(h * 0.92))
 
 if __name__ == "__main__":
     root = tk.Tk()
