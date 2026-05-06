@@ -11,7 +11,7 @@ def create_mode_button(canvas, x, y, text, command, width, height):
 
     size_act = (width, height)
     size_in = (width - 40, height - 10)
-    current_size = [width - 40, height - 10]
+    current_size = [width - 100, height - 10]
 
     inactive_i = ImageTk.PhotoImage(inactive_pil.resize(size_in, Image.Resampling.LANCZOS))
     active_i   = ImageTk.PhotoImage(active_pil.resize(size_act, Image.Resampling.LANCZOS))
