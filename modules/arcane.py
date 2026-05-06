@@ -104,16 +104,13 @@ class Arcane:
         self.canvas.delete(self.tag)
         if self.alpha <= 0:
             return
-
-        # Get button position from canvas
+    
         coords = self.canvas.coords(self.bg_id)
         if not coords:
             return
         cx, cy = coords[0], coords[1]
-
-        a = self.alpha  # 0–1
-
-        # Choose stipple based on alpha
+    
+        a = self.alpha
         if a < 0.33:
             stipple = "gray12"
         elif a < 0.66:
@@ -122,88 +119,66 @@ class Arcane:
             stipple = "gray50"
         else:
             stipple = ""
-            
+    
         r_outer = int(130 * self.scale)
         r_mid   = int(95  * self.scale)
         r_inner = int(60  * self.scale)
-        self._draw_ring(cx, cy, r_outer, self.angle1, stipple, a)
-        self._draw_ring(cx, cy, r_mid,   self.angle2, stipple, a)
-        self._draw_ring(cx, cy, r_inner, self.angle3, stipple, a)
-
-        # Raise button above circle
+    
+        rune_font_outer = max(6, int(8 * self.scale))   # add these
+        rune_font_mid   = max(5, int(7 * self.scale))
+    
+        self._draw_ring(cx, cy, r_outer, self.angle1, stipple, a, rune_font_outer, is_outer=True)
+        self._draw_ring(cx, cy, r_mid,   self.angle2, stipple, a, rune_font_mid,   is_mid=True)
+        self._draw_ring(cx, cy, r_inner, self.angle3, stipple, a, 0)
+    
         self.canvas.tag_raise(self.bg_id)
         self.canvas.tag_raise(self.txt_id)
 
-    def _draw_ring(self, cx, cy, r, angle_offset, stipple, a):
+    def _draw_ring(self, cx, cy, r, angle_offset, stipple, a, rune_font=7, is_outer=False, is_mid=False):
         tag = self.tag
-
-        # Outer circle
+    
         self.canvas.create_oval(
             cx - r, cy - r, cx + r, cy + r,
-            outline=self.col_outer if r == 130 else (self.col_mid if r == 95 else self.col_inner),
-            width=1 if r < 130 else 2,
+            outline=self.col_outer if is_outer else (self.col_mid if is_mid else self.col_inner),
+            width=2 if is_outer else 1,
             fill="", tags=tag
         )
-
-        # Nodes & polygon for outer ring only
-        if r == 130:
+    
+        if is_outer:
             n_points = 6
             nodes = []
             for i in range(n_points):
-                ang = math.radians(angle_offset + i * 360 / n_points)
+                ang = math.radians(angle_offset + i * 60)
                 nx = cx + r * math.cos(ang)
                 ny = cy + r * math.sin(ang)
                 nodes.append((nx, ny))
-                self.canvas.create_oval(
-                    nx - 4, ny - 4, nx + 4, ny + 4,
-                    outline=self.col_node, width=1, fill="", tags=tag
-                )
-            # Two overlapping triangles (Star of David style)
+                self.canvas.create_oval(nx-3, ny-3, nx+3, ny+3,
+                    outline=self.col_node, width=1, fill="", tags=tag)
             t1 = [nodes[0], nodes[2], nodes[4]]
             t2 = [nodes[1], nodes[3], nodes[5]]
             for tri in (t1, t2):
                 pts = [c for p in tri for c in p]
-                self.canvas.create_polygon(
-                    *pts, outline=self.col_poly,
-                    fill="", width=1, tags=tag
-                )
-
-        # Triangle for mid ring
-        if r == 95:
-            n_points = 3
+                self.canvas.create_polygon(*pts, outline=self.col_poly, fill="", width=1, tags=tag)
+    
+            # Runes just inside the outer ring
+            for i in range(24):
+                ang = math.radians(angle_offset + i * 15)
+                rx = cx + (r - 12) * math.cos(ang)   # inside the ring, not outside
+                ry = cy + (r - 12) * math.sin(ang)
+                self.canvas.create_text(rx, ry, text=RUNES[i % len(RUNES)],
+                    font=("Arial", rune_font), fill=self.col_rune, tags=tag)
+    
+        if is_mid:
             pts = []
-            for i in range(n_points):
+            for i in range(3):
                 ang = math.radians(angle_offset + i * 120)
                 pts.extend([cx + r * math.cos(ang), cy + r * math.sin(ang)])
-            self.canvas.create_polygon(
-                *pts, outline=self.col_poly,
-                fill="", width=1, tags=tag
-            )
-
-        # Runic text around outer ring
-        if r == 130:
-            n_runes = 24
-            for i in range(n_runes):
-                ang = math.radians(angle_offset + i * (360 / n_runes))
-                rx = cx + (r + 10) * math.cos(ang)
-                ry = cy + (r + 10) * math.sin(ang)
-                rune = RUNES[i % len(RUNES)]
-                self.canvas.create_text(
-                    rx, ry, text=rune,
-                    font=("Arial", 7), fill=self.col_rune,
-                    tags=tag
-                )
-
-        # Runic text around mid ring  
-        if r == 95:
-            n_runes = 16
-            for i in range(n_runes):
-                ang = math.radians(angle_offset + i * (360 / n_runes))
-                rx = cx + (r - 12) * math.cos(ang)
-                ry = cy + (r - 12) * math.sin(ang)
-                rune = RUNES[(i + 8) % len(RUNES)]
-                self.canvas.create_text(
-                    rx, ry, text=rune,
-                    font=("Arial", 6), fill=self.col_rune,
-                    tags=tag
-                )
+            self.canvas.create_polygon(*pts, outline=self.col_poly, fill="", width=1, tags=tag)
+    
+            # Runes inside mid ring
+            for i in range(12):
+                ang = math.radians(angle_offset + i * 30)
+                rx = cx + (r - 10) * math.cos(ang)
+                ry = cy + (r - 10) * math.sin(ang)
+                self.canvas.create_text(rx, ry, text=RUNES[(i + 8) % len(RUNES)],
+                    font=("Arial", rune_font), fill=self.col_rune, tags=tag)
