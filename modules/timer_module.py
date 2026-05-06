@@ -169,10 +169,13 @@ class StudyTimer:
         self.current_round = 0
 
         self.root.update_idletasks()
+        self.root.after(10, self._draw_setup)
+        self.root.bind("<Configure>", self._on_setup_resize) #resizing semantics
+
+    def _draw_setup(self):
+        self._clear_ui()
         self._draw_nav_bar()
         self._draw_setup_controls()
-
-        self.root.bind("<Configure>", self._on_setup_resize) #resizing semantics
 
     def _on_setup_resize(self, event):
         if event.widget != self.root:
