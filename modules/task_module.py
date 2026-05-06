@@ -29,6 +29,7 @@ class TaskSticky:
             return
 
         self.window = tk.Toplevel(self.root)
+        self.window.bind("<Button-3>", lambda e: "break") #DEBUG DELETE
         self.window.title("Tasks")
         self.window.geometry("350x450")
         self.window.configure(bg="#120921")
