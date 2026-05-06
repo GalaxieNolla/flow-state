@@ -2,10 +2,12 @@ import tkinter as tk
 from visuals import styles
 from PIL import Image, ImageTk
 
+
 class StudyTimer:
     def __init__(self, root, canvas, app):
         self.root = root
         self.canvas = canvas
+        self.app = app
 
         # Timer state
         self.seconds_left = 0
@@ -15,50 +17,44 @@ class StudyTimer:
         self.is_paused = False
         self.after_id = None
         self.center_image = None
-        self.ui_widgets = []  # track widgets
 
-        # Pomodoro config (defaults)
+        # Pomodoro config
         self.study_minutes = 25
-        self.rounds_goal = 4
-        self.current_round = 0  # completed study rounds
-
-        # Short break = 5min, long break = 15min (standard)
         self.short_break_mins = 5
         self.long_break_mins = 15
+        self.rounds_goal = 4
+        self.current_round = 0
 
-        # Canvas items
+        self.ui_widgets = []
+
+        # ── Persistent canvas text items ──────────────────────────────────────
         self.clock_display = self.canvas.create_text(
-            256, 356, text="",
+            256, 310, text="",
             font=("Courier New", 52, "bold"),
             fill=styles.PURPLE_GLOW,
             state="hidden"
         )
         self.session_label_id = self.canvas.create_text(
-            256, 295, text="",
-            font=("Cinzel", 12, "bold"),
+            256, 255, text="",
+            font=("Cinzel", 11, "bold"),
             fill="#a78bfa",
             state="hidden"
         )
-        self.round_dots_id = self.canvas.create_text(
-            256, 415, text="",
-            font=("Cinzel", 16),
-            fill=styles.PURPLE_GLOW,
+        self.round_label_id = self.canvas.create_text(
+            256, 370, text="",
+            font=("Cinzel", 11),
+            fill="#6b4c8a",
             state="hidden"
         )
 
-    # ── Helpers ───────────────────────────────────────────────────────────────
+    # ── Widget helpers ────────────────────────────────────────────────────────
+
     def _place(self, widget, x, y):
-        """
-        Place widget on canvas & track.
-        """
         win_id = self.canvas.create_window(x, y, window=widget)
         self.ui_widgets.append((widget, win_id))
         return win_id
 
     def _clear_ui(self):
-        """
-        Remove all buttons & labels from main screen
-        """
         for widget, win_id in self.ui_widgets:
             try:
                 self.canvas.delete(win_id)
@@ -69,23 +65,93 @@ class StudyTimer:
         self.canvas.delete("timer_elements")
         self.canvas.delete("timer_bg")
         self.canvas.delete("timer_ring")
+        self.canvas.delete("progress_bar")
 
-    def _hide_canvas_items(self):
+    def _hide_clock(self):
         self.canvas.itemconfig(self.clock_display, state="hidden")
         self.canvas.itemconfig(self.session_label_id, state="hidden")
-        self.canvas.itemconfig(self.round_dots_id, state="hidden")
+        self.canvas.itemconfig(self.round_label_id, state="hidden")
 
-    def _show_canvas_items(self):
+    def _show_clock(self):
         self.canvas.itemconfig(self.clock_display, state="normal")
         self.canvas.itemconfig(self.session_label_id, state="normal")
-        self.canvas.itemconfig(self.round_dots_id, state="normal")
+        self.canvas.itemconfig(self.round_label_id, state="normal")
+
+    def stop(self):
+        if self.after_id:
+            self.root.after_cancel(self.after_id)
+            self.after_id = None
+        self.is_running = False
+        self.is_paused = False
+        self._clear_ui()
+        self._hide_clock()
+
+    # ── Progress Bar ──────────────────────────────────────────────────────────
+
+    def _draw_progress_bar(self):
+        """
+        Responsive progress bar over all N rounds. Incrementally increases per round.
+        """
+        self.canvas.delete("progress_bar")
+        if self.is_break:
+            return
+
+        w = self.canvas.winfo_width() or 512
+        bar_h = 6        # bar height
+        tick_h = 12      # tick mark height (extends above+below bar)
+        y = 18           # top of bar
+        color = styles.PURPLE_GLOW
+        bg_color = "#1e0f33"
+
+        # Background track
+        self.canvas.create_rectangle(
+            0, y, w, y + bar_h,
+            fill=bg_color, outline="",
+            tags="progress_bar"
+        )
+
+        # Completed rounds — fully filled segments
+        seg_w = w / self.rounds_goal
+        for r in range(self.current_round):
+            x0 = r * seg_w
+            x1 = (r + 1) * seg_w
+            self.canvas.create_rectangle(
+                x0, y, x1, y + bar_h,
+                fill=color, outline="",
+                tags="progress_bar"
+            )
+
+        # Current round — fills based on elapsed time
+        if not self.is_break and self.total_seconds > 0:
+            elapsed_frac = 1.0 - (self.seconds_left / self.total_seconds)
+            x0 = self.current_round * seg_w
+            x1 = x0 + seg_w * elapsed_frac
+            self.canvas.create_rectangle(
+                x0, y, x1, y + bar_h,
+                fill=color, outline="",
+                tags="progress_bar"
+            )
+
+        # Tick marks
+        for r in range(1, self.rounds_goal):
+            x = r * seg_w
+            self.canvas.create_line(
+                x, y - (tick_h - bar_h) // 2,
+                x, y + bar_h + (tick_h - bar_h) // 2,
+                fill="#3d2b56", width=2,
+                tags="progress_bar"
+            )
+
+        # Raise clock items above bar
+        self.canvas.tag_raise(self.session_label_id)
+        self.canvas.tag_raise(self.clock_display)
+        self.canvas.tag_raise(self.round_label_id)
 
     # ── Setup Screen ──────────────────────────────────────────────────────────
 
     def show_setup(self):
-        """Setup screen: preset time + rounds selector."""
         self._clear_ui()
-        self._hide_canvas_items()
+        self._hide_clock()
         if self.after_id:
             self.root.after_cancel(self.after_id)
             self.after_id = None
@@ -93,108 +159,152 @@ class StudyTimer:
         self.is_paused = False
         self.current_round = 0
 
-        # ── Study time label
+        self._draw_nav_bar()
+        self._draw_setup_controls()
+
+    def _draw_nav_bar(self):
+        menu_btn = tk.Label(
+            self.root, text="← Menu",
+            font=("Cinzel", 11, "bold"),
+            fg="#6b4c8a", bg="#0a0514",
+            cursor="hand2", padx=8, pady=4
+        )
+        menu_btn.bind("<Enter>", lambda e: menu_btn.config(fg=styles.PURPLE_GLOW))
+        menu_btn.bind("<Leave>", lambda e: menu_btn.config(fg="#6b4c8a"))
+        menu_btn.bind("<Button-1>", lambda e: self.app.return_to_menu())
+        self._place(menu_btn, x=55, y=50)
+
+        lb_btn = tk.Label(
+            self.root, text="Leaderboard →",
+            font=("Cinzel", 11, "bold"),
+            fg="#6b4c8a", bg="#0a0514",
+            cursor="hand2", padx=8, pady=4
+        )
+        lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
+        lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
+        lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
+        self._place(lb_btn, x=450, y=50)
+
+    def _draw_setup_controls(self):
+        # Title
+        title = tk.Label(
+            self.root, text="POMODORO",
+            font=("Cinzel", 22, "bold"),
+            fg=styles.PURPLE_GLOW, bg="#0a0514"
+        )
+        self._place(title, x=256, y=180)
+
+        # Study time label
         time_label = tk.Label(
             self.root, text="STUDY TIME",
-            font=("Cinzel", 10, "bold"),
-            bg="#120921", fg="#6b4c8a"
+            font=("Cinzel", 9, "bold"),
+            fg="#6b4c8a", bg="#0a0514"
         )
-        self._place(time_label, x=256, y=270)
+        self._place(time_label, x=256, y=225)
 
-        # ── Preset time buttons
-        preset_frame = tk.Frame(self.root, bg="#120921")
+        # Preset buttons
+        preset_frame = tk.Frame(self.root, bg="#0a0514")
         presets = [15, 25, 45, 60]
-        self.selected_time = tk.IntVar(value=self.study_minutes)
+        self._preset_btns = {}
 
         for mins in presets:
             is_sel = mins == self.study_minutes
             btn = tk.Label(
                 preset_frame,
                 text=f"{mins}",
-                font=("Cinzel", 15, "bold"),
-                fg=styles.PURPLE_GLOW if is_sel else "#4a3a6a",
-                bg="#1e0f33" if is_sel else "#120921",
-                width=3, pady=4,
-                relief="flat",
+                font=("Cinzel", 14, "bold"),
+                fg="#120921" if is_sel else "#4a3a6a",
+                bg=styles.PURPLE_GLOW if is_sel else "#1a0f2e",
+                width=3, pady=5,
                 cursor="hand2"
             )
-            btn.pack(side="left", padx=4)
-            btn.bind("<Button-1>", lambda e, m=mins, b=btn: self._select_time(m))
+            btn.pack(side="left", padx=5)
+            self._preset_btns[mins] = btn
 
-        self._preset_btns = {m: preset_frame.winfo_children()[i] for i, m in enumerate(presets)}
-        self._place(preset_frame, x=256, y=305)
+        for mins, btn in self._preset_btns.items():
+            btn.bind("<Button-1>", lambda e, m=mins: self._select_time(m))
 
-        # ── Rounds label
+        self._place(preset_frame, x=256, y=258)
+
+        # Rounds label
         rounds_label = tk.Label(
             self.root, text="ROUNDS",
-            font=("Cinzel", 10, "bold"),
-            bg="#120921", fg="#6b4c8a"
+            font=("Cinzel", 9, "bold"),
+            fg="#6b4c8a", bg="#0a0514"
         )
-        self._place(rounds_label, x=256, y=340)
+        self._place(rounds_label, x=256, y=298)
 
-        # ── Rounds selector
-        rounds_frame = tk.Frame(self.root, bg="#120921")
+        # Rounds selector
+        rounds_frame = tk.Frame(self.root, bg="#0a0514")
 
-        minus_btn = tk.Label(rounds_frame, text="−", font=("Cinzel", 18, "bold"),
-                             fg="#a78bfa", bg="#120921", cursor="hand2", padx=8)
+        minus_btn = tk.Label(
+            rounds_frame, text="−",
+            font=("Cinzel", 16, "bold"),
+            fg="#a78bfa", bg="#0a0514",
+            cursor="hand2", padx=10
+        )
         minus_btn.pack(side="left")
         minus_btn.bind("<Button-1>", lambda e: self._change_rounds(-1))
 
-        self.rounds_display = tk.Label(rounds_frame, text=str(self.rounds_goal),
-                                       font=("Cinzel", 18, "bold"),
-                                       fg=styles.PURPLE_GLOW, bg="#120921", width=2)
+        self.rounds_display = tk.Label(
+            rounds_frame, text=str(self.rounds_goal),
+            font=("Cinzel", 16, "bold"),
+            fg=styles.PURPLE_GLOW, bg="#0a0514", width=2
+        )
         self.rounds_display.pack(side="left")
 
-        plus_btn = tk.Label(rounds_frame, text="+", font=("Cinzel", 18, "bold"),
-                            fg="#a78bfa", bg="#120921", cursor="hand2", padx=8)
+        plus_btn = tk.Label(
+            rounds_frame, text="+",
+            font=("Cinzel", 16, "bold"),
+            fg="#a78bfa", bg="#0a0514",
+            cursor="hand2", padx=10
+        )
         plus_btn.pack(side="left")
         plus_btn.bind("<Button-1>", lambda e: self._change_rounds(1))
 
-        self._place(rounds_frame, x=256, y=370)
+        self._place(rounds_frame, x=256, y=328)
 
-        # ── Break info line
-        break_info = tk.Label(
+        # Break info
+        self._break_info = tk.Label(
             self.root,
-            text=f"5 min breaks · long break after {self.rounds_goal} rounds",
-            font=("Cinzel", 9, "italic"),
-            bg="#120921", fg="#4a3a6a"
+            text=f"5 min breaks  ·  15 min long break after {self.rounds_goal} rounds",
+            font=("Cinzel", 8, "italic"),
+            fg="#3d2b56", bg="#0a0514"
         )
-        self._break_info_label = break_info
-        self._place(break_info, x=256, y=398)
+        self._place(self._break_info, x=256, y=358)
 
-        # ── Start button
+        # Start button
         start_btn = tk.Label(
-            self.root, text="▶  START",
+            self.root, text="▶   START",
             font=("Cinzel", 13, "bold"),
             fg="#120921", bg=styles.PURPLE_GLOW,
-            padx=18, pady=6,
+            padx=22, pady=8,
             cursor="hand2"
         )
         start_btn.bind("<Button-1>", lambda e: self._start_session())
         start_btn.bind("<Enter>", lambda e: start_btn.config(bg="#b06eff"))
         start_btn.bind("<Leave>", lambda e: start_btn.config(bg=styles.PURPLE_GLOW))
-        self._place(start_btn, x=256, y=435)
+        self._place(start_btn, x=256, y=410)
 
     def _select_time(self, mins):
         self.study_minutes = mins
         for m, btn in self._preset_btns.items():
             if m == mins:
-                btn.config(fg=styles.PURPLE_GLOW, bg="#1e0f33")
+                btn.config(fg="#120921", bg=styles.PURPLE_GLOW)
             else:
-                btn.config(fg="#4a3a6a", bg="#120921")
+                btn.config(fg="#4a3a6a", bg="#1a0f2e")
 
     def _change_rounds(self, delta):
         self.rounds_goal = max(1, min(8, self.rounds_goal + delta))
         self.rounds_display.config(text=str(self.rounds_goal))
-        if hasattr(self, '_break_info_label'):
-            self._break_info_label.config(
-                text=f"5 min breaks · long break after {self.rounds_goal} rounds"
+        if hasattr(self, '_break_info'):
+            self._break_info.config(
+                text=f"5 min breaks  ·  15 min long break after {self.rounds_goal} rounds"
             )
 
-    # ── Session Start ─────────────────────────────────────────────────────────
+    # ── Session flow ──────────────────────────────────────────────────────────
 
     def _start_session(self):
-        """Begin the first study round."""
         self._clear_ui()
         self.current_round = 0
         self.is_break = False
@@ -202,15 +312,13 @@ class StudyTimer:
 
     def _begin_study(self):
         self.is_break = False
-        secs = self.study_minutes * 60
-        self._launch_timer(secs, label="FOCUS")
+        self._launch_timer(self.study_minutes * 60, label="FOCUS")
 
     def _begin_break(self):
         self.is_break = True
-        # Long break after completing all rounds
         if self.current_round >= self.rounds_goal:
             secs = self.long_break_mins * 60
-            label = f"LONG BREAK"
+            label = "LONG BREAK"
         else:
             secs = self.short_break_mins * 60
             label = "SHORT BREAK"
@@ -222,19 +330,14 @@ class StudyTimer:
         self.is_running = True
         self.is_paused = False
 
-        # Update session label color
-        if self.is_break:
-            self.canvas.itemconfig(self.session_label_id, fill="#00cccc")
-            self.canvas.itemconfig(self.clock_display, fill="#00cccc")
-        else:
-            self.canvas.itemconfig(self.session_label_id, fill="#a78bfa")
-            self.canvas.itemconfig(self.clock_display, fill=styles.PURPLE_GLOW)
-
-        self.canvas.itemconfig(self.session_label_id, text=label)
-        self._show_canvas_items()
-        self._update_round_dots()
-        self._draw_visuals()
+        color = "#00cccc" if self.is_break else styles.PURPLE_GLOW
+        self.canvas.itemconfig(self.clock_display, fill=color)
+        self.canvas.itemconfig(self.session_label_id, text=label, fill=color)
+        self._update_round_label()
+        self._show_clock()
+        self._draw_timer_visuals()
         self._show_controls()
+        self._draw_progress_bar()
         self._tick()
 
     # ── Tick ──────────────────────────────────────────────────────────────────
@@ -246,6 +349,7 @@ class StudyTimer:
             mins, secs = divmod(self.seconds_left, 60)
             self.canvas.itemconfig(self.clock_display, text=f"{mins:02d}:{secs:02d}")
             self._update_ring()
+            self._draw_progress_bar()
             self.seconds_left -= 1
             self.after_id = self.root.after(1000, self._tick)
         else:
@@ -253,26 +357,17 @@ class StudyTimer:
 
     def _handle_cycle(self):
         if not self.is_break:
-            # Completed a study round
             self.current_round += 1
-            self._update_round_dots()
-            if self.current_round >= self.rounds_goal:
-                # All rounds done — long break then reset
-                self._begin_break()
-            else:
-                self._begin_break()
+            self._update_round_label()
+            self._begin_break()
         else:
-            # Break finished
             if self.current_round >= self.rounds_goal:
-                # After long break, reset everything
                 self.current_round = 0
             self._begin_study()
 
     # ── Controls ──────────────────────────────────────────────────────────────
 
     def _show_controls(self):
-        """Show pause/reset/skip buttons below the ring."""
-        # Clear any existing controls
         for widget, win_id in self.ui_widgets:
             try:
                 self.canvas.delete(win_id)
@@ -281,39 +376,49 @@ class StudyTimer:
                 pass
         self.ui_widgets.clear()
 
-        ctrl_frame = tk.Frame(self.root, bg="#120921")
+        self._draw_nav_bar()
 
-        # Pause/Resume
+        ctrl_frame = tk.Frame(self.root, bg="#0a0514")
+
         self.pause_btn = tk.Label(
             ctrl_frame, text="⏸",
-            font=("Courier New", 20),
-            fg="#a78bfa", bg="#120921",
-            cursor="hand2", padx=10
+            font=("Courier New", 22),
+            fg="#a78bfa", bg="#0a0514",
+            cursor="hand2", padx=12
         )
         self.pause_btn.pack(side="left")
         self.pause_btn.bind("<Button-1>", lambda e: self._toggle_pause())
 
-        # Reset
         reset_btn = tk.Label(
             ctrl_frame, text="↺",
-            font=("Courier New", 20),
-            fg="#a78bfa", bg="#120921",
-            cursor="hand2", padx=10
+            font=("Courier New", 22),
+            fg="#a78bfa", bg="#0a0514",
+            cursor="hand2", padx=12
         )
         reset_btn.pack(side="left")
         reset_btn.bind("<Button-1>", lambda e: self.show_setup())
 
-        # Skip
         skip_btn = tk.Label(
             ctrl_frame, text="⏭",
-            font=("Courier New", 20),
-            fg="#a78bfa", bg="#120921",
-            cursor="hand2", padx=10
+            font=("Courier New", 22),
+            fg="#a78bfa", bg="#0a0514",
+            cursor="hand2", padx=12
         )
         skip_btn.pack(side="left")
         skip_btn.bind("<Button-1>", lambda e: self._skip())
 
-        self._place(ctrl_frame, x=256, y=455)
+        self._place(ctrl_frame, x=256, y=430)
+
+        tasks_btn = tk.Label(
+            self.root, text="📋 Tasks",
+            font=("Cinzel", 10),
+            fg="#6b4c8a", bg="#0a0514",
+            cursor="hand2", padx=6
+        )
+        tasks_btn.bind("<Enter>", lambda e: tasks_btn.config(fg=styles.PURPLE_GLOW))
+        tasks_btn.bind("<Leave>", lambda e: tasks_btn.config(fg="#6b4c8a"))
+        tasks_btn.bind("<Button-1>", lambda e: self.app.task_manager.open())
+        self._place(tasks_btn, x=256, y=470)
 
     def _toggle_pause(self):
         if self.is_paused:
@@ -327,12 +432,11 @@ class StudyTimer:
                 self.root.after_cancel(self.after_id)
 
     def _skip(self):
-        """Skip current session (study → break or break → study)."""
         if self.after_id:
             self.root.after_cancel(self.after_id)
         if not self.is_break:
             self.current_round += 1
-            self._update_round_dots()
+            self._update_round_label()
             self._begin_break()
         else:
             if self.current_round >= self.rounds_goal:
@@ -341,11 +445,15 @@ class StudyTimer:
 
     # ── Visuals ───────────────────────────────────────────────────────────────
 
-    def _draw_visuals(self):
-        """Draw the dark circle background behind the clock."""
+    def _draw_timer_visuals(self):
         self.canvas.delete("timer_bg")
+        # Center the ring in the window
+        w = self.canvas.winfo_width() or 512
+        h = self.canvas.winfo_height() or 512
+        cx, cy = w // 2, h // 2
+
         self.canvas.create_oval(
-            165, 265, 347, 447,
+            cx - 91, cy - 91, cx + 91, cy + 91,
             fill="#0b0514", outline="",
             tags=("timer_bg", "timer_elements")
         )
@@ -353,12 +461,12 @@ class StudyTimer:
             self._load_monkey()
         if self.center_image:
             self.canvas.create_image(
-                256, 356, image=self.center_image,
+                cx, cy, image=self.center_image,
                 tags=("timer_bg", "timer_elements")
             )
-        self.canvas.tag_raise(self.clock_display)
         self.canvas.tag_raise(self.session_label_id)
-        self.canvas.tag_raise(self.round_dots_id)
+        self.canvas.tag_raise(self.clock_display)
+        self.canvas.tag_raise(self.round_label_id)
 
     def _load_monkey(self):
         try:
@@ -377,22 +485,25 @@ class StudyTimer:
             print(f"Image Error: {e}")
 
     def _update_ring(self):
+        w = self.canvas.winfo_width() or 512
+        h = self.canvas.winfo_height() or 512
+        cx, cy = w // 2, h // 2
+        r = 100
+
         extent = (self.seconds_left / self.total_seconds) * 359.9 if self.total_seconds > 0 else 0
         color = "#00cccc" if self.is_break else styles.PURPLE_GLOW
         self.canvas.delete("timer_ring")
         self.canvas.create_arc(
-            156, 256, 356, 456,
+            cx - r, cy - r, cx + r, cy + r,
             start=90, extent=extent,
             outline=color, width=8,
             style="arc",
             tags=("timer_ring", "timer_elements")
         )
-        self.canvas.tag_raise(self.clock_display)
         self.canvas.tag_raise(self.session_label_id)
-        self.canvas.tag_raise(self.round_dots_id)
+        self.canvas.tag_raise(self.clock_display)
+        self.canvas.tag_raise(self.round_label_id)
 
-    def _update_round_dots(self):
-        """Show dots: filled for completed rounds, empty for remaining."""
-        filled = "●" * self.current_round
-        empty = "○" * max(0, self.rounds_goal - self.current_round)
-        self.canvas.itemconfig(self.round_dots_id, text=filled + empty)
+    def _update_round_label(self):
+        text = f"Round {self.current_round + 1} / {self.rounds_goal}"
+        self.canvas.itemconfig(self.round_label_id, text=text)
