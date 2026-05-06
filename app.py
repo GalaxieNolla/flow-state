@@ -70,7 +70,7 @@ class FlowApp:
             256, 280,
             text="Select a mode...",
             font=("Cinzel", 20, "bold"),
-            fill="#c6c3fe"
+            fill="#febdff"
         )
 
         # Footer toggle
