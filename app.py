@@ -176,15 +176,9 @@ class FlowApp:
             self.canvas.itemconfig(txt_id, font=("Cinzel", font_size, "bold"))
             self.canvas.all_refs.extend([inactive_i, active_i])
             
-        _rescale_btn(self.leaderboard_btn_id, self.leaderboard_txt_id,
-                     self.leaderboard_active_pil, self.leaderboard_inactive_pil,
-                     self.leaderboard_base_size, lb_x, lb_y)
-        _rescale_btn(self.time_btn_id, self.time_txt_id,
-                     self.time_active_pil, self.time_inactive_pil,
-                     self.time_base_size, time_x, time_y)
-        _rescale_btn(self.task_btn_id, self.task_txt_id,
-                     self.task_active_pil, self.task_inactive_pil,
-                     self.task_base_size, task_x, task_y)
+        _rescale_btn(self.lb_btn, self.lb_txt, self.lb_active, self.lb_inactive, self.lb_base, self.lb_cur, lb_x, lb_y)
+        _rescale_btn(self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur, time_x, time_y)
+        _rescale_btn(self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur, task_x, task_y)
     
         self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
         self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
