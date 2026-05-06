@@ -42,4 +42,4 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     canvas.all_refs.extend([active_i, inactive_i])
 
     # Return all four things the caller needs to reposition + resize
-    return bg_id, text_id, active_pil, inactive_pil
+    return bg_id, text_id, active_pil, inactive_pil, size #size as a tuple
