@@ -184,11 +184,11 @@ class TaskSticky:
         priority_btn.bind("<Button-1>", lambda e, r=row, btn=priority_btn: self.cycle_priority(r, btn))
     
         # Strikethrough toggle (left bullet)
-        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn))
+        bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
     
         # Right-click to delete row
         for widget in (row, bullet_btn, task_edit, priority_btn):
-            widget.bind("<Button-3>", lambda e, r=row: self.delete_row(r))
+            widget.bind("<Button-3>", lambda e, r=row: self.delete_row(r) or "break")
     
         # Hover
         task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
@@ -198,127 +198,89 @@ class TaskSticky:
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
     
         if done:
-            self.toggle_strike(task_edit, bullet_btn)  # apply strikethrough if loaded as done
+            self.toggle_strike(task_edit, bullet_btn, row)  # apply strikethrough if loaded as done
 
         '''# Ensure input frame stays at bottom DEBUG
         if self.input_frame is not None:
             self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="bottom", pady=5)'''
 
-    def start_drag(self, event, row):
+        def start_drag(self, event, row):
         """
-        Begin drag: store row and create a placeholder.
+        Begin drag: store the row and initial mouse position.
         """
         self.drag_row = row
-        # Get all task rows (excluding input frame)
-        self.drag_rows = self.get_task_rows()
-        self.drag_start_index = self.drag_rows.index(row)
-        # Create a placeholder frame (darkened rectangle)
-        self.placeholder = tk.Frame(self.main_container, bg="#5a4a6a", height=40)  # purple greyish rectangleee
-        self.placeholder.place_forget()
-        # Store mouse offset
         self.drag_start_y = event.y_root
-        # Bind global motion and release to main container
-        self.main_container.bind("<B1-Motion>", self.on_drag_global)
-        self.main_container.bind("<ButtonRelease-1>", self.end_drag_global)
+        self.drag_threshold = 10  # Minimum pixels to move before reordering
         # Change cursor
         self.main_container.config(cursor="fleur")
+        # Bind global motion and release
+        self.main_container.bind("<B1-Motion>", self.on_drag_global)
+        self.main_container.bind("<ButtonRelease-1>", self.end_drag_global)
+        # Prevent default event handling
+        return "break"
 
     def on_drag_global(self, event):
         """
-        Move placeholder to show where the dragged row will land.
+        Move the row up/down as the mouse moves, swapping with neighbors.
         """
         if not hasattr(self, 'drag_row'):
             return
-        # Get mouse y relative to main_container
-        mouse_y = event.widget.winfo_pointery() - self.main_container.winfo_rooty()
-        # Get all task rows EXCEPT dragging one
-        rows = [r for r in self.drag_rows if r != self.drag_row]
-        # Find target index
-        target_index = 0
-        for i, r in enumerate(rows):
-            top = r.winfo_y()
-            bottom = top + r.winfo_height()
-            if mouse_y < top:
-                target_index = i
-                break
-            elif top <= mouse_y <= bottom:
-                mid = (top + bottom) / 2
-                target_index = i if mouse_y < mid else i+1
-                break
-            else:
-                target_index = i+1
-        else: # If mouse below all rows
-            target_index = len(rows)
-        self.show_placeholder_at_index(target_index)
-
-    def show_placeholder_at_index(self, index):
-        """
-        Place a darkened rectangle at the insertion point.
-        """
-        if not hasattr(self, 'placeholder'):
+        # Get current mouse y position
+        current_y = event.y_root
+        delta_y = current_y - self.drag_start_y
+        if abs(delta_y) < self.drag_threshold:
             return
-        rows = [r for r in self.drag_rows if r != self.drag_row]
-        if not rows:
-            y_pos = 5
-        elif index == 0: # Before first row
-            y_pos = rows[0].winfo_y() - 5
-        elif index >= len(rows): # After last row
-            y_pos = rows[-1].winfo_y() + rows[-1].winfo_height() + 5
-        else: # Between rows
-            prev_row = rows[index-1]
-            y_pos = prev_row.winfo_y() + prev_row.winfo_height() + 5
-        width = self.main_container.winfo_width() - 20
-        self.placeholder.place(in_=self.main_container, x=10, y=y_pos, width=width, height=35)
+        # Get all task rows (excluding input frame)
+        rows = self.get_task_rows()
+        if self.drag_row not in rows:
+            self.cleanup_drag()
+            return
+        current_index = rows.index(self.drag_row)
+        # Determine direction: moving up or down
+        if delta_y > 0 and current_index < len(rows) - 1:
+            # Moving down: swap with next row
+            target_index = current_index + 1
+            self.swap_rows(rows, current_index, target_index)
+            self.drag_start_y = event.y_root  # Reset start to prevent repeated swaps
+        elif delta_y < 0 and current_index > 0:
+            # Moving up: swap with previous row
+            target_index = current_index - 1
+            self.swap_rows(rows, current_index, target_index)
+            self.drag_start_y = event.y_root
+        return "break"
+
+    def swap_rows(self, rows, idx1, idx2):
+        """
+        Swap two rows visually and in the container, then re-pack input frame.
+        """
+        # Swap in list
+        rows[idx1], rows[idx2] = rows[idx2], rows[idx1]
+        # Repack all rows in new order
+        for r in rows:
+            r.pack_forget()
+            r.pack(fill="x", side="top", pady=2)
+        # Ensure input frame stays at bottom
+        if self.input_frame is not None:
+            self.input_frame.pack_forget()
+            self.input_frame.pack(fill="x", side="top", pady=5)
+        self.save_tasks()
 
     def end_drag_global(self, event):
         """
-        Drop the dragged row at the placeholder position.
+        Clean up drag state.
         """
-        if not hasattr(self, 'drag_row'):
-            self.cleanup_drag()
-            return
-        # Determine target index from placeholder position
-        if hasattr(self, 'placeholder') and self.placeholder.winfo_ismapped():
-            placeholder_y = self.placeholder.winfo_y()
-            rows = [r for r in self.drag_rows if r != self.drag_row]
-            target_index = 0
-            for i, r in enumerate(rows):
-                top = r.winfo_y()
-                bottom = top + r.winfo_height()
-                if placeholder_y < top:
-                    break
-                elif top <= placeholder_y <= bottom:
-                    target_index = i
-                    break
-                else:
-                    target_index = i+1
-            # Reorder rows
-            new_rows = self.drag_rows.copy()
-            new_rows.remove(self.drag_row)
-            new_rows.insert(target_index, self.drag_row)
-            # Repack all rows in new order
-            for r in new_rows:
-                r.pack_forget()
-                r.pack(fill="x", side="top", pady=2)
-            # Ensure input frame is at bottom
-            if self.input_frame is not None:
-                self.input_frame.pack_forget()
-                self.input_frame.pack(fill="x", side="top", pady=5)
-            self.save_tasks()
         self.cleanup_drag()
+        return "break"
 
     def cleanup_drag(self):
-        """Remove drag state and placeholder."""
+        """
+        Remove drag state and restore cursor.
+        """
         if hasattr(self, 'drag_row'):
             del self.drag_row
-        if hasattr(self, 'drag_rows'):
-            del self.drag_rows
-        if hasattr(self, 'drag_start_index'):
-            del self.drag_start_index
-        if hasattr(self, 'placeholder') and self.placeholder.winfo_exists():
-            self.placeholder.destroy()
-            del self.placeholder
+        if hasattr(self, 'drag_start_y'):
+            del self.drag_start_y
         self.main_container.unbind("<B1-Motion>")
         self.main_container.unbind("<ButtonRelease-1>")
         self.main_container.config(cursor="")
@@ -350,7 +312,8 @@ class TaskSticky:
         
         for child in row.winfo_children():
             if isinstance(child, tk.Label):
-                if "text" in str(child.cget("text")) and child != btn:  # bullet label
+                # Check if it's the bullet label (text is "○" or "●")
+                if child.cget("text") in ("○", "●"):
                     child.config(fg=colors["bullet"], bg=colors["bg"])
                 else:  # priority button itself
                     child.config(bg=colors["bg"])
@@ -360,18 +323,38 @@ class TaskSticky:
         btn.config(bg=colors["bg"])
         self.save_tasks()
 
+    def darken_color(self, hex_color, factor=0.4):
+        """
+        Return a darker/greyer version of text when task is completed
+        """
+        hex_color = hex_color.lstrip('#')
+        r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+        r = int(r * factor + (1 - factor) * 50)
+        g = int(g * factor + (1 - factor) * 50)
+        b = int(b * factor + (1 - factor) * 50)
+        return f"#{r:02x}{g:02x}{b:02x}"
+    
     def delete_row(self, row):
         row.destroy()
         self.save_tasks()
     
-    def toggle_strike(self, entry_widget, circle_widget):
+    def toggle_strike(self, entry_widget, circle_widget, row):
+        """
+        Toggle strikethrough on a task. When striked, text and bullet become a
+        darker/greyer version of the priority's original color.
+        """
         current_font = entry_widget.cget("font")
-        if "overstrike" in str(current_font):
-            entry_widget.config(font=self.font_normal, fg="#c37aff")
-            circle_widget.config(text="○", fg="#c37aff")
-        else:
-            entry_widget.config(font=self.font_done, fg="#2d1b4d")
-            circle_widget.config(text="●", fg="#2d1b4d")
+        priority = getattr(row, "priority", "None")
+        original_fg = self.priority_colors[priority]["entry_fg"]
+        original_bullet = self.priority_colors[priority]["bullet"]
+        grey_color = self.darken_color(original_fg, 0.4)
+        
+        if "overstrike" in str(current_font): # Remove strikethrough: revert to original colors
+            entry_widget.config(font=self.font_normal, fg=original_fg)
+            circle_widget.config(text="○", fg=original_bullet)
+        else: # Apply strikethrough: use darkened colors
+            entry_widget.config(font=self.font_done, fg=grey_color)
+            circle_widget.config(text="●", fg=grey_color)
 
     def on_edit_finish(self, widget):
         if not widget.get().strip():
