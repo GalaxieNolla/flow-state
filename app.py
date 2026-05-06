@@ -164,8 +164,11 @@ class FlowApp:
             self.canvas.itemconfig(bg_id, image=inactive_i)
             self.canvas.coords(bg_id, x, y)
             self.canvas.coords(txt_id, x, y)
+            # Scale font size with window
+            font_size = max(14, int(24 * scale))  # 24 is your base font size
+            self.canvas.itemconfig(txt_id, font=("Cinzel", font_size, "bold"))
             self.canvas.all_refs.extend([inactive_i, active_i])
-    
+            
         _rescale_btn(self.leaderboard_btn_id, self.leaderboard_txt_id,
                      self.leaderboard_active_pil, self.leaderboard_inactive_pil,
                      self.leaderboard_base_size, lb_x, lb_y)
