@@ -134,6 +134,8 @@ class TaskSticky:
         task_edit.pack(side="left", fill="x", expand=True, padx=(0, 10))
         task_edit.row = row
 
+        task_edit.bindtags((str(task_edit), "Entry", str(self.window), "all")) #help delete?
+
         # Priority selector (right)
         priority_btn = tk.Label(row, text=f"▼ {priority}", font=("Cinzel", 9, "bold"),
                                 fg="#a78bfa", bg=self.priority_colors[priority]["bg"],
@@ -162,12 +164,11 @@ class TaskSticky:
 
         row.bind("<Button-3>", _delete)
         bullet_btn.bind("<Button-3>", _delete)
-        task_edit.bind("<Button-3>", _delete)
         priority_btn.bind("<Button-3>", _delete)
-
-        # Hover highlight on entry
-        task_edit.bind("<Enter>", lambda e: task_edit.config(highlightbackground="#3d2b56"))
-        task_edit.bind("<Leave>", lambda e: task_edit.config(highlightbackground="#120921"))
+        
+        # entry: override binding 
+        task_edit.bind("<Button-3>", _delete, add=False)
+        task_edit.event_delete("<<PasteSelection>>")  # suppress built-in right-click
 
         # Save on focus out
         task_edit.bind("<FocusOut>", lambda e: self.on_edit_finish(task_edit))
