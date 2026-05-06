@@ -52,13 +52,13 @@ class FlowApp:
 
         # ── Main Menu Buttons ─────────────────────────────────────────────────
         self.lb_btn, self.lb_txt, self.lb_active, self.lb_inactive, self.lb_base, self.lb_cur = create_mode_button(
-            self.canvas, 256, 100, "Leaderboard", self.leaderboard.open, 340, 130
+            self.canvas, 256, 180, "Leaderboard", self.leaderboard.open, 340, 130
         )
         self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur = create_mode_button(
-            self.canvas, 140, 180, "Time-Based", lambda: self.enter_timer_mode(), 290, 130
+            self.canvas, 140, 260, "Time-Based", lambda: self.enter_timer_mode(), 290, 130
         )
         self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur = create_mode_button(
-            self.canvas, 372, 180, "Task-Based", lambda: self.task_manager.open(), 290, 130
+            self.canvas, 372, 260, "Task-Based", lambda: self.task_manager.open(), 290, 130
         )
         self.btn_images = {
             'lb':   {'active': None, 'inactive': None},
@@ -72,13 +72,13 @@ class FlowApp:
 
         # Titles
         self.sub_title_label = self.canvas.create_text(
-            256, 50,
+            256, 80,
             text="We are entering ...",
             font=("Cinzel", 12, "bold"),
             fill="#402867"
         )
         self.main_title_label = self.canvas.create_text(
-            256, 50,
+            256, 100,
             text="Flow State",
             font=("Cinzel", 50, "bold"),
             fill="#ddd1ff"
@@ -86,7 +86,7 @@ class FlowApp:
         
         # Mode selction
         self.select_label_win = self.canvas.create_text(
-            256, 280,
+            256, 300,
             text="Select a mode...",
             font=("Cinzel", 20, "bold"),
             fill="#febdff"
