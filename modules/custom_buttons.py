@@ -53,4 +53,4 @@ def create_mode_button(canvas, x, y, text, command, width, height):
     canvas.tag_bind(tag, "<Enter>", on_hover)
     canvas.tag_bind(tag, "<Leave>", on_leave)
 
-    return bg_id, text_id, active_pil, inactive_pil, size_act, size_in, current_size
+    return bg_id, text_id, active_pil, inactive_pil, size_act, size_in
