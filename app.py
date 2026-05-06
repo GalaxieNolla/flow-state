@@ -214,6 +214,10 @@ class FlowApp:
         _rescale_btn(self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur, time_x, time_y, 'time')
         _rescale_btn(self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur, task_x, task_y, 'task')
 
+        if hasattr(self, 'mc_time'):
+            circle_scale = h / 650
+            self.mc_time.scale = circle_scale
+            self.mc_task.scale = circle_scale
 
         # title positions
         self.canvas.coords(self.sub_title_label, cx, int(h * 0.18)) 
