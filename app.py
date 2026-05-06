@@ -55,13 +55,13 @@ class FlowApp:
         cx = w // 2
         
         self.lb_btn, self.lb_txt, self.lb_active, self.lb_inactive, self.lb_base, self.lb_cur = create_mode_button(
-            self.canvas, cx, int(h * 0.75), "Leaderboard", self.leaderboard.open, 300, 130
+            self.canvas, cx, int(h * 0.38), "Leaderboard", self.leaderboard.open, 300, 130
         )
         self.time_btn, self.time_txt, self.time_active, self.time_inactive, self.time_base, self.time_cur = create_mode_button(
-            self.canvas, int(w * 0.27), int(h * 0.57), "Time-Based", lambda: self.enter_timer_mode(), 350, 130
+            self.canvas, int(w * 0.27), int(h * 0.62), "Time-Based", lambda: self.enter_timer_mode(), 350, 130
         )
         self.task_btn, self.task_txt, self.task_active, self.task_inactive, self.task_base, self.task_cur = create_mode_button(
-            self.canvas, int(w * 0.73), int(h * 0.57), "Task-Based", lambda: self.task_manager.open(), 350, 130
+            self.canvas, int(w * 0.73), int(h * 0.62), "Task-Based", lambda: self.task_manager.open(), 350, 130
         )
         self.btn_images = {
             'lb':   {'active': None, 'inactive': None},
@@ -78,7 +78,7 @@ class FlowApp:
             256, 10,
             text="We are entering ...",
             font=("Cinzel", 10, "bold"),
-            fill="#6b4a8a"
+            fill="#9b72c0"
         )
         self.main_title_label = self.canvas.create_text(
             256, 30,
@@ -91,8 +91,8 @@ class FlowApp:
         self.select_label_win = self.canvas.create_text(
             256, 100,
             text="Select a mode to begin~",
-            font=("Cinzel", 20, "bold"),
-            fill="#7a4fa0"
+            font=("Cinzel", 20),
+            fill="#c9a0e8"
         )
 
         # Footer toggle
@@ -187,9 +187,9 @@ class FlowApp:
     
         # Button positions — defined FIRST so _rescale_btn can use them
         cx = w // 2
-        lb_x,   lb_y   = cx,              int(h * 0.75) # DEBUG0.15 previously
-        time_x, time_y = int(w * 0.27),   int(h * 0.57)
-        task_x, task_y = int(w * 0.73),   int(h * 0.57)
+        lb_x,   lb_y   = cx,              int(h * 0.38) # DEBUG0.15 previously
+        time_x, time_y = int(w * 0.27),   int(h * 0.62)
+        task_x, task_y = int(w * 0.73),   int(h * 0.62)
     
         def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y, key):
             scale = h / 650
@@ -220,12 +220,18 @@ class FlowApp:
             self.mc_task.scale = circle_scale
 
         # title positions
-        self.canvas.coords(self.sub_title_label, cx, int(h * 0.18)) 
-        self.canvas.coords(self.main_title_label, cx, int(h * 0.27))
+        self.canvas.coords(self.sub_title_label, cx, int(h * 0.10)) 
+        self.canvas.coords(self.main_title_label, cx, int(h * 0.18))
 
         # footer & select mode title
-        self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
+        self.canvas.coords(self.select_label_win, cx, int(h * 0.50))
         self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
+
+        # add these after the button rescaling:
+        title_scale = h / 650
+        self.canvas.itemconfig(self.main_title_label, font=("Cinzel", max(28, int(50 * title_scale)), "bold"))
+        self.canvas.itemconfig(self.sub_title_label,  font=("Cinzel", max(8,  int(10 * title_scale)), "bold"))
+        self.canvas.itemconfig(self.select_label_win, font=("Cinzel", max(12, int(18 * title_scale))))
 
 if __name__ == "__main__":
     root = tk.Tk()
