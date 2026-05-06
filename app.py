@@ -137,11 +137,25 @@ class FlowApp:
     def _on_resize(self, event):
         if event.widget == self.root:
             w, h = event.width, event.height
+            
+            # Background
             img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
             self.bg_image = ImageTk.PhotoImage(img)
             self.canvas.itemconfig(self.bg_item, image=self.bg_image)
-            # Also resize dim overlay
             self.canvas.coords(self.dim_overlay, 0, 0, w, h)
+    
+            # Main menu items (i.e. buttons)
+            cx = w // 2
+            self.canvas.coords(self.leaderboard_btn_id, cx, int(h * 0.15))
+            self.canvas.coords(self.time_btn_id, int(w * 0.27), int(h * 0.28))
+            self.canvas.coords(self.task_btn_id, int(w * 0.73), int(h * 0.28))
+            self.canvas.coords(self.select_label_win, cx, int(h * 0.42))
+    
+            # footer
+            self.canvas.coords(
+                self.canvas.find_withtag("all")[-1],  # mode toggle window
+                cx, int(h * 0.92)
+            )
 
 if __name__ == "__main__":
     root = tk.Tk()
