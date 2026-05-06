@@ -77,13 +77,13 @@ class FlowApp:
         self.sub_title_label = self.canvas.create_text(
             256, 50,
             text="We are entering ...",
-            font=("Cinzel", 12, "bold"),
+            font=("Cinzel", 0, "bold"),
             fill="#6b4a8a"
         )
         self.main_title_label = self.canvas.create_text(
             256, 100,
             text="Flow State",
-            font=("Cinzel", 50, "bold"),
+            font=("Cinzel", 10, "bold"),
             fill="#ddd1ff"
         )
         
@@ -92,7 +92,7 @@ class FlowApp:
             256, 320,
             text="Select a mode to begin~",
             font=("Cinzel", 20, "bold"),
-            fill="#febdff"
+            fill="#7a4fa0"
         )
 
         # Footer toggle
