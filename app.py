@@ -77,13 +77,13 @@ class FlowApp:
         self.sub_title_label = self.canvas.create_text(
             256, 10,
             text="We are entering ...",
-            font=("Cinzel", 10, "bold"),
+            font=("Cinzel", 12, "bold"),
             fill="#9b72c0"
         )
         self.main_title_label = self.canvas.create_text(
             256, 30,
             text="Flow State",
-            font=("Cinzel", 50, "bold"),
+            font=("Cinzel", 60, "bold"),
             fill="#ddd1ff"
         )
         
@@ -91,7 +91,7 @@ class FlowApp:
         self.select_label_win = self.canvas.create_text(
             256, 100,
             text="Select a mode to begin~",
-            font=("Cinzel", 20),
+            font=("Cinzel", 20, "bold"),
             fill="#c9a0e8"
         )
 
@@ -187,7 +187,7 @@ class FlowApp:
     
         # Button positions — defined FIRST so _rescale_btn can use them
         cx = w // 2
-        lb_x,   lb_y   = cx,              int(h * 0.38) # DEBUG0.15 previously
+        lb_x,   lb_y   = cx,              int(h * 0.32) # DEBUG0.15 previously
         time_x, time_y = int(w * 0.27),   int(h * 0.62)
         task_x, task_y = int(w * 0.73),   int(h * 0.62)
     
@@ -224,14 +224,14 @@ class FlowApp:
         self.canvas.coords(self.main_title_label, cx, int(h * 0.18))
 
         # footer & select mode title
-        self.canvas.coords(self.select_label_win, cx, int(h * 0.50))
+        self.canvas.coords(self.select_label_win, cx, int(h * 0.45))
         self.canvas.coords(self.mode_toggle_id, cx, int(h * 0.92))
 
         # add these after the button rescaling:
         title_scale = h / 650
         self.canvas.itemconfig(self.main_title_label, font=("Cinzel", max(28, int(50 * title_scale)), "bold"))
         self.canvas.itemconfig(self.sub_title_label,  font=("Cinzel", max(8,  int(10 * title_scale)), "bold"))
-        self.canvas.itemconfig(self.select_label_win, font=("Cinzel", max(12, int(18 * title_scale))))
+        self.canvas.itemconfig(self.select_label_win, font=("Cinzel", max(12, int(18 * title_scale)), "bold"))
 
 if __name__ == "__main__":
     root = tk.Tk()
