@@ -212,8 +212,8 @@ class FlowApp:
         # Button positions — defined FIRST so _rescale_btn can use them
         cx = w // 2
         lb_x,   lb_y   = cx,              int(h * 0.32) # DEBUG0.15 previously
-        time_x, time_y = int(w * 0.27),   int(h * 0.68)
-        task_x, task_y = int(w * 0.73),   int(h * 0.68)
+        time_x, time_y = int(w * 0.27),   int(h * 0.60)
+        task_x, task_y = int(w * 0.73),   int(h * 0.60)
     
         def _rescale_btn(bg_id, txt_id, active_pil, inactive_pil, base_size, current_size, x, y, key):
             scale = h / 650
