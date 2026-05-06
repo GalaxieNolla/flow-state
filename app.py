@@ -145,6 +145,7 @@ class FlowApp:
         if event.widget != self.root:
             return
         w, h = event.width, event.height
+        print(f"ROOT: {w}x{h} | CANVAS: {self.canvas.winfo_width()}x{self.canvas.winfo_height()}")
 
         self.canvas.config(width=w, height=h)
         
