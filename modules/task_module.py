@@ -18,7 +18,7 @@ class TaskSticky:
         # HEXTECH inspired colors
         self.priority_colors = {
             "None":     {"bullet": "#9b6dff", "bg": "#120921", "entry_fg": "#9b6dff"},
-            "Low":      {"bullet": "#c084f5", "bg": "#1a0f2e", "entrly_fg": "#d9a8ff"},
+            "Low":      {"bullet": "#c084f5", "bg": "#1a0f2e", "entry_fg": "#d9a8ff"},
             "Medium":   {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
             "High":     {"bullet": "#e8c96a", "bg": "#1c1608", "entry_fg": "#f5e09a"},
             "Personal": {"bullet": "#7c4fd4", "bg": "#150d2a", "entry_fg": "#a87df5"},
