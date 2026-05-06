@@ -15,12 +15,13 @@ class TaskSticky:
 
         # priority sorting
         self.priority_levels = ["None", "Low", "Medium", "High"]
+        # HEXTECH inspired colors
         self.priority_colors = {
-            "None": {"bullet": "#c37aff", "bg": "#120921", "entry_fg": "#c37aff"},
-            "Low": {"bullet": "#5bc8af", "bg": "#0f2a28", "entry_fg": "#8eded0"},
-            "Medium": {"bullet": "#e8825a", "bg": "#2a1a0f", "entry_fg": "#f5aa88"},
-            "High": {"bullet": "#d45a8a", "bg": "#2a0f1a", "entry_fg": "#f598bb"},
-            "LongTerm": {"bullet": "#b381d3", "bg": "#2a1f33", "entry_fg": "#dcb5ff"},
+            "None":     {"bullet": "#9b6dff", "bg": "#120921", "entry_fg": "#9b6dff"},
+            "Low":      {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
+            "Medium":   {"bullet": "#c084f5", "bg": "#1a0f2e", "entry_fg": "#d9a8ff"},
+            "High":     {"bullet": "#e8c96a", "bg": "#1c1608", "entry_fg": "#f5e09a"},
+            "LongTerm": {"bullet": "#7c4fd4", "bg": "#150d2a", "entry_fg": "#a87df5"},
         }
 
     def open(self):
