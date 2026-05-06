@@ -72,7 +72,7 @@ class Arcane:
             self._fade_id = None
 
     def _fade_step(self, direction):
-        self.alpha = max(0.0, min(1.0, self.alpha + direction * 0.08))
+        self.alpha = max(0.0, min(0.6, self.alpha + direction * 0.08)) #0.6 = slightly less opaque
         self._draw()
         if (direction == 1 and self.alpha < 1.0) or (direction == -1 and self.alpha > 0.0):
             self._fade_id = self.canvas.after(16, lambda: self._fade_step(direction))
