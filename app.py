@@ -149,7 +149,7 @@ class FlowApp:
         self.canvas.all_refs = [] # clear 
         # DEBUG print(f"ROOT: {w}x{h} | CANVAS: {self.canvas.winfo_width()}x{self.canvas.winfo_height()}")
 
-        # .canvas.config(width=w, height=h)
+        self.canvas.config(width=w, height=h)
         
         # Background
         img = Image.open("visuals/arcane background.webp").resize((w, h), Image.Resampling.LANCZOS)
