@@ -166,6 +166,7 @@ class StudyTimer:
         self.is_paused = False
         self.current_round = 0
 
+        self.root.update_idletasks()
         self._draw_nav_bar()
         self._draw_setup_controls()
 
