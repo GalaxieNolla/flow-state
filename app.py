@@ -81,6 +81,12 @@ class FlowApp:
 
         self.update_ui()
 
+        # Force correct sizing on launch
+        self.root.update_idletasks()
+        self._on_resize(type('E', (), {
+            'widget': self.root, 'width': self.root.winfo_width(), 'height': self.root.winfo_height()
+        })())
+
     # ── Navigation ────────────────────────────────────────────────────────────
 
     def enter_timer_mode(self):
@@ -113,9 +119,10 @@ class FlowApp:
 
     def _set_main_menu_visible(self, visible):
         state = "normal" if visible else "hidden"
-        for tag in ["btn_140_180", "btn_372_180", "btn_256_100"]:
-            for item in self.canvas.find_withtag(tag):
-                self.canvas.itemconfig(item, state=state)
+        for item in [self.lb_btn, self.lb_txt, #leaderboard
+                     self.time_btn, self.time_txt, #time
+                     self.task_btn, self.task_txt]: #task
+            self.canvas.itemconfig(item, state=state)
         self.canvas.itemconfig(self.select_label_win, state=state)
 
     # ── UI Loop ───────────────────────────────────────────────────────────────
