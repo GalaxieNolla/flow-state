@@ -249,5 +249,5 @@ class Leaderboard:
         if self.window and self.window.winfo_exists():
             for item in self.canvas.find_withtag("session_item"):
                 self.canvas.delete(item)
-            self._draw_current_session(self._rc, self._top_y + 70)
+            self._draw_current_session(self._rc, self._right_y + 70)
             self.root.after(1000, self._start_session_ticker)
