@@ -55,6 +55,12 @@ There are commented out lines with a # debug or # for debugging note. Uncomment 
 ## Distractions
 In monitor.py there are list of distractions and exceptions. Update based on what you consider distractions or exceptions; e.g. if you use facebook or other sites as distractions, place them in the distraction list. 
 
+## Upcoming Additions/Edits
+- Music options for studying
+- Moving graphics
+- More runes across different pages
+- Option to connect phone / other devices
+
 ## Limitations & Known Issues
 (1) Monitoring / nudging
 The browser monitoring only works on macOS currently. A user is also able to bypass nudging system by interacting with distractions on mobile devices or second devices -- a further expansion may be to connect other devices to allow comprehensiveness. 
