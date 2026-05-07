@@ -96,12 +96,12 @@ class Leaderboard:
 
         # column x positions
         col_x = {
-            "rank":   panel_x + int(panel_w * 0.08),
-            "date":   panel_x + int(panel_w * 0.30),
-            "hrs":    panel_x + int(panel_w * 0.50),
+            "rank": panel_x + int(panel_w * 0.08),
+            "date": panel_x + int(panel_w * 0.30),
+            "hrs": panel_x + int(panel_w * 0.50),
             "streak": panel_x + int(panel_w * 0.63),
-            "dist":   panel_x + int(panel_w * 0.76),
-            "score":  panel_x + int(panel_w * 0.90),
+            "dist": panel_x + int(panel_w * 0.76),
+            "score": panel_x + int(panel_w * 0.90),
         }
 
         # header row
@@ -163,11 +163,11 @@ class Leaderboard:
 
             dur = s.get("duration_hrs", round(s.get("duration_mins", 0) / 60, 1))
             values = {
-                "date":   s["date"],
-                "hrs":    str(dur),
+                "date": s["date"],
+                "hrs": str(dur),
                 "streak": str(s["longest_streak"]),
-                "dist":   str(s["distractions"]),
-                "score":  str(s["score"]),
+                "dist": str(s["distractions"]),
+                "score": str(s["score"]),
             }
             for key, val in values.items():
                 self.canvas.create_text(
@@ -178,18 +178,19 @@ class Leaderboard:
                     anchor="center"
                 )
 
-    def _draw_current_session(self, cx, start_y):
+    def _draw_current_session(self, cx, start_y, h=600):
         if not self.session_tracker:
             self.canvas.create_text(cx, start_y + 60,
                 text="no active session",
-                font=("Cinzel", 13, "italic"),
+                font=("Cinzel", max(8, int(10 * h / 600)), "italic"),
                 fill=styles.AMBER_MID, tags="session_item")
             return
 
-        elapsed       = time.time() - self.session_tracker.session_start
+        elapsed = time.time() - self.session_tracker.session_start
         streak_elapsed = time.time() - self.session_tracker.nudge.streak_start
-        distractions  = self.session_tracker.distractions
+        distractions = self.session_tracker.distractions
 
+        # helper method <3
         def fmt(secs):
             h = int(secs // 3600)
             m = int((secs % 3600) // 60)
@@ -200,27 +201,27 @@ class Leaderboard:
             elapsed / 3600, int(streak_elapsed // 60), distractions)
 
         rows = [
-            ("Session Time",  fmt(elapsed)),
-            ("Focus Streak",  fmt(streak_elapsed)),
-            ("Distractions",  str(distractions)),
-            ("Score",         str(score)),
+            ("Session Time", fmt(elapsed)),
+            ("Focus Streak", fmt(streak_elapsed)),
+            ("Distractions", str(distractions)),
+            ("Score", str(score)),
         ]
 
         for i, (label, value) in enumerate(rows):
-            y = start_y + i * 65 #for row spacing
+            y = start_y + i * 65 #row spacing
             # label
             self.canvas.create_text(cx, y,
                 text=label.upper(),
-                font=("Cinzel", 8, "bold"),
+                font=("Cinzel", max(8, int(10 * h / 600)), "bold"),
                 fill=styles.AMBER_DIM, tags="session_item")
-            # divider under label
+            # divider below label
             self.canvas.create_line(
                 cx - 80, y + 14, cx + 80, y + 14,
                 fill=styles.DIVIDER, width=1, tags="session_item")
             # value
             self.canvas.create_text(cx, y + 34,
                 text=value,
-                font=("Cinzel", 22, "bold"),
+                font=("Cinzel", max(14, int(22 * h / 600)), "bold"),
                 fill=styles.AMBER_DIM if label == "Score" else styles.TEXT_BRIGHT,
                 tags="session_item")
 
@@ -228,7 +229,7 @@ class Leaderboard:
         refresh_y = start_y + len(rows) * 65 + 10
         ref = self.canvas.create_text(cx, refresh_y,
             text="↻  refresh",
-            font=("Cinzel", 11),
+            font=("Cinzel", max(8, int(11 * h / 600))),
             fill=styles.AMBER_DIM, tags="session_item")
         self.canvas.tag_bind(ref, "<Button-1>", lambda e: self._refresh())
         self.canvas.tag_bind(ref, "<Enter>",
@@ -277,12 +278,12 @@ class Leaderboard:
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
     
         # layout — all relative to current w, h
-        pad     = int(w * 0.022)
-        left_w  = int(w * 0.27)   # ~300px at 1100
+        pad = int(w * 0.022)
+        left_w = int(w * 0.27)   # ~300px at 1100
         right_w = int(w * 0.255)  # ~280px at 1100
-        left_x  = pad
+        left_x = pad
         right_x = int(w * 0.7)
-        top_y   = int(h * 0.1)
+        top_y = int(h * 0.1)
         right_y = int(h * 0.15)
         panel_h = int(h * 0.75)
         right_h = int(h * 0.633)  # ~380px at 600
