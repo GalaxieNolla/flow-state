@@ -88,10 +88,6 @@ class Leaderboard:
             fill="", outline=styles.GOLD, width=1
         )
 
-        # shadow + text on top
-        self.canvas.create_text(x + 1, y + 1, text=text, font=font, fill="#000000")
-        self.canvas.create_text(x, y, text=text, font=font, fill=color)
-
     def _draw_winners(self, panel_x, start_y, panel_w):
         sessions = self._load()
 
