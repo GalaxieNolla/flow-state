@@ -193,10 +193,11 @@ class StudyTimer:
     def _draw_nav_bar(self):
         w, h = self._wh()
         cx = w // 2
+        s = self._scale()
     
         menu_btn = tk.Label(
             self.canvas, text="← Menu",
-            font=("Cinzel", 11, "bold"),
+            font=("Cinzel", max(8, int(11 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514",
             cursor="hand2", padx=8, pady=4
         )
@@ -207,7 +208,7 @@ class StudyTimer:
     
         lb_btn = tk.Label(
             self.canvas, text="Leaderboard →",
-            font=("Cinzel", 11, "bold"),
+            font=("Cinzel", max(8, int(11 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514",
             cursor="hand2", padx=8, pady=4
         )
@@ -219,17 +220,18 @@ class StudyTimer:
     def _draw_setup_controls(self):
         w, h = self._wh()
         cx = w // 2
+        s = self._scale()
     
         title = tk.Label(
             self.canvas, text="POMODORO",
-            font=("Cinzel", 22, "bold"),
+            font=("Cinzel", max(12, int(22 * s)), "bold"),
             fg=styles.PURPLE_GLOW, bg="#0a0514"
         )
         self._place(title, x=cx, y=int(h * 0.25))
     
         time_label = tk.Label(
             self.canvas, text="STUDY TIME",
-            font=("Cinzel", 9, "bold"),
+            font=("Cinzel", max(7, int(9 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
         self._place(time_label, x=cx, y=int(h * 0.32))
@@ -241,7 +243,7 @@ class StudyTimer:
             is_sel = mins == self.study_minutes
             btn = tk.Label(
                 preset_frame, text=f"{mins}",
-                font=("Cinzel", 14, "bold"),
+                font=("Cinzel", max(8, int(14 * s)), "bold"),
                 fg="#120921" if is_sel else "#4a3a6a",
                 bg=styles.PURPLE_GLOW if is_sel else "#1a0f2e",
                 width=3, pady=5, cursor="hand2"
@@ -254,7 +256,7 @@ class StudyTimer:
     
         rounds_label = tk.Label(
             self.canvas, text="ROUNDS",
-            font=("Cinzel", 9, "bold"),
+            font=("Cinzel", max(7, int(9 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
         self._place(rounds_label, x=cx, y=int(h * 0.47))
@@ -262,7 +264,7 @@ class StudyTimer:
         rounds_frame = tk.Frame(self.canvas, bg="#0a0514")
         minus_btn = tk.Label(
             rounds_frame, text="−",
-            font=("Cinzel", 16, "bold"),
+            font=("Cinzel", max(10, int(16 * s)), "bold"),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=10
         )
@@ -270,13 +272,13 @@ class StudyTimer:
         minus_btn.bind("<Button-1>", lambda e: self._change_rounds(-1))
         self.rounds_display = tk.Label(
             rounds_frame, text=str(self.rounds_goal),
-            font=("Cinzel", 16, "bold"),
+            font=("Cinzel", max(7, int(10 * s)), "bold"),
             fg=styles.PURPLE_GLOW, bg="#0a0514", width=2
         )
         self.rounds_display.pack(side="left")
         plus_btn = tk.Label(
             rounds_frame, text="+",
-            font=("Cinzel", 16, "bold"),
+            font=("Cinzel", max(9, int(13 * s)), "bold"),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=10
         )
@@ -466,24 +468,35 @@ class StudyTimer:
         w = self.canvas.winfo_width() or 512
         h = self.canvas.winfo_height() or 512
         cx, cy = w // 2, h // 2
+        s = self._scale()
     
+        # Scale fonts
+        self.canvas.itemconfig(self.session_label_id, font=("Cinzel", max(8, int(11 * s)), "bold"))
+        self.canvas.itemconfig(self.clock_display,    font=("Courier New", max(24, int(52 * s)), "bold"))
+        self.canvas.itemconfig(self.round_label_id,   font=("Cinzel", max(8, int(11 * s))))
+    
+        # Scale oval :3
+        r = int(91 * s)
         self.canvas.create_oval(
-            cx - 91, cy - 91, cx + 91, cy + 91,
+            cx - r, cy - r, cx + r, cy + r,
             fill="#0b0514", outline="",
             tags=("timer_bg", "timer_elements")
         )
-        if not self.center_image:
-            self._load_monkey()
+    
+        # Scale image
+        if not self.center_image or self._last_scale != s:
+            self._last_scale = s
+            self._load_monkey(size=int(200 * s))
         if self.center_image:
             self.canvas.create_image(
                 cx, cy, image=self.center_image,
                 tags=("timer_bg", "timer_elements")
             )
     
-        # Reposition text relative to true center
-        self.canvas.coords(self.session_label_id, cx, cy - 65)
-        self.canvas.coords(self.clock_display,    cx, cy - 10)
-        self.canvas.coords(self.round_label_id,   cx, cy + 55)
+        # Scale text positions
+        self.canvas.coords(self.session_label_id, cx, cy - int(65 * s))
+        self.canvas.coords(self.clock_display,    cx, cy - int(10 * s))
+        self.canvas.coords(self.round_label_id,   cx, cy + int(55 * s))
     
         self.canvas.tag_raise(self.session_label_id)
         self.canvas.tag_raise(self.clock_display)
@@ -529,6 +542,8 @@ class StudyTimer:
         text = f"Round {self.current_round + 1} / {self.rounds_goal}"
         self.canvas.itemconfig(self.round_label_id, text=text)
 
+     # ── Resize ───────────────────────────────────────────────────────────────
+    
     def _on_timer_resize(self, event):
         if event.widget != self.root:
             return
@@ -541,3 +556,8 @@ class StudyTimer:
         self._draw_timer_visuals()
         self._update_ring()
         self._show_controls()
+
+    def _scale(self):
+        w = self.canvas.winfo_width() or 512
+        h = self.canvas.winfo_height() or 512
+        return min(w, h) / 512  # 512 is your base size
