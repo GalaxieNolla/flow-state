@@ -17,7 +17,7 @@ class Leaderboard:
         self.root = root
         self.window = None
         self.session_tracker = session_tracker
-
+ 
     def open(self):
         if self.window and self.window.winfo_exists():
             self.window.lift()
