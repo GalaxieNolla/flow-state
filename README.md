@@ -79,7 +79,7 @@ No persistence; if a user mistakenly presses the reset button, closes the app, o
 In order for the nudge system to work, the app is placed *above* other layers on the device. However, this means that other apps cannot be dragged in front of flow-app while open. This cannot be toggled yet, which means users either accept or have to close the app to temporarily disable this behavior. 
 
 (5) Accessibility
-App hasn't b
+App has been screened via color filters from mac System Preferences; Greyscale, Red/Green filter for deuteranopia, green/red filter for protanopia, and blue/yellow for tritanopia were tested to ensure instructions and visuals remained accessible. 
 
 ## Credits & Acknowledgements
 **Inspiration**
@@ -91,7 +91,7 @@ App hasn't b
   https://prompti.ai/arcane-art-style-illustrated-story-backgrounds/
   -> Also inspired by the temple of Janna, where the fight between Jinx and Vi occurred. 
 
-- Leaderboard background — Screenshot from Arcane (2021), original artist unknown
+- Leaderboard background — Screenshot from Arcane (2021),
   (If you are the original artist, please reach out!)
   © Fortiche, Riot Games, Netflix
   Upscaled version sourced via u/barooned (Reddit, r/arcane, 2024)
