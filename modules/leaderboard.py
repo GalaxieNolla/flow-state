@@ -92,7 +92,7 @@ class Leaderboard:
             (x, y + r, x + w, y + h - r),
         ]:
             self.canvas.create_rectangle(
-                *rect, fill=PANEL_BG, outline="", stipple="gray50"  # transparency 50%
+                *rect, fill=styles.PANEL_BG, outline="", stipple="gray50"  # transparency 50%
             )
         # corners
         for cx2, cy2, start in [
