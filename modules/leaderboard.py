@@ -59,7 +59,7 @@ class Leaderboard:
         lc = left_x + left_w // 2
         self.canvas.create_text(lc, top_y + 30,
             text="✦  Winner's Circle  ✦",
-            font=("Cinzel", 20, "bold"), fill=styles.GOLD)
+            font=("Cinzel", 20, "bold"), fill=styles.AMBER_DIM)
         self.canvas.create_line(
             left_x + 40, top_y + 52,
             left_x + left_w - 40, top_y + 52,
@@ -70,7 +70,7 @@ class Leaderboard:
         rc = right_x + right_w // 2
         self.canvas.create_text(rc, right_y + 30,
             text="✦  Current Session  ✦",
-            font=("Cinzel", 14, "bold"), fill=styles.GOLD)
+            font=("Cinzel", 14, "bold"), fill=styles.AMBER_DIM)
         self.canvas.create_line(
             right_x + 24, right_y + 52,
             right_x + right_w - 24, right_y + 52,
@@ -87,7 +87,7 @@ class Leaderboard:
         # create borders, so can still see background
         self.canvas.create_rectangle(
             x, y, x + w, y + h,
-            fill="", outline=styles.GOLD, width=1
+            fill="", outline=styles.AMBER_DIM, width=1
         )
 
     def _draw_winners(self, panel_x, start_y, panel_w):
@@ -171,7 +171,7 @@ class Leaderboard:
                     col_x[key], y,
                     text=val,
                     font=("Cinzel", 13),
-                    fill=styles.GOLD if key == "score" and i < 3 else color,
+                    fill=styles.AMBER_DIM if key == "score" and i < 3 else color,
                     anchor="center"
                 )
 
@@ -218,7 +218,7 @@ class Leaderboard:
             self.canvas.create_text(cx, y + 34,
                 text=value,
                 font=("Cinzel", 22, "bold"),
-                fill=styles.GOLD if label == "Score" else styles.TEXT_BRIGHT,
+                fill=styles.AMBER_DIM if label == "Score" else styles.TEXT_BRIGHT,
                 tags="session_item")
 
         # refresh button
