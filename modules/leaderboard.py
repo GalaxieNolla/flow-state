@@ -93,12 +93,12 @@ class Leaderboard:
 
         # column x positions
         col_x = {
-            "rank":   panel_x + 52,
-            "date":   panel_x + 160,
-            "hrs":    panel_x + 290,
-            "streak": panel_x + 370,
-            "dist":   panel_x + 455,
-            "score":  panel_x + 545,
+            "rank":   panel_x + 25,
+            "date":   panel_x + 80,
+            "hrs":    panel_x + 140,
+            "streak": panel_x + 200,
+            "dist":   panel_x + 260,
+            "score":  panel_x + 120,
         }
 
         # header row
