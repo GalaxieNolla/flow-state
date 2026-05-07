@@ -217,6 +217,7 @@ class TaskSticky:
         self.drag_ghost.overrideredirect(True)
         self.drag_ghost.attributes("-alpha", 0.80)
         self.drag_ghost.attributes("-topmost", True)
+        self.drag_ghost.configure(bg=colors["bg"])  # DEBUG prev white flash
 
         tk.Label(
             self.drag_ghost, text=text,
