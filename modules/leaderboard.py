@@ -253,7 +253,7 @@ class Leaderboard:
         self.canvas.tag_bind(ref, "<Enter>",
             lambda e: self.canvas.itemconfig(ref, fill=styles.GOLD))
         self.canvas.tag_bind(ref, "<Leave>",
-            lambda e: self.canvas.itemconfig(ref, fill=AMBER_DIM))
+            lambda e: self.canvas.itemconfig(ref, fill=styles.AMBER_DIM))
 
     def _refresh(self):
         if self.window and self.window.winfo_exists():
