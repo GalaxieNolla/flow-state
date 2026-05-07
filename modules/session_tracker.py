@@ -6,6 +6,9 @@ from datetime import datetime
 SESSIONS_FILE = os.path.join(os.path.dirname(__file__), "sessions.json")
 
 class SessionTracker:
+    """
+    Checks session and provides it as input for leaderboard (current session and future leaderboard positions)
+    """
     def __init__(self, monitor, nudge):
         self.monitor = monitor
         self.nudge = nudge
