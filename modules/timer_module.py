@@ -214,7 +214,7 @@ class StudyTimer:
         lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
         lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
         lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
-        self._place(lb_btn, x=int(w * 0.7), y=int(h * 0.07))
+        self._place(lb_btn, x=int(w * 0.92), y=int(h * 0.07))
 
     def _draw_setup_controls(self):
         w, h = self._wh()
@@ -257,7 +257,7 @@ class StudyTimer:
             font=("Cinzel", 9, "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
-        self._place(rounds_label, x=cx, y=int(h * 0.44))
+        self._place(rounds_label, x=cx, y=int(h * 0.5))
     
         rounds_frame = tk.Frame(self.canvas, bg="#0a0514")
         minus_btn = tk.Label(
@@ -282,7 +282,7 @@ class StudyTimer:
         )
         plus_btn.pack(side="left")
         plus_btn.bind("<Button-1>", lambda e: self._change_rounds(1))
-        self._place(rounds_frame, x=cx, y=int(h * 0.49))
+        self._place(rounds_frame, x=cx, y=int(h * 0.53))
     
         self._break_info = tk.Label(
             self.canvas,
@@ -290,7 +290,7 @@ class StudyTimer:
             font=("Cinzel", 8, "italic"),
             fg="#3d2b56", bg="#0a0514"
         )
-        self._place(self._break_info, x=cx, y=int(h * 0.54))
+        self._place(self._break_info, x=cx, y=int(h * 0.58))
     
         start_btn = tk.Label(
             self.canvas, text="▶   START",
