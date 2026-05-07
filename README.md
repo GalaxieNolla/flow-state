@@ -17,8 +17,15 @@ The *'modules'* tab houses the different components.
 - *'timer_module.py'* allows users to select a session duration and number of rounds, which are followed by preset breaks between rounds. There is a progress bar at the top which tracks progress throughout all rounds for the given session. The monkey bomb graphic is Jinx-inspired!
 - *'app.py'* is the main page :3
 
-## Setup 
-Install fonts before running: open all files in `visuals/fonts/` and click Install Font. Cinzel is the main font employed. 
+## Setup / Installation
+Requires Python 3.x and macOS (see Limitations & Known Issues below).
+
+```bash
+pip install pillow pynput pyobjc
+```
+Then, install fonts before running: open all files in `visuals/fonts/` and click Install Font. Cinzel is the main font employed. 
+
+The project mainly uses these as well as built-in Python (e.g. tkinter, os, json, datetime, subprocess) or pyobjc (e.g. AppKit, Quartz.CoreGraphics).
 
 ## Debugging 
 There are commented out lines with a # debug or # for debugging note. Uncomment out as needed to troubleshoot in the terminal.
