@@ -100,4 +100,4 @@ class Leaderboard:
             (x + w - r, y + r,      90),
             (x + w - r, y + h - r,   0),
             (x + r,     y + h - r, 270),
-        ]:
+        ]
