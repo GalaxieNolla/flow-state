@@ -2,18 +2,19 @@
 ## Project Description: Arcane-inspired Flow State is designed to gamify studying/working and encourage users towards completing their goals. 
 TL;DR: open app --> start session (time/task) --> get nudged when distracted --> session is logged to leaderboard
 On the main page there is the option to view the leaderboard or to choose between two studying modes: time-based and task-based. (1) The Time-Based button sends users to a pomodoro page where they can select a time to study and a number of rounds. (2) The Task-Based button opens a pop-up to-do list where users can enter their tasks, set a color-coded priority level, and strikethrough or delete tasks upon completion. 
+
 The second key feature is a distraction monitoring pop-up, which checks to see if a user is interacting with distraction sites (e.g. Netflix, Youtube, Reddit, etc.). If so, a pop-up with a countdown and the streak time appears. The pop-up encourages three options: (1) exit the distraction site, (2) 'stressed' to redirect user to calming breathing page, and (3) 'take a break' which allows users to interact with distractions for the next 5 minutes. 
 
 ## House Tour ------------------------------
 The *visuals* tab has the key images, backgrounds, and button graphics that are used in this project, as well as the font style under 'styles.py'. 
 The *'modules'* tab houses the different components. 
-a) *'arcane.py'* houses the functions creating the moving Arcane-inspired runes that appear under the two main buttons on the main landing page. 
-b) *'custom_buttons.py'* has the code to create the buttons on the main landing page, wherein 'inactive' is a button's resting state, and 'active' is what the button changes to when a user hovers over the button. 
-c) *'leaderboard.py'* works with 'session_tracker.py' to create a ranked list of past sessions predicated on number of distractions, session length, and a points-based system. It also displays the current session with a refresh option. 
-d) *'nudge.py'* works with the 'monitor.py'; monitor locates and reads sites the user interacts with, and nudge sends a pop-up on the user's screen to nudge them into focusing. 
-e) *'task_module'* gives users an option to input tasks they have and sort priority levels (low, medium, high, personal) on the right of each task, to drag-and-drop tasks to change order, and to strikethrough (left-click on bullet) or delete tasks (right click task) upon completion. 
-f) *'timer_module.py'* allows users to select a session duration and number of rounds, which are followed by preset breaks between rounds. There is a progress bar at the top which tracks progress throughout all rounds for the given session. The monkey bomb graphic is Jinx-inspired!
-g) *'app.py'* is the main page :3
+  a) *'arcane.py'* houses the functions creating the moving Arcane-inspired runes that appear under the two main buttons on the main landing page. 
+  b) *'custom_buttons.py'* has the code to create the buttons on the main landing page, wherein 'inactive' is a button's resting state, and 'active' is what the button changes to when a user hovers over the button. 
+  c) *'leaderboard.py'* works with 'session_tracker.py' to create a ranked list of past sessions predicated on number of distractions, session length, and a points-based system. It also displays the current session with a refresh option. 
+  d) *'nudge.py'* works with the 'monitor.py'; monitor locates and reads sites the user interacts with, and nudge sends a pop-up on the user's screen to nudge them into focusing. 
+  e) *'task_module'* gives users an option to input tasks they have and sort priority levels (low, medium, high, personal) on the right of each task, to drag-and-drop tasks to change order, and to strikethrough (left-click on bullet) or delete tasks (right click task) upon completion. 
+  f) *'timer_module.py'* allows users to select a session duration and number of rounds, which are followed by preset breaks between rounds. There is a progress bar at the top which tracks progress throughout all rounds for the given session. The monkey bomb graphic is Jinx-inspired!
+  g) *'app.py'* is the main page :3
 
 ## Setup -----------------------------------
 Install fonts before running: open all files in `visuals/fonts/` and click Install Font. Cinzel is the main font employed. 
