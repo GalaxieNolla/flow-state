@@ -502,7 +502,7 @@ class StudyTimer:
         self.canvas.tag_raise(self.clock_display)
         self.canvas.tag_raise(self.round_label_id)
 
-    def _load_monkey(self):
+    def _load_monkey(self, size=200):
         try:
             img = Image.open("visuals/images/monkey.jpg").convert("RGBA")
             img = img.resize((200, 200), Image.Resampling.LANCZOS)
