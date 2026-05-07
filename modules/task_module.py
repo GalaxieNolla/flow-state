@@ -5,6 +5,12 @@ import os
 saved_sticky = os.path.join(os.path.dirname(__file__), "tasks.json")
 
 class TaskSticky:
+    """
+    Creates a tab where users can input tasks for the study session. Tasks may be kept as none, or sorted low > medium > high > personal.
+    Tasks can also be dragged and dropped / sorted by the user. 
+    When tasks are complete, users can left-click on the bullet point to strikethrough the task, or right-click to delete the task.
+    Tasks can be edited.
+    """
     def __init__(self, root):
         self.root = root
         self.window = None
@@ -17,10 +23,10 @@ class TaskSticky:
         self.priority_levels = ["None", "Low", "Medium", "High", "Personal"]
         # HEXTECH inspired colors
         self.priority_colors = {
-            "None":     {"bullet": "#9b6dff", "bg": "#120921", "entry_fg": "#9b6dff"},
-            "Low":      {"bullet": "#c084f5", "bg": "#1a0f2e", "entry_fg": "#d9a8ff"},
-            "Medium":   {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
-            "High":     {"bullet": "#e8c96a", "bg": "#1c1608", "entry_fg": "#f5e09a"},
+            "None": {"bullet": "#9b6dff", "bg": "#120921", "entry_fg": "#9b6dff"},
+            "Low": {"bullet": "#c084f5", "bg": "#1a0f2e", "entry_fg": "#d9a8ff"},
+            "Medium": {"bullet": "#5ab4d4", "bg": "#0a1a24", "entry_fg": "#7dd4f0"},
+            "High": {"bullet": "#e8c96a", "bg": "#1c1608", "entry_fg": "#f5e09a"},
             "Personal": {"bullet": "#e040a0", "bg": "#2a0a1a", "entry_fg": "#f080c0"},
         }
 
@@ -152,8 +158,7 @@ class TaskSticky:
         priority_btn.current = priority
         priority_btn.row = row
 
-        # ── Bindings ──────────────────────────────────────────────────────────
-
+        # BINDINGS
         # Strikethrough w/ left-click
         bullet_btn.bind("<Button-1>", lambda e: self.toggle_strike(task_edit, bullet_btn, row))
 
@@ -173,10 +178,11 @@ class TaskSticky:
         if done:
             self.toggle_strike(task_edit, bullet_btn, row)
 
-    # ── Drag & Drop ────────────────────────────────────────────────────────────
-
+    # DRAG N DROP (TASKS)
     def start_drag(self, event, row):
-        """Record start position. Ghost/placeholder created only after threshold."""
+        """
+        Record start position. Ghost/placeholder created only after threshold.
+        """
         self.drag_row = row
         self.drag_start_y = event.y_root
         self.drag_active = False
@@ -189,7 +195,9 @@ class TaskSticky:
         return "break"
 
     def _ensure_drag_active(self, row):
-        """Lazily create ghost and placeholder on first real motion."""
+        """
+        Lazily create ghost and placeholder on first real motion.
+        """
         if self.drag_active:
             return
         self.drag_active = True
@@ -319,7 +327,9 @@ class TaskSticky:
         self.window.unbind("<ButtonRelease-1>")
 
     def get_task_rows(self):
-        """Return task rows, excluding input frame and drag placeholder."""
+        """
+        Return task rows, excluding input frame and drag placeholder.
+        """
         rows = []
         for child in self.main_container.winfo_children():
             if not isinstance(child, tk.Frame):
@@ -331,8 +341,7 @@ class TaskSticky:
             rows.append(child)
         return rows
 
-    # ── Priority ───────────────────────────────────────────────────────────────
-
+    # PRIORITY 
     def cycle_priority(self, row, btn):
         """
         Cycle priority: None -> Low -> Medium -> High --> Longterm -> None
