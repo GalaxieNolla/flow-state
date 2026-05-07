@@ -42,7 +42,7 @@ class Leaderboard:
 
         # Layout vars
         pad       = 24
-        left_w    = 580
+        left_w    = 460
         right_w   = 280
         left_x    = pad
         right_x   = left_x + left_w + pad
@@ -76,7 +76,7 @@ class Leaderboard:
             fill=styles.AMBER_DIM, width=1)
 
         self._rc = rc
-        self._right_x = right_x
+        right_x = W - right_w - pad #DEBUG sizing for right panel
         self._right_w = right_w
         self._top_y = top_y
         self._draw_current_session(rc, top_y + 70)
