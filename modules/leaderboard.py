@@ -211,7 +211,7 @@ class Leaderboard:
             # label
             self.canvas.create_text(cx, y,
                 text=label.upper(),
-                font=("Cinzel", 10, "bold"),
+                font=("Cinzel", 8, "bold"),
                 fill=styles.AMBER_DIM, tags="session_item")
             # divider under label
             self.canvas.create_line(
