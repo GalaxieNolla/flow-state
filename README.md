@@ -92,14 +92,13 @@ App has been screened via color filters from mac System Preferences; Greyscale, 
   This app is not affiliated with or endorsed by Riot Games or Netflix.
 
 **Visuals / Backgrounds**
-- Main background — AI-generated in Arcane art style via prompti.ai
+- Main background — AI-generated in Arcane art style via prompti.ai at:
   https://prompti.ai/arcane-art-style-illustrated-story-backgrounds/
   -> Also inspired by the temple of Janna, where the fight between Jinx and Vi occurred. 
 
-- Leaderboard background — Screenshot from Arcane (2021),
-  (If you are the original artist, please reach out!)
+- Leaderboard background — Screenshot from Arcane (2021), 
   © Fortiche, Riot Games, Netflix
-  Upscaled version sourced via u/barooned (Reddit, r/arcane, 2024)
+  Upscaled version sourced via u/barooned (Reddit, r/arcane, 2024) at: https://www.reddit.com/r/arcane/comments/1hiudgu/2300_4k_upscaled_and_native_wallpapersscreenshots/
   Upscaling method originally credited to u/Mewthree1
 
 - Monkey bomb graphic — Fan art, original artist unknown; possibly Justingeth 
