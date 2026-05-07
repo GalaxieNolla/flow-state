@@ -110,7 +110,7 @@ class Leaderboard:
             self.canvas.create_text(
                 col_x[key], start_y,
                 text=label.upper(),
-                font=("Cinzel", 10, "bold"),
+                font=("Cinzel", max(8, int(10 * h / 600)), "bold"),
                 fill=styles.AMBER_DIM, anchor="center"
             )
         self.canvas.create_line(
@@ -129,7 +129,7 @@ class Leaderboard:
             return
 
         row_h = int(h * 0.063)  # ~38px
-        fs = max(9, int(13 * h / 600))
+        fs = max(8, int(13 * h / 600))
         
         for i, s in enumerate(sessions[:10]):
             y = start_y + 28 + i * row_h
