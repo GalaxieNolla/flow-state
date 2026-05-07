@@ -162,6 +162,7 @@ class FlowApp:
         self._set_main_menu_visible(True) #display main menu
 
         self.canvas.itemconfig(self.mode_toggle_id, text="switch mode")
+        self.root.bind("<Configure>", self._on_resize) #rebind for resize when switch back
 
     def _set_main_menu_visible(self, visible):
         state = "normal" if visible else "hidden"
