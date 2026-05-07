@@ -33,11 +33,11 @@ class Nudge:
         "you've gotten through hard things before.",
         "Ekko: 'Sometimes taking a leap forward/nmeans leaving a few things behind.'"
         "Vi: 'You're stronger than you think.'"
-        "Viktor: 'When you're going to change\nthe world, don't ask for permission.'"
-        "Vi: 'We've all had bad days.\nBut we learn, and we stick together.'"
-        "Vander: 'You've got a good heart.\nDon't ever lose it."
-        "Ekko: 'In case I don't remember to tell you\ntomorrow, you've always meant the world to me.'"
-        "Jayce: 'There is beauty in imperfections.\nThey made you who you are.'"
+        "Viktor: 'When you're going to change\u2028the world, don't ask for permission.'"
+        "Vi: 'We've all had bad days.\u2028But we learn, and we stick together.'"
+        "Vander: 'You've got a good heart.\u2028Don't ever lose it."
+        "Ekko: 'In case I don't remember to tell you\u2028tomorrow, you've always meant the world to me.'"
+        "Jayce: 'There is beauty in imperfections.\u2028They made you who you are.'"
         "Vi: 'Be honest. Be patient.'"
     ]
 
@@ -47,7 +47,7 @@ class Nudge:
         "look out a window for 20 seconds 👀",
         "roll your shoulders back. unclench your jaw.",
         "step outside for 5 mins if you can ☀️",
-        "Vander: 'You need to fill your own cup\nevery now and again.'"
+        "Vander: 'You need to fill your own cup\u2028every now and again.'"
         "Vi: 'You're an all-right shot.'"
         "Jinx: 'Big fat hero ❤︎'"
     ]
@@ -368,6 +368,7 @@ class Nudge:
         cv.layer().setBackgroundColor_(
             NSColor.colorWithRed_green_blue_alpha_(0.071, 0.035, 0.129, 0.95).CGColor()
         )
+        message = message.replace("\n", "\u2028") #ensure honoring the newlines from earlier (i.e. the \u2028
         self._add_label(cv, message, 12, 15, PW - 24, 22, size=10, color=color)
         popup.makeKeyAndOrderFront_(None)
         popup.resignKeyWindow()
