@@ -28,7 +28,7 @@ class StudyTimer:
 
         self.ui_widgets = []
 
-        # ── Persistent canvas text items ──────────────────────────────────────
+        # CANVAS TEXT ITEMS
         self.clock_display = self.canvas.create_text(
             256, 310, text="",
             font=("Courier New", 52, "bold"),
@@ -48,7 +48,7 @@ class StudyTimer:
             state="hidden"
         )
 
-    # ── Widget helpers ────────────────────────────────────────────────────────
+    # WIDGET HELPERS
     def _wh(self):
         """
         Return current canvas w & h.
@@ -95,8 +95,7 @@ class StudyTimer:
         self._hide_clock()
         self.root.unbind("<Configure>") #prev stagnant binding
 
-    # ── Progress Bar ──────────────────────────────────────────────────────────
-
+    # PROGRESS BAR
     def _draw_progress_bar(self):
         """
         Responsive progress bar over all N rounds. Incrementally increases per round.
@@ -156,8 +155,7 @@ class StudyTimer:
         self.canvas.tag_raise(self.clock_display)
         self.canvas.tag_raise(self.round_label_id)
 
-    # ── Setup Screen ──────────────────────────────────────────────────────────
-
+    # SETUP SCREEN
     def show_setup(self):
         self._clear_ui()
         self._hide_clock()
@@ -321,8 +319,7 @@ class StudyTimer:
                 text=f"5 min breaks  ·  15 min long break after {self.rounds_goal} rounds"
             )
 
-    # ── Session flow ──────────────────────────────────────────────────────────
-
+    # SESSION FLOW
     def _start_session(self):
         self.root.unbind("<Configure>") 
         self._clear_ui()
@@ -361,8 +358,7 @@ class StudyTimer:
         self.root.bind("<Configure>", self._on_timer_resize)  #for resizing
         self._tick()
 
-    # ── Tick ──────────────────────────────────────────────────────────────────
-
+    # TICK TICK BOOM
     def _tick(self):
         if not self.is_running or self.is_paused:
             return
@@ -386,7 +382,7 @@ class StudyTimer:
                 self.current_round = 0
             self._begin_study()
 
-    # ── Controls ──────────────────────────────────────────────────────────────
+    # CONTROLS
     def _show_controls(self):
         for widget, win_id in self.ui_widgets:
             try:
@@ -462,7 +458,7 @@ class StudyTimer:
                 self.current_round = 0
             self._begin_study()
 
-    # ── Visuals ───────────────────────────────────────────────────────────────
+    # VISUALS
     def _draw_timer_visuals(self):
         self.canvas.delete("timer_bg")
         self.root.update_idletasks()
@@ -536,8 +532,7 @@ class StudyTimer:
         text = f"Round {self.current_round + 1} / {self.rounds_goal}"
         self.canvas.itemconfig(self.round_label_id, text=text)
 
-     # ── Resize ───────────────────────────────────────────────────────────────
-    
+     # RESIZE
     def _on_timer_resize(self, event):
         if event.widget != self.root:
             return
