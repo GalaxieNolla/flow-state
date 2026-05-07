@@ -63,9 +63,9 @@ In monitor.py there are list of distractions and exceptions. Update based on wha
 
 ## Limitations & Known Issues
 (1) Monitoring / nudging
-The browser monitoring only works on macOS currently. A user is also able to bypass nudging system by interacting with distractions on mobile devices or second devices -- a further expansion may be to connect other devices to allow comprehensiveness. 
+The browser monitoring only works on macOS currently. A user is also able to bypass nudging system by interacting with distractions on mobile devices or second devices. a further expansion may be to connect other devices to allow comprehensiveness. 
 MacOS additionally needs to manually grant permissions to FLow State in System Preferences (similar to apps such as Zoom) to allow monitor.py to work correctly. 
-Monitoring also relies on exact URL/site name matching, so variations may bypass the system, and 'exceptions list' may not be comprehensive enough. Perhaps AI-integration of some kind for real-time monitoring to see whether sites would constitute as distractions?
+Monitoring also relies on exact URL/site name matching, so variations may bypass the system, and 'exceptions list' may not be comprehensive enough. For instance, if a user wants music that isn't in exceptions but they are using it to study, it will be marked as a distraction unless they manually add it to a list of allowed exceptions. Idea for improvement: add a temporary list that will delete upon the termination of the app/session and checks in the monitor.py.
 
 (2) Leaderboard
 Local, as intention was to compete with oneself. However, there is not an option to study with friends or compete with others. 
