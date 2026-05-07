@@ -18,14 +18,6 @@ RUNE_GLOW = "#a78bfa"       # lavender rune color
 GOLD_ACCENT = "#c9a84c"
 PURPLE_DIM = "#7c3aed"
 
-# Leadership board
-JINX_BLUE = "#5ee7ff"      # electric blue
-JINX_BLUE_MID = "#7dd3fc"  # sky blue
-JINX_BLUE_DARK = "#4a7fa5" # muted blue 
-JINX_BG = "#050d1a"        # dark navy -- main background color
-JINX_DIVIDER = "#1e3a5f"   # mid navy
-JINX_BG_TINT = "#0a1628"
-
 # Font Styles
 FONT_HEADER = ("Cinzel", 14)
 FONT_DISPLAY = ("Cinzel", 40, "bold")
@@ -33,8 +25,35 @@ FONT_STATUS = ("Cinzel", 12, "italic")
 FONT_FOOTER = ("Cormorant Garamond", 10, "italic") # easier to read, smaller
 FONT_RUNE = ("Cormorant Garamond", 9, "italic")
 
+# Font Colors (leadership board)
+GOLD         = "#f5c842"
+SILVER       = "#c0c0c0"
+BRONZE       = "#cd7f32"
+AMBER_DIM    = "#b8860b"
+AMBER_MID    = "#d4a017"
+AMBER_LIGHT  = "#f5deb3"
+PANEL_BG     = "#1a1205"       # dark amber bg
+PANEL_BORDER = "#5a3e0a"
+ROW_ALT      = "#221808"
+ROW_HOVER    = "#2e2010"
+TEXT_DIM     = "#8a7050"
+TEXT_MID     = "#c8a870"
+TEXT_BRIGHT  = "#f5deb3"
+DIVIDER      = "#3d2a08"
+PINK         = "#ff69b4"
+
+# Leadership board (old, blue-inspired)
+JINX_BLUE = "#5ee7ff"      # electric blue
+JINX_BLUE_MID = "#7dd3fc"  # sky blue
+JINX_BLUE_DARK = "#4a7fa5" # muted blue 
+JINX_BG = "#050d1a"        # dark navy -- main background
+JINX_DIVIDER = "#1e3a5f"   # mid navy
+JINX_BG_TINT = "#0a1628"
+
 def apply_ghost_style(label, command=None):
-    """Applies the invisible/ghost style to any label to make it act like a button."""
+    """
+    Applies the invisible/ghost style to any label to make it act like a button.
+    """
     label.config(bg=BG_DARK, fg=GREY_MUTED, cursor="hand2")
     
     if command:
