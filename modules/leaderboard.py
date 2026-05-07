@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 SESSIONS_FILE = os.path.join(os.path.dirname(__file__), "sessions.json")
 VISUALS_DIR   = os.path.join(os.path.dirname(__file__), "..", "visuals", "images")
 
+# ── Palette ───────────────────────────────────────────────────────────────────
 W, H = 1100, 600
 
 
@@ -27,7 +28,7 @@ class Leaderboard:
         self.window.geometry(f"{W}x{H}")
         self.window.resizable(False, False)
         self.window.attributes("-topmost", True)
-        self.window.configure(bg=PANEL_BG)
+        self.window.configure(bg=styles.PANEL_BG)
 
         # ── Background ────────────────────────────────────────────────────────
         bg_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
@@ -100,4 +101,176 @@ class Leaderboard:
             (x + w - r, y + r,      90),
             (x + w - r, y + h - r,   0),
             (x + r,     y + h - r, 270),
+        ]:
+            self.canvas.create_arc(
+                cx2 - r, cy2 - r, cx2 + r, cy2 + r,
+                start=start, extent=90,
+                fill=styles.PANEL_BG, outline=""
+            )
+        # border
+        self.canvas.create_rectangle(
+            x + 1, y + 1, x + w - 1, y + h - 1,
+            fill="", outline=styles.PANEL_BORDER, width=1
+        )
+
+    def _draw_winners(self, panel_x, start_y, panel_w):
+        sessions = self._load()
+
+        # column x positions
+        col_x = {
+            "rank":   panel_x + 52,
+            "date":   panel_x + 160,
+            "hrs":    panel_x + 290,
+            "streak": panel_x + 370,
+            "dist":   panel_x + 455,
+            "score":  panel_x + 545,
+        }
+
+        # header row
+        for key, label in [("rank","#"), ("date","Date"), ("hrs","Hrs"),
+                            ("streak","Streak"), ("dist","Dist"), ("score","Score")]:
+            self.canvas.create_text(
+                col_x[key], start_y,
+                text=label.upper(),
+                font=("Cinzel", 10, "bold"),
+                fill=styles.AMBER_DIM, anchor="center"
+            )
+        self.canvas.create_line(
+            panel_x + 20, start_y + 16,
+            panel_x + panel_w - 20, start_y + 16,
+            fill=styles.DIVIDER, width=1
+        )
+
+        if not sessions:
+            self.canvas.create_text(
+                panel_x + panel_w // 2, start_y + 100,
+                text="nothing here yet...\ngo make some chaos cupcake",
+                font=("Cinzel", 16, "italic"),
+                fill=styles.TEXT_DIM, justify="center"
+            )
+            return
+
+        row_h = 38
+        for i, s in enumerate(sessions[:10]):
+            y = start_y + 28 + i * row_h
+
+            # alternating row bg
+            if i % 2 == 0:
+                self.canvas.create_rectangle(
+                    panel_x + 12, y - 12,
+                    panel_x + panel_w - 12, y + row_h - 14,
+                    fill=styles.ROW_ALT, outline=""
+                )
+
+            # rank badge
+            rank_colors = {0: (styles.GOLD, "#3d2800"), 1: (styles.SILVER, "#2a2a2a"), 2: (styles.BRONZE, "#2a1500")}
+            badge_fill, badge_text = rank_colors.get(i, (styles.PANEL_BG, styles.TEXT_DIM))
+            r = 13
+            bx = col_x["rank"]
+            self.canvas.create_oval(
+                bx - r, y - r, bx + r, y + r,
+                fill=badge_fill, outline=""
+            )
+            self.canvas.create_text(
+                bx, y,
+                text=str(i + 1),
+                font=("Cinzel", 9, "bold"),
+                fill=badge_text if i < 3 else styles.TEXT_DIM
+            )
+
+            # row text color
+            color = styles.TEXT_BRIGHT if i == 0 else styles.TEXT_MID if i < 3 else styles.TEXT_DIM
+
+            dur = s.get("duration_hrs", round(s.get("duration_mins", 0) / 60, 1))
+            values = {
+                "date":   s["date"],
+                "hrs":    str(dur),
+                "streak": str(s["longest_streak"]),
+                "dist":   str(s["distractions"]),
+                "score":  str(s["score"]),
+            }
+            for key, val in values.items():
+                self.canvas.create_text(
+                    col_x[key], y,
+                    text=val,
+                    font=("Cinzel", 13),
+                    fill=GOLD if key == "score" and i < 3 else color,
+                    anchor="center"
+                )
+
+    def _draw_current_session(self, cx, start_y):
+        if not self.session_tracker:
+            self.canvas.create_text(cx, start_y + 60,
+                text="no active session",
+                font=("Cinzel", 13, "italic"),
+                fill=styles.AMBER_MID, tags="session_item")
+            return
+
+        elapsed       = time.time() - self.session_tracker.session_start
+        streak_elapsed = time.time() - self.session_tracker.nudge.streak_start
+        distractions  = self.session_tracker.distractions
+
+        def fmt(secs):
+            h = int(secs // 3600)
+            m = int((secs % 3600) // 60)
+            s = int(secs % 60)
+            return f"{h}:{m:02d}:{s:02d}"
+
+        score = self.session_tracker._calculate_score(
+            elapsed / 3600, int(streak_elapsed // 60), distractions)
+
+        rows = [
+            ("Session Time",  fmt(elapsed)),
+            ("Focus Streak",  fmt(streak_elapsed)),
+            ("Distractions",  str(distractions)),
+            ("Score",         str(score)),
         ]
+
+        for i, (label, value) in enumerate(rows):
+            y = start_y + i * 90
+            # label
+            self.canvas.create_text(cx, y,
+                text=label.upper(),
+                font=("Cinzel", 10, "bold"),
+                fill=styles.AMBER_DIM, tags="session_item")
+            # divider under label
+            self.canvas.create_line(
+                cx - 80, y + 14, cx + 80, y + 14,
+                fill=styles.DIVIDER, width=1, tags="session_item")
+            # value
+            self.canvas.create_text(cx, y + 34,
+                text=value,
+                font=("Cinzel", 22, "bold"),
+                fill=styles.GOLD if label == "Score" else styles.TEXT_BRIGHT,
+                tags="session_item")
+
+        # refresh button
+        refresh_y = start_y + len(rows) * 90 + 10
+        ref = self.canvas.create_text(cx, refresh_y,
+            text="↻  refresh",
+            font=("Cinzel", 11),
+            fill=styles.AMBER_DIM, tags="session_item")
+        self.canvas.tag_bind(ref, "<Button-1>", lambda e: self._refresh())
+        self.canvas.tag_bind(ref, "<Enter>",
+            lambda e: self.canvas.itemconfig(ref, fill=styles.GOLD))
+        self.canvas.tag_bind(ref, "<Leave>",
+            lambda e: self.canvas.itemconfig(ref, fill=AMBER_DIM))
+
+    def _refresh(self):
+        if self.window and self.window.winfo_exists():
+            for item in self.canvas.find_withtag("session_item"):
+                self.canvas.delete(item)
+            self._draw_current_session(self._rc, self._top_y + 70)
+
+    def _load(self):
+        if not os.path.exists(SESSIONS_FILE):
+            return []
+        with open(SESSIONS_FILE, "r") as f:
+            return json.load(f)
+
+    def _start_session_ticker(self):
+        if self.window and self.window.winfo_exists():
+            for item in self.canvas.find_withtag("session_item"):
+                self.canvas.delete(item)
+            self._draw_current_session(self._rc, self._top_y + 70)
+            self.root.after(1000, self._start_session_ticker)
