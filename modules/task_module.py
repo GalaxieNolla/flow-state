@@ -264,6 +264,9 @@ class TaskSticky:
             return
         self.drag_insert_idx = insert_idx
 
+        if self.input_frame:
+            self.input_frame.pack_forget()
+        
         # Unpack everything, repack with placeholder at insert position
         self.drag_row.pack_forget()
         self.drag_placeholder.pack_forget()
@@ -278,7 +281,6 @@ class TaskSticky:
             self.drag_placeholder.pack(fill="x", side="top", pady=2)
 
         if self.input_frame:
-            self.input_frame.pack_forget()
             self.input_frame.pack(fill="x", side="top", pady=5)
 
         return "break"
