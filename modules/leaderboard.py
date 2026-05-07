@@ -237,11 +237,11 @@ class Leaderboard:
             lambda e: self.canvas.itemconfig(ref, fill=styles.AMBER_DIM))
 
     def _refresh(self):
-    if self.window and self.window.winfo_exists():
-        for item in self.canvas.find_withtag("session_item"):
-            self.canvas.delete(item)
-        h = getattr(self, '_h', 600)
-        self._draw_current_session(self._rc, self._right_y + int(h * 0.117))
+        if self.window and self.window.winfo_exists():
+            for item in self.canvas.find_withtag("session_item"):
+                self.canvas.delete(item)
+            h = getattr(self, '_h', 600)
+            self._draw_current_session(self._rc, self._right_y + int(h * 0.117))
 
     def _start_session_ticker(self):
         if self.window and self.window.winfo_exists():
