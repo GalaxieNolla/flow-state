@@ -462,11 +462,10 @@ class StudyTimer:
 
     def _draw_timer_visuals(self):
         self.canvas.delete("timer_bg")
-        # Center the ring in the window
         w = self.canvas.winfo_width() or 512
         h = self.canvas.winfo_height() or 512
         cx, cy = w // 2, h // 2
-
+    
         self.canvas.create_oval(
             cx - 91, cy - 91, cx + 91, cy + 91,
             fill="#0b0514", outline="",
@@ -479,6 +478,12 @@ class StudyTimer:
                 cx, cy, image=self.center_image,
                 tags=("timer_bg", "timer_elements")
             )
+    
+        # Reposition text relative to true center
+        self.canvas.coords(self.session_label_id, cx, cy - 65)
+        self.canvas.coords(self.clock_display,    cx, cy - 10)
+        self.canvas.coords(self.round_label_id,   cx, cy + 55)
+    
         self.canvas.tag_raise(self.session_label_id)
         self.canvas.tag_raise(self.clock_display)
         self.canvas.tag_raise(self.round_label_id)
