@@ -25,14 +25,14 @@ class FlowApp:
         self.session_tracker.start(self.root)
         self.leaderboard = Leaderboard(self.root, self.session_tracker)
 
-        # ── Canvas ────────────────────────────────────────────────────────────
+        # CANVAS
         self.canvas = tk.Canvas(root, highlightthickness=0, bd=0, bg="#0a0514")
         self.canvas.pack(fill="both", expand=True)
         self.root.configure(bg="#0a0514")
         self.canvas.configure(bg="#0a0514")
         self.canvas.all_refs = [] # properly initialize
 
-        # Background
+        # BACKGROUND
         self.bg_image = ImageTk.PhotoImage(
             Image.open("visuals/arcane background.png").resize((512, 512))
         )
@@ -46,11 +46,11 @@ class FlowApp:
             state="hidden"
         )
 
-        # ── Modules ───────────────────────────────────────────────────────────
+        # MODULES
         self.task_manager = TaskSticky(self.root)
         self.timer_manager = StudyTimer(self.root, self.canvas, self)
 
-        # ── Main Menu Buttons ─────────────────────────────────────────────────
+        # MAIN LANDING PAGE BTNS
         w, h = 512, 512  # default size
         cx = w // 2
         
@@ -69,11 +69,11 @@ class FlowApp:
             'task': {'active': None, 'inactive': None},
         }
 
-        # Create runes beneath the time & task buttons
+        # RUNES
         self.mc_time = Arcane(self.canvas, self.time_btn, self.time_txt, color="blue")
         self.mc_task = Arcane(self.canvas, self.task_btn, self.task_txt, color="purple")
 
-        # Titles
+        # TITLES
         self.sub_title_label = self.canvas.create_text(
             256, 10,
             text="We are entering ...",
@@ -87,7 +87,7 @@ class FlowApp:
             fill="#ddd1ff"
         )
         
-        # Description below buttons
+        # Description below btns
         self.time_desc_title = self.canvas.create_text(
             int(w * 0.27), int(h * 0.68),
             text="Pomodoro Style",
@@ -138,8 +138,7 @@ class FlowApp:
             'widget': self.root, 'width': self.root.winfo_width(), 'height': self.root.winfo_height()
         })()))
 
-    # ── Navigation ────────────────────────────────────────────────────────────
-
+    # NAVIGATION
     def enter_timer_mode(self):
         """
         Switch to timer setup view.
@@ -181,8 +180,7 @@ class FlowApp:
             self.canvas.itemconfig(item, state=state)
         self.canvas.itemconfig(self.select_label_win, state=state)
 
-    # ── UI Loop ───────────────────────────────────────────────────────────────
-
+    # UI LOOP
     def update_ui(self):
         self.root.after(500, self.update_ui)
         try:
@@ -199,8 +197,7 @@ class FlowApp:
             import traceback
             traceback.print_exc()
     
-    # ── MISC ──────────────────────────────────────────────────────────────────
-    
+    # RESIZING + MISC
     def _on_resize(self, event):
         if event.widget != self.root:
             return
