@@ -69,13 +69,17 @@ Monitoring also relies on exact URL/site name matching, so variations may bypass
 
 (2) Leaderboard
 Local, as intention was to compete with oneself. However, there is not an option to study with friends or compete with others. 
-The leaderboard additionally has weighting based on 'points'. Later iterations should use session length, number of distractions, and/or tasks complete to determine final points rather than arbitrary points score.
+The leaderboard additionally has weighting based on 'points'. Later iterations could use session length, number of distractions, and/or tasks complete to determine final points rather than arbitrary points score.
+Leaderboard has a min size for the screen under the open() function -- may not be compatible for all devices.
 
 (3) Timer
 No persistence; if a user mistakenly presses the reset button, closes the app, or the app crashes, then the timer isn't saved. Break times are fixed and study times are preset, so there is limited flexibility in time selection.
 
 (4) General
 In order for the nudge system to work, the app is placed *above* other layers on the device. However, this means that other apps cannot be dragged in front of flow-app while open. This cannot be toggled yet, which means users either accept or have to close the app to temporarily disable this behavior. 
+
+(5) Accessibility
+App hasn't b
 
 ## Credits & Acknowledgements
 **Inspiration**
