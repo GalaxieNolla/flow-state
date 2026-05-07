@@ -84,10 +84,12 @@ In order for the nudge system to work, the app is placed *above* other layers on
 (5) Accessibility
 App has been screened via color filters from mac System Preferences; Greyscale, Red/Green filter for deuteranopia, green/red filter for protanopia, and blue/yellow for tritanopia were tested to ensure instructions and visuals remained accessible. 
 
-## Credits & Acknowledgements
+## Acknowledgements
 **Inspiration**
 - Arcane (2021) — created by Riot Games, produced by Fortiche, distributed by Netflix
   Arcane's visual art, arcane/hextech/rune designs, and character colors/references are heavily inspired by the series!
+  Used for non-commercial, fan purposes only <see licensing below>
+  This app is not affiliated with or endorsed by Riot Games or Netflix.
 
 **Visuals / Backgrounds**
 - Main background — AI-generated in Arcane art style via prompti.ai
@@ -104,6 +106,11 @@ App has been screened via color filters from mac System Preferences; Greyscale, 
   based on references found in the Arcane: League of Legends Facebook community 
   and Shiina's YouTube channel. Inspired by Jinx's design in Arcane 
   © Fortiche, Riot Games, Netflix. If you are the original artist, please reach out.
+
+**Quotes/Dialogue**
+- Select dialogue quoted from Arcane Season 1 (2021) & Season 2 (2024)
+  Characters: Vi, Jinx, Ekko, Vander, Viktor, Jayce, Silco, Heimerdinger.
+  © Fortiche, Riot Games, Netflix. All rights reserved.
 
 **Academic**
 - Yeung, K. (2017). Hypernudge: Big Data as a mode of regulation by design. Information, Communication & Society, 20(1), 118–136.
