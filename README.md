@@ -17,15 +17,32 @@ The *'modules'* tab houses the different components.
 - *'timer_module.py'* allows users to select a session duration and number of rounds, which are followed by preset breaks between rounds. There is a progress bar at the top which tracks progress throughout all rounds for the given session. The monkey bomb graphic is Jinx-inspired!
 - *'app.py'* is the main page :3
 
-## Setup / Installation
+## SetUp / Installation
 Requires Python 3.x and macOS (see Limitations & Known Issues below).
-
+1. Install libraries and packages via bash command:
 ```bash
 pip install pillow pynput pyobjc
 ```
-Then, install fonts before running: open all files in `visuals/fonts/` and click Install Font. Cinzel is the main font employed. 
+| Library | Purpose |
+|--------|---------|
+| Pillow | Image loading and processing for backgrounds and graphics |
+| pynput | Mouse and keyboard activity monitoring |
+| pyobjc | macOS-native window management and active tab detection |
 
-The project mainly uses these as well as built-in Python (e.g. tkinter, os, json, datetime, subprocess) or pyobjc (e.g. AppKit, Quartz.CoreGraphics).
+2. Install the Cinzel font before running:
+   - Option A: Navigate to `visuals`, double-click `Cinzel-VariableFont_wght.ttf`, click "Install Font"
+   - Option B: Download Cinzel directly from Google Fonts at: https://fonts.google.com/specimen/Cinzel
+
+3. Grant accessibility permissions (macOS):
+   - System Preferences --> Privacy & Security --> Accessibility
+   - Enable access for your terminal/Python interpreter
+
+4. You are ready to run the app:
+```bash
+   python app.py
+```
+
+<The project mainly uses these as well as built-in Python (e.g. tkinter, os, json, datetime, subprocess) or pyobjc (e.g. AppKit, Quartz.CoreGraphics).>
 
 ## Debugging 
 There are commented out lines with a # debug or # for debugging note. Uncomment out as needed to troubleshoot in the terminal.
@@ -41,6 +58,7 @@ Monitoring also relies on exact URL/site name matching, so variations may bypass
 
 (2) Leaderboard
 Local, as intention was to compete with oneself. However, there is not an option to study with friends or compete with others. 
+The leaderboard additionally has weighting based on 'points'. Later iterations should use session length, number of distractions, and/or tasks complete to determine final points rather than arbitrary points score.
 
 (3) Timer
 No persistence; if a user mistakenly presses the reset button, closes the app, or the app crashes, then the timer isn't saved. Break times are fixed and study times are preset, so there is limited flexibility in time selection.
