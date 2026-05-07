@@ -19,7 +19,12 @@ The *'modules'* tab houses the different components.
 
 ## SetUp / Installation
 Requires Python 3.x and macOS (see Limitations & Known Issues below).
-1. Install libraries and packages via bash command:
+1. Create & activate virtual environment (i.e. venv):
+```bash
+   python -m venv venv
+   source venv/bin/activate
+```
+2. Install libararies/dependencies:
 ```bash
 pip install pillow pynput pyobjc
 ```
@@ -29,15 +34,15 @@ pip install pillow pynput pyobjc
 | pynput | Mouse and keyboard activity monitoring |
 | pyobjc | macOS-native window management and active tab detection |
 
-2. Install the Cinzel font before running:
+3. Install the Cinzel font before running:
    - Option A: Navigate to `visuals`, double-click `Cinzel-VariableFont_wght.ttf`, click "Install Font"
    - Option B: Download Cinzel directly from Google Fonts at: https://fonts.google.com/specimen/Cinzel
 
-3. Grant accessibility permissions (macOS):
+4. Grant accessibility permissions (macOS):
    - System Preferences --> Privacy & Security --> Accessibility
    - Enable access for your terminal/Python interpreter
 
-4. You are ready to run the app:
+5. You are ready to run the app:
 ```bash
    python app.py
 ```
