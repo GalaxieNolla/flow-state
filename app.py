@@ -91,7 +91,7 @@ class FlowApp:
         self.time_desc_title = self.canvas.create_text(
             int(w * 0.27), int(h * 0.68),
             text="Pomodoro Style",
-            font=("Cinzel", 10, "italic"), fill="#a07bc0"
+            font=("Cinzel", 10, "bold"), fill="#a07bc0"
         )
         self.time_desc_2 = self.canvas.create_text(
             int(w * 0.27), int(h * 0.72),
@@ -101,7 +101,7 @@ class FlowApp:
         self.task_desc_title = self.canvas.create_text(
             int(w * 0.73), int(h * 0.68),
             text="To-do List",
-            font=("Cinzel", 10, "italic"), fill="#a07bc0"
+            font=("Cinzel", 10, "bold"), fill="#a07bc0"
         )
         self.task_desc_2 = self.canvas.create_text(
             int(w * 0.73), int(h * 0.72),
