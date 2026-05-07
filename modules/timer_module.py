@@ -282,12 +282,12 @@ class StudyTimer:
         )
         plus_btn.pack(side="left")
         plus_btn.bind("<Button-1>", lambda e: self._change_rounds(1))
-        self._place(rounds_frame, x=cx, y=int(h * 0.55))
+        self._place(rounds_frame, x=cx, y=int(h * 0.53))
     
         self._break_info = tk.Label(
             self.canvas,
             text=f"Breaks: 5 min per round (short)  ·  15 min after {self.rounds_goal} rounds (long)",
-            font=("Cinzel", 8, "italic"),
+            font=("Cinzel", 10, "italic"),
             fg="#3d2b56", bg="#0a0514"
         )
         self._place(self._break_info, x=cx, y=int(h * 0.61))
