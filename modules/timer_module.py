@@ -290,7 +290,7 @@ class StudyTimer:
             font=("Cinzel", 8, "italic"),
             fg="#3d2b56", bg="#0a0514"
         )
-        self._place(self._break_info, x=cx, y=int(h * 0.58))
+        self._place(self._break_info, x=cx, y=int(h * 0.65))
     
         start_btn = tk.Label(
             self.canvas, text="▶   START",
@@ -301,7 +301,7 @@ class StudyTimer:
         start_btn.bind("<Button-1>", lambda e: self._start_session())
         start_btn.bind("<Enter>", lambda e: start_btn.config(bg="#b06eff"))
         start_btn.bind("<Leave>", lambda e: start_btn.config(bg=styles.PURPLE_GLOW))
-        self._place(start_btn, x=cx, y=int(h * 0.62))
+        self._place(start_btn, x=cx, y=int(h * 0.7))
 
     def _select_time(self, mins):
         self.study_minutes = mins
