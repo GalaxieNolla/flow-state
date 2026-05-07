@@ -430,7 +430,7 @@ class StudyTimer:
     
         tasks_btn = tk.Label(
             self.root, text="[Open Tasks List]",
-            font=("Cinzel", max(8, int(10 * s))),
+            font=("Cinzel", max(10, int(10 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514",
             cursor="hand2", padx=6
         )
