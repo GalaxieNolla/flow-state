@@ -79,7 +79,7 @@ class Leaderboard:
         self._rc = rc
         right_x = W - right_w - pad #DEBUG sizing for right panel
         self._right_w = right_w
-        self._top_y = top_y
+        self._right_y = right_y
         self._draw_current_session(rc, right_y + 70)
         self._start_session_ticker()
 
@@ -121,7 +121,7 @@ class Leaderboard:
         if not sessions:
             self.canvas.create_text(
                 panel_x + panel_w // 2, start_y + 100,
-                text="nothing here yet...\ngo make some chaos cupcake",
+                text="nothing here yet...\ngo paint the town blue, cupcake",
                 font=("Cinzel", 16, "italic"),
                 fill=styles.TEXT_DIM, justify="center"
             )
@@ -237,7 +237,7 @@ class Leaderboard:
         if self.window and self.window.winfo_exists():
             for item in self.canvas.find_withtag("session_item"):
                 self.canvas.delete(item)
-            self._draw_current_session(self._rc, self._top_y + 70)
+            self._draw_current_session(self._rc, self._right_y + 70)
 
     def _load(self):
         if not os.path.exists(SESSIONS_FILE):
