@@ -54,8 +54,8 @@ class SessionTracker:
         with open(SESSIONS_FILE, "w") as f:
             json.dump(sessions, f, indent=2)
 
-    def _calculate_score(self, duration, streak, distractions):
-        return max(0, (duration * 2) + (streak * 3) - (distractions * 5))
+    def _calculate_score(self, duration_hrs, streak_mins, distractions):
+        return round(max(0, (duration_hrs * 120) + (streak_mins * 3) - (distractions * 10)), 1) #ensures that duration_hrs & streak_mins are same measure
 
     def _load_all(self):
         if not os.path.exists(SESSIONS_FILE):
