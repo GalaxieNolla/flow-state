@@ -45,9 +45,9 @@ class Leaderboard:
         left_w    = 300 # adjust for left leaderboard panel
         right_w   = 280
         left_x    = pad
-        right_x   = left_x + left_w * 2 + pad * 5 #adjust for LHS of right panel
+        right_x   = W * 0.75 #adjust for LHS of right panel
         top_y     = pad
-        panel_h   = H - pad * 3 # height of panel
+        panel_h   = H * 0.75 # height of panel
         right_h = 380 #right panel, curr session
 
         # ── Draw panels ───────────────────────────────────────────────────────
