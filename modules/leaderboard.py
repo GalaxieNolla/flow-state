@@ -68,19 +68,19 @@ class Leaderboard:
 
         # ── Current session panel content ─────────────────────────────────────
         rc = right_x + right_w // 2
-        self.canvas.create_text(rc, top_y + 30,
+        self.canvas.create_text(rc, right_y + 30,
             text="✦  Current Session  ✦",
             font=("Cinzel", 14, "bold"), fill=styles.GOLD)
         self.canvas.create_line(
-            right_x + 24, top_y + 52,
-            right_x + right_w - 24, top_y + 52,
+            right_x + 24, right_y + 52,
+            right_x + right_w - 24, right_y + 52,
             fill=styles.AMBER_DIM, width=1)
 
         self._rc = rc
         right_x = W - right_w - pad #DEBUG sizing for right panel
         self._right_w = right_w
         self._top_y = top_y
-        self._draw_current_session(rc, top_y + 70)
+        self._draw_current_session(rc, right_y + 70)
         self._start_session_ticker()
 
     def _draw_panel(self, x, y, w, h):
