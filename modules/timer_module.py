@@ -286,11 +286,11 @@ class StudyTimer:
     
         self._break_info = tk.Label(
             self.canvas,
-            text=f"5 min breaks  ·  15 min long break after {self.rounds_goal} rounds",
+            text=f"Breaks: 5 min per round (short)  ·  15 min after {self.rounds_goal} rounds (long)",
             font=("Cinzel", 8, "italic"),
             fg="#3d2b56", bg="#0a0514"
         )
-        self._place(self._break_info, x=cx, y=int(h * 0.65))
+        self._place(self._break_info, x=cx, y=int(h * 0.61))
     
         start_btn = tk.Label(
             self.canvas, text="▶   START",
