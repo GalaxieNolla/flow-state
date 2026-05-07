@@ -349,7 +349,7 @@ class Nudge:
         screen = AppKit.NSScreen.mainScreen()
         sw = screen.frame().size.width
         sh = screen.frame().size.height
-        PW, PH = 260, 50
+        PW, PH = 260, 80
         popup = NSPanel.alloc().initWithContentRect_styleMask_backing_defer_(
             NSMakeRect(sw - PW - 20, sh - H - PH - 30, PW, PH),
             NSNonactivatingPanelMask | NSWindowStyleMaskBorderless,
