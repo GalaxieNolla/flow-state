@@ -26,19 +26,18 @@ class Nudge:
 
     # Messages to randomly choose from :D
     STRESSED_MESSAGES = [
-        "you're doing better than you think 💜",
+        "you're doing better than you think",
         "one thing at a time. breathe.",
         "it's okay to not have it all figured out.",
         "rest is part of the work too.",
         "you've gotten through hard things before.",
-        "Ekko: 'Sometimes taking a leap forward means leaving a few things behind.'"
-        "Vi: 'They're wrong. You're stronger than you think.'"
-        "Viktor: 'When you're going to change the world, don't ask for permission.'"
-        "Vi: 'We've all had bad days. But we learn, and we stick together.'"
-        "Silco: 'There's this thing in your head, and it's raging, lighting every nerve with madness to fight, to survive.'"
-        "Vander: 'You've got a good heart. Don't ever lose it. No matter how the world tries to break you.'"
-        "Ekko: 'In case I don't remember to tell you tomorrow, you've always meant the world to me.'"
-        "Jayce: 'There is beauty in imperfections. They made you who you are.' 💛"
+        "Ekko: 'Sometimes taking a leap forward/nmeans leaving a few things behind.'"
+        "Vi: 'You're stronger than you think.'"
+        "Viktor: 'When you're going to change\nthe world, don't ask for permission.'"
+        "Vi: 'We've all had bad days.\nBut we learn, and we stick together.'"
+        "Vander: 'You've got a good heart.\nDon't ever lose it."
+        "Ekko: 'In case I don't remember to tell you\ntomorrow, you've always meant the world to me.'"
+        "Jayce: 'There is beauty in imperfections.\nThey made you who you are.'"
         "Vi: 'Be honest. Be patient.'"
     ]
 
@@ -48,7 +47,7 @@ class Nudge:
         "look out a window for 20 seconds 👀",
         "roll your shoulders back. unclench your jaw.",
         "step outside for 5 mins if you can ☀️",
-        "Vander: 'As good as it feels to pour everyone's drink, you need to fill your own cup every now and again.'"
+        "Vander: 'You need to fill your own cup\nevery now and again.'"
         "Vi: 'You're an all-right shot.'"
         "Jinx: 'Big fat hero ❤︎'"
     ]
