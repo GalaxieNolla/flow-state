@@ -26,19 +26,13 @@ class Nudge:
 
     # Messages to randomly choose from :D
     STRESSED_MESSAGES = [
-        "Ekko: 'Sometimes taking a leap forward
-        means leaving a few things behind.'"
+        "Ekko: 'Sometimes taking a leap forward\rmeans leaving a few things behind.'"
         "Vi: 'You're stronger than you think.'"
-        "Viktor: 'When you're going to change
-        the world, don't ask for permission.'"
-        "Vi: 'We've all had bad days.
-        But we learn, and we stick together.'"
-        "Vander: 'You've got a good heart.
-        Don't ever lose it."
-        "Ekko: 'In case I don't remember to tell you
-        tomorrow, you've always meant the world to me.'"
-        "Jayce: 'There is beauty in imperfections.
-        They made you who you are.'"
+        "Viktor: 'When you're going to change\rthe world, don't ask for permission.'"
+        "Vi: 'We've all had bad days.\rBut we learn, and we stick together.'"
+        "Vander: 'You've got a good heart.\rDon't ever lose it."
+        "Ekko: 'In case I don't remember to tell you\rtomorrow, you've always meant the world to me.'"
+        "Jayce: 'There is beauty in imperfections.\rThey made you who you are.'"
         "Vi: 'Be honest. Be patient.'"
         "you're doing better than you think",
         "one thing at a time. breathe.",
@@ -53,8 +47,7 @@ class Nudge:
         "look out a window for 20 seconds 👀",
         "roll your shoulders back. unclench your jaw.",
         "step outside for 5 mins if you can ☀️",
-        "Vander: 'You need to fill your own cup
-        every now and again.'"
+        "Vander: 'You need to fill your own cup\revery now and again.'"
         "Vi: 'You're an all-right shot.'"
         "Jinx: 'Big fat hero ❤︎'"
     ]
@@ -375,7 +368,18 @@ class Nudge:
         cv.layer().setBackgroundColor_(
             NSColor.colorWithRed_green_blue_alpha_(0.071, 0.035, 0.129, 0.95).CGColor()
         )
-        self._add_label(cv, message, 12, 15, PW - 24, 22, size=10, color=color)
+        
+        # Allowance for two-lined messages
+        lines = message.split("\r")
+        line_h = 18
+        total_h = len(lines) * line_h
+        start_y = (PH - total_h) // 2
+        
+        for i, line in enumerate(lines):
+            y = start_y + (len(lines) - 1 - i) * line_h
+            self._add_label(cv, line, 12, y, PW - 24, line_h, size=10, color=color)
+        #self._add_label(cv, message, 12, 15, PW - 24, 22, size=10, color=color)
+        
         popup.makeKeyAndOrderFront_(None)
         popup.resignKeyWindow()
 
