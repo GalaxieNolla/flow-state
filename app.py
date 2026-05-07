@@ -155,14 +155,21 @@ class FlowApp:
 
     def return_to_menu(self):
         """
-        Return to main menu from timer
+        Return to main menu from timer page
         """
         self.timer_manager.stop()
         self.canvas.itemconfig(self.dim_overlay, state="hidden") #restore overlap
         self._set_main_menu_visible(True) #display main menu
 
         self.canvas.itemconfig(self.mode_toggle_id, text="switch mode")
+
+        # force a resize when returning to main menu
         self.root.bind("<Configure>", self._on_resize) #rebind for resize when switch back
+        self._on_resize(type('E', (), { #force a resize
+            'widget': self.root,
+            'width': self.root.winfo_width(),
+            'height': self.root.winfo_height()
+        })())
 
     def _set_main_menu_visible(self, visible):
         state = "normal" if visible else "hidden"
