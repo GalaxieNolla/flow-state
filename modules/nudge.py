@@ -26,14 +26,14 @@ class Nudge:
 
     # Messages to randomly choose from :D
     STRESSED_MESSAGES = [
-        "Ekko: 'Sometimes taking a leap forward\rmeans leaving a few things behind.'"
-        "Vi: 'You're stronger than you think.'"
-        "Viktor: 'When you're going to change\rthe world, don't ask for permission.'"
-        "Vi: 'We've all had bad days.\rBut we learn, and we stick together.'"
-        "Vander: 'You've got a good heart.\rDon't ever lose it."
-        "Ekko: 'In case I don't remember to tell you\rtomorrow, you've always meant the world to me.'"
-        "Jayce: 'There is beauty in imperfections.\rThey made you who you are.'"
-        "Vi: 'Be honest. Be patient.'"
+        "Ekko: 'Sometimes taking a leap forward\rmeans leaving a few things behind.'",
+        "Vi: 'You're stronger than you think.'",
+        "Viktor: 'When you're going to change\rthe world, don't ask for permission.'",
+        "Vi: 'We've all had bad days.\rBut we learn, and we stick together.'",
+        "Vander: 'You've got a good heart.\rDon't ever lose it.",
+        "Ekko: 'In case I don't remember to tell you\rtomorrow, you've always meant the world to me.'",
+        "Jayce: 'There is beauty in imperfections.\rThey made you who you are.'",
+        "Vi: 'Be honest. Be patient.'",
         "you're doing better than you think",
         "one thing at a time. breathe.",
         "it's okay to not have it all figured out.",
