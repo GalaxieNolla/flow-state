@@ -87,14 +87,13 @@ class Leaderboard:
         """
         r = 18
         # filled rounded rect via polygon approximation
-        self.canvas.create_rectangle(
-            x + r, y, x + w - r, y + h,
-            fill=styles.PANEL_BG, outline="", stipple=""
-        )
-        self.canvas.create_rectangle(
-            x, y + r, x + w, y + h - r,
-            fill=styles.PANEL_BG, outline=""
-        )
+        for rect in [
+            (x + r, y, x + w - r, y + h),
+            (x, y + r, x + w, y + h - r),
+        ]:
+            self.canvas.create_rectangle(
+                *rect, fill=PANEL_BG, outline="", stipple="gray50"  # transparency 50%
+            )
         # corners
         for cx2, cy2, start in [
             (x + r,     y + r,     180),
@@ -227,7 +226,7 @@ class Leaderboard:
         ]
 
         for i, (label, value) in enumerate(rows):
-            y = start_y + i * 90
+            y = start_y + i * 65 #for row spacing
             # label
             self.canvas.create_text(cx, y,
                 text=label.upper(),
@@ -245,7 +244,7 @@ class Leaderboard:
                 tags="session_item")
 
         # refresh button
-        refresh_y = start_y + len(rows) * 90 + 10
+        refresh_y = start_y + len(rows) * 65 + 10
         ref = self.canvas.create_text(cx, refresh_y,
             text="↻  refresh",
             font=("Cinzel", 11),
