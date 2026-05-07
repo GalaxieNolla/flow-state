@@ -208,7 +208,7 @@ class Leaderboard:
         ]
 
         for i, (label, value) in enumerate(rows):
-            y = start_y + i * 65 #row spacing
+            y = start_y + i * int(h * 0.108) # row spacing
             # label
             self.canvas.create_text(cx, y,
                 text=label.upper(),
@@ -219,14 +219,14 @@ class Leaderboard:
                 cx - 80, y + 14, cx + 80, y + 14,
                 fill=styles.DIVIDER, width=1, tags="session_item")
             # value
-            self.canvas.create_text(cx, y + 34,
+            self.canvas.create_text(cx, y + int(h * 0.057),
                 text=value,
                 font=("Cinzel", max(14, int(22 * h / 600)), "bold"),
                 fill=styles.AMBER_DIM if label == "Score" else styles.TEXT_BRIGHT,
                 tags="session_item")
 
         # refresh button
-        refresh_y = start_y + len(rows) * 65 + 10
+        refresh_y = start_y + len(rows) * int(h * 0.108) + 10
         ref = self.canvas.create_text(cx, refresh_y,
             text="↻  refresh",
             font=("Cinzel", max(8, int(11 * h / 600))),
@@ -242,14 +242,14 @@ class Leaderboard:
             for item in self.canvas.find_withtag("session_item"):
                 self.canvas.delete(item)
             h = getattr(self, '_h', 600)
-            self._draw_current_session(self._rc, self._right_y + int(h * 0.117))
+            self._draw_current_session(self._rc, self._right_y + int(h * 0.117), h)
 
     def _start_session_ticker(self):
         if self.window and self.window.winfo_exists():
             for item in self.canvas.find_withtag("session_item"):
                 self.canvas.delete(item)
             h = getattr(self, '_h', 600)
-            self._draw_current_session(self._rc, self._right_y + int(h * 0.117))
+            self._draw_current_session(self._rc, self._right_y + int(h * 0.117), h)
             self.root.after(1000, self._start_session_ticker)
 
     def _load(self):
@@ -318,4 +318,4 @@ class Leaderboard:
         self._right_w = right_w
         self._right_y = right_y
         self._h = h
-        self._draw_current_session(rc, right_y + int(h * 0.117))
+        self._draw_current_session(rc, right_y + int(h * 0.117), h)
