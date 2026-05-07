@@ -214,7 +214,7 @@ class StudyTimer:
         lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
         lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
         lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
-        self._place(lb_btn, x=int(w * 0.92), y=int(h * 0.07))
+        self._place(lb_btn, x=int(w * 0.92), y=int(h * 0.12))
 
     def _draw_setup_controls(self):
         w, h = self._wh()
