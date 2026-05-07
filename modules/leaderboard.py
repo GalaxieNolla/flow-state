@@ -42,10 +42,10 @@ class Leaderboard:
 
         # Layout vars
         pad       = 24
-        left_w    = 460
+        left_w    = 300 # adjust for left leaderboard panel
         right_w   = 280
         left_x    = pad
-        right_x   = left_x + left_w + pad
+        right_x   = left_x + left_w + pad * 5 #adjust for LHS of right panel
         top_y     = pad
         panel_h   = H - pad * 2
         right_h = 380 #right panel, curr session
