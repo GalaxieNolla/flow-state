@@ -356,6 +356,7 @@ class StudyTimer:
         self._draw_timer_visuals()
         self._show_controls()
         self._draw_progress_bar()
+        self.root.bind("<Configure>", self._on_timer_resize)  #for resizing
         self._tick()
 
     # ── Tick ──────────────────────────────────────────────────────────────────
@@ -527,3 +528,16 @@ class StudyTimer:
     def _update_round_label(self):
         text = f"Round {self.current_round + 1} / {self.rounds_goal}"
         self.canvas.itemconfig(self.round_label_id, text=text)
+
+    def _on_timer_resize(self, event):
+        if event.widget != self.root:
+            return
+        if self._resize_id:
+            self.root.after_cancel(self._resize_id)
+        self._resize_id = self.root.after(80, self._redraw_timer)
+
+    def _redraw_timer(self):
+        self._resize_id = None
+        self._draw_timer_visuals()
+        self._update_ring()
+        self._show_controls()
