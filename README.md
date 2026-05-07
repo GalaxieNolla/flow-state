@@ -72,6 +72,9 @@ Local, as intention was to compete with oneself. However, there is not an option
 The leaderboard additionally has weighting based on 'points'. Later iterations could use session length, number of distractions, and/or tasks complete to determine final points rather than arbitrary points score.
 Leaderboard has a min size for the screen under the open() function -- may not be compatible for all devices.
 
+(2.5) Session Tracker
+Session tracking for idle has a few bugs; when laptop is shut then the countdown contines until the app is terminated. Need to update.
+
 (3) Timer
 No persistence; if a user mistakenly presses the reset button, closes the app, or the app crashes, then the timer isn't saved. Break times are fixed and study times are preset, so there is limited flexibility in time selection.
 
