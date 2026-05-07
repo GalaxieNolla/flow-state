@@ -56,22 +56,22 @@ class Leaderboard:
         lc = left_x + left_w // 2
         self.canvas.create_text(lc, top_y + 30,
             text="✦  Winner's Circle  ✦",
-            font=("Cinzel", 20, "bold"), fill=GOLD)
+            font=("Cinzel", 20, "bold"), fill=styles.GOLD)
         self.canvas.create_line(
             left_x + 40, top_y + 52,
             left_x + left_w - 40, top_y + 52,
-            fill=AMBER_DIM, width=1)
+            fill=styles.AMBER_DIM, width=1)
         self._draw_winners(left_x, top_y + 65, left_w)
 
         # ── Current session panel content ─────────────────────────────────────
         rc = right_x + right_w // 2
         self.canvas.create_text(rc, top_y + 30,
             text="✦  Current Session  ✦",
-            font=("Cinzel", 14, "bold"), fill=GOLD)
+            font=("Cinzel", 14, "bold"), fill=styles.GOLD)
         self.canvas.create_line(
             right_x + 24, top_y + 52,
             right_x + right_w - 24, top_y + 52,
-            fill=AMBER_DIM, width=1)
+            fill=styles.AMBER_DIM, width=1)
 
         self._rc = rc
         self._right_x = right_x
@@ -88,11 +88,11 @@ class Leaderboard:
         # filled rounded rect via polygon approximation
         self.canvas.create_rectangle(
             x + r, y, x + w - r, y + h,
-            fill=PANEL_BG, outline="", stipple=""
+            fill=styles.PANEL_BG, outline="", stipple=""
         )
         self.canvas.create_rectangle(
             x, y + r, x + w, y + h - r,
-            fill=PANEL_BG, outline=""
+            fill=styles.PANEL_BG, outline=""
         )
         # corners
         for cx2, cy2, start in [
