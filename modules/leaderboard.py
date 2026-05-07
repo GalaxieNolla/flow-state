@@ -82,7 +82,7 @@ class Leaderboard:
         self._draw_current_session(rc, right_y + 70)
         self._start_session_ticker()
         self.window.bind("<Configure>", self._on_resize) #to help resize
-        self.window.minsize(800, 450) #minsize so wording doesn't get too wonky
+        self.window.minsize(810, 460) #minsize so wording doesn't get too wonky
 
     def _draw_panel(self, x, y, w, h):
         # create borders, so can still see background
