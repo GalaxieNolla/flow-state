@@ -36,7 +36,7 @@ class Leaderboard:
         self.bg_image = ImageTk.PhotoImage(bg_img)
 
         self.canvas = tk.Canvas(self.window, width=W, height=H,
-                                highlightthickness=0, bg=PANEL_BG)
+                                highlightthickness=0, bg=styles.PANEL_BG)
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
