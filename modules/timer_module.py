@@ -257,7 +257,7 @@ class StudyTimer:
             font=("Cinzel", 9, "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
-        self._place(rounds_label, x=cx, y=int(h * 0.47))
+        self._place(rounds_label, x=cx, y=int(h * 0.49))
     
         rounds_frame = tk.Frame(self.canvas, bg="#0a0514")
         minus_btn = tk.Label(
