@@ -82,6 +82,7 @@ class Leaderboard:
         self._draw_current_session(rc, right_y + 70)
         self._start_session_ticker()
         self.window.bind("<Configure>", self._on_resize) #to help resize
+        self.window.minsize(800, 450) #minsize so wording doesn't get too wonky
 
     def _draw_panel(self, x, y, w, h):
         # create borders, so can still see background
@@ -95,12 +96,12 @@ class Leaderboard:
 
         # column x positions
         col_x = {
-            "rank":   panel_x + 25,
-            "date":   panel_x + 90,
-            "hrs":    panel_x + 150,
-            "streak": panel_x + 190,
-            "dist":   panel_x + 230,
-            "score":  panel_x + 270,
+            "rank":   panel_x + int(panel_w * 0.08),
+            "date":   panel_x + int(panel_w * 0.30),
+            "hrs":    panel_x + int(panel_w * 0.50),
+            "streak": panel_x + int(panel_w * 0.63),
+            "dist":   panel_x + int(panel_w * 0.76),
+            "score":  panel_x + int(panel_w * 0.90),
         }
 
         # header row
@@ -130,7 +131,6 @@ class Leaderboard:
         row_h = int(h * 0.063)  # ~38px
         fs = max(9, int(13 * h / 600))
         
-        row_h = 38
         for i, s in enumerate(sessions[:10]):
             y = start_y + 28 + i * row_h
 
