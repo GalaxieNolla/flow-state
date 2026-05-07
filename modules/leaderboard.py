@@ -7,12 +7,12 @@ from PIL import Image, ImageTk
 
 SESSIONS_FILE = os.path.join(os.path.dirname(__file__), "sessions.json")
 VISUALS_DIR   = os.path.join(os.path.dirname(__file__), "..", "visuals", "images")
-
-# ── Palette ───────────────────────────────────────────────────────────────────
 W, H = 1100, 600
 
-
 class Leaderboard:
+    """
+    Creates a leaderboard with two panels: (1) left panel for past records, (2) right panel for the current session.
+    """
     def __init__(self, root, session_tracker=None):
         self.root = root
         self.window = None
@@ -29,7 +29,7 @@ class Leaderboard:
         self.window.attributes("-topmost", True)
         self.window.configure(bg=styles.PANEL_BG)
 
-        # ── Background ────────────────────────────────────────────────────────
+        # BACKGROUND
         bg_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leaderboard.webp")
         bg_img = Image.open(bg_path).resize((W, H), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_img)
@@ -50,11 +50,10 @@ class Leaderboard:
         panel_h = H * 0.75 # height of panel
         right_h = 380 #right panel, curr session
 
-        # ── Draw panels ───────────────────────────────────────────────────────
         self._draw_panel(left_x,  top_y, left_w,  panel_h)
         self._draw_panel(right_x, right_y, right_w, right_h)
 
-        # ── Winners panel content ─────────────────────────────────────────────
+        # (1) WINNERS PANEL
         lc = left_x + left_w // 2
         self.canvas.create_text(lc, top_y + 30,
             text="✦  Winner's Circle  ✦",
@@ -65,7 +64,7 @@ class Leaderboard:
             fill=styles.AMBER_DIM, width=1)
         self._draw_winners(left_x, top_y + 65, left_w)
 
-        # ── Current session panel content ─────────────────────────────────────
+        # (2) CURRENT SESSION PANEL
         rc = right_x + right_w // 2
         self.canvas.create_text(rc, right_y + 30,
             text="✦  Current Session  ✦",
@@ -85,7 +84,7 @@ class Leaderboard:
         self.window.minsize(810, 460) #minsize so wording doesn't get too wonky
 
     def _draw_panel(self, x, y, w, h):
-        # create borders, so can still see background
+        # create borders (so can still see background)
         self.canvas.create_rectangle(
             x, y, x + w, y + h,
             fill="", outline=styles.AMBER_DIM, width=1
@@ -93,8 +92,6 @@ class Leaderboard:
 
     def _draw_winners(self, panel_x, start_y, panel_w, h=600):
         sessions = self._load()
-
-        # column x positions
         col_x = {
             "rank": panel_x + int(panel_w * 0.08),
             "date": panel_x + int(panel_w * 0.30),
@@ -122,7 +119,7 @@ class Leaderboard:
         if not sessions:
             self.canvas.create_text(
                 panel_x + panel_w // 2, start_y + 100,
-                text="nothing here yet...\ngo paint the town blue, cupcake",
+                text="nothing here yet...\ngo paint the town blue, cupcake", #hehe sneaky arcane reference
                 font=("Cinzel", 16, "italic"),
                 fill=styles.TEXT_DIM, justify="center"
             )
@@ -142,7 +139,7 @@ class Leaderboard:
                     fill=styles.ROW_ALT, outline=""
                 )
 
-            # rank badge
+            # rank badges (top 3)
             rank_colors = {0: (styles.GOLD, "#3d2800"), 1: (styles.SILVER, "#2a2a2a"), 2: (styles.BRONZE, "#2a1500")}
             badge_fill, badge_text = rank_colors.get(i, (styles.PANEL_BG, styles.TEXT_DIM))
             r = 13
@@ -258,7 +255,7 @@ class Leaderboard:
         with open(SESSIONS_FILE, "r") as f:
             return json.load(f)
 
-    # Resize ---------------------------------------------------------
+    # RESIZING
     def _on_resize(self, event):
         if event.widget != self.window:
             return
