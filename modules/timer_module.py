@@ -264,7 +264,7 @@ class StudyTimer:
         rounds_frame = tk.Frame(self.canvas, bg="#0a0514")
         minus_btn = tk.Label(
             rounds_frame, text="−",
-            font=("Cinzel", max(10, int(16 * s)), "bold"),
+            font=("Cinzel", max(12, int(16 * s)), "bold"),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=10
         )
@@ -272,13 +272,13 @@ class StudyTimer:
         minus_btn.bind("<Button-1>", lambda e: self._change_rounds(-1))
         self.rounds_display = tk.Label(
             rounds_frame, text=str(self.rounds_goal),
-            font=("Cinzel", max(7, int(10 * s)), "bold"),
+            font=("Cinzel", max(10, int(13 * s)), "bold"),
             fg=styles.PURPLE_GLOW, bg="#0a0514", width=2
         )
         self.rounds_display.pack(side="left")
         plus_btn = tk.Label(
             rounds_frame, text="+",
-            font=("Cinzel", max(9, int(13 * s)), "bold"),
+            font=("Cinzel", max(12, int(16 * s)), "bold"),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=10
         )
@@ -289,14 +289,14 @@ class StudyTimer:
         self._break_info = tk.Label(
             self.canvas,
             text=f"Breaks: 5 min per round (short)  ·  15 min after {self.rounds_goal} rounds (long)",
-            font=("Georgia", 10, "bold italic"),
+            font=("Georgia", max(10, int(13 * s)), "bold italic"),
             fg="#3d2b56", bg="#0a0514"
         )
         self._place(self._break_info, x=cx, y=int(h * 0.58))
     
         start_btn = tk.Label(
             self.canvas, text="▶   START",
-            font=("Cinzel", 13, "bold"),
+            font=("Cinzel", max(13, int(18 * s)), "bold"),
             fg="#120921", bg=styles.PURPLE_GLOW,
             padx=22, pady=8, cursor="hand2"
         )
