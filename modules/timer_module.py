@@ -290,7 +290,7 @@ class StudyTimer:
             self.canvas,
             text=f"Breaks: 5 min per round (short)  ·  15 min after {self.rounds_goal} rounds (long)",
             font=("Georgia", max(10, int(13 * s)), "bold italic"),
-            fg="#3d2b56", bg="#0a0514"
+            fg="#6b4c8a", bg="#0a0514"
         )
         self._place(self._break_info, x=cx, y=int(h * 0.58))
     
