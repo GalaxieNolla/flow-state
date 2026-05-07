@@ -31,7 +31,7 @@ class Nudge:
         "it's okay to not have it all figured out.",
         "rest is part of the work too.",
         "you've gotten through hard things before.",
-        "Ekko: 'Sometimes taking a leap forward/nmeans leaving a few things behind.'"
+        "Ekko: 'Sometimes taking a leap forward\u2028means leaving a few things behind.'"
         "Vi: 'You're stronger than you think.'"
         "Viktor: 'When you're going to change\u2028the world, don't ask for permission.'"
         "Vi: 'We've all had bad days.\u2028But we learn, and we stick together.'"
