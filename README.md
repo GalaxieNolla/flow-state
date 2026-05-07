@@ -7,7 +7,7 @@ On the main page there is the option to view the leaderboard or to choose betwee
 The second key feature is a distraction monitoring pop-up, which checks to see if a user is interacting with distraction sites (e.g. Netflix, Youtube, Reddit, etc.). If so, a pop-up with a countdown and the streak time appears. The pop-up encourages three options: (1) exit the distraction site, (2) 'stressed' to redirect user to calming breathing page, and (3) 'take a break' which allows users to interact with distractions for the next 5 minutes. 
 
 ## House Tour 
-The *visuals* tab has the key images, backgrounds, and button graphics that are used in this project, as well as the font style under 'styles.py'. 
+The *'visuals'* tab has the key images, backgrounds, and button graphics that are used in this project, as well as the font style under 'styles.py'. 
 The *'modules'* tab houses the different components. 
 - *'arcane.py'* houses the functions creating the moving Arcane-inspired runes that appear under the two main buttons on the main landing page.
 - *'custom_buttons.py'* has the code to create the buttons on the main landing page, wherein 'inactive' is a button's resting state, and 'active' is what the button changes to when a user hovers over the button.
