@@ -194,7 +194,7 @@ class Leaderboard:
                     col_x[key], y,
                     text=val,
                     font=("Cinzel", 13),
-                    fill=GOLD if key == "score" and i < 3 else color,
+                    fill=styles.GOLD if key == "score" and i < 3 else color,
                     anchor="center"
                 )
 
