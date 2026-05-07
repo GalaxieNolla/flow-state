@@ -231,7 +231,7 @@ class StudyTimer:
     
         time_label = tk.Label(
             self.canvas, text="STUDY TIME",
-            font=("Cinzel", max(7, int(9 * s)), "bold"),
+            font=("Cinzel", max(9, int(12 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
         self._place(time_label, x=cx, y=int(h * 0.32))
@@ -256,7 +256,7 @@ class StudyTimer:
     
         rounds_label = tk.Label(
             self.canvas, text="ROUNDS",
-            font=("Cinzel", max(7, int(9 * s)), "bold"),
+            font=("Cinzel", max(9, int(12 * s)), "bold"),
             fg="#6b4c8a", bg="#0a0514"
         )
         self._place(rounds_label, x=cx, y=int(h * 0.47))
