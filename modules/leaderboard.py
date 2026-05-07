@@ -40,18 +40,19 @@ class Leaderboard:
         self.canvas.pack(fill="both", expand=True)
         self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
 
-        # ── Layout constants ──────────────────────────────────────────────────
+        # Layout vars
         pad       = 24
-        left_w    = 680
-        right_w   = 340
+        left_w    = 580
+        right_w   = 280
         left_x    = pad
         right_x   = left_x + left_w + pad
         top_y     = pad
         panel_h   = H - pad * 2
+        right_h = 380 #right panel, curr session
 
         # ── Draw panels ───────────────────────────────────────────────────────
         self._draw_panel(left_x,  top_y, left_w,  panel_h)
-        self._draw_panel(right_x, top_y, right_w, panel_h)
+        self._draw_panel(right_x, top_y, right_w, right_h)
 
         # ── Winners panel content ─────────────────────────────────────────────
         lc = left_x + left_w // 2
