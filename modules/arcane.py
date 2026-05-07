@@ -79,9 +79,10 @@ class Arcane:
 
     # ANIMATION LOOPING EFFECT
     def _animate(self):
-        self.angle1 = (self.angle1 + 0.4) % 360
-        self.angle2 = (self.angle2 - 0.25) % 360
-        self.angle3 = (self.angle3 + 0.15) % 360
+        # These determine speed
+        self.angle1 = (self.angle1 + 0.4) % 360   # outer ring 
+        self.angle2 = (self.angle2 - 0.25) % 360  # mid ring 
+        self.angle3 = (self.angle3 + 0.15) % 360  # inner ring 
         self._draw()
         if self.alpha > 0:
             self._anim_id = self.canvas.after(16, self._animate)
