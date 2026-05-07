@@ -290,7 +290,7 @@ class StudyTimer:
             font=("Georgia", 10, "bold italic"),
             fg="#3d2b56", bg="#0a0514"
         )
-        self._place(self._break_info, x=cx, y=int(h * 0.61))
+        self._place(self._break_info, x=cx, y=int(h * 0.58))
     
         start_btn = tk.Label(
             self.canvas, text="▶   START",
