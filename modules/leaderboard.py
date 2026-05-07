@@ -26,7 +26,6 @@ class Leaderboard:
         self.window = tk.Toplevel(self.root)
         self.window.title("Leaderboard")
         self.window.geometry(f"{W}x{H}")
-        self.window.resizable(False, False)
         self.window.attributes("-topmost", True)
         self.window.configure(bg=styles.PANEL_BG)
 
@@ -82,6 +81,7 @@ class Leaderboard:
         self._right_y = right_y
         self._draw_current_session(rc, right_y + 70)
         self._start_session_ticker()
+        self.window.bind("<Configure>", self._on_resize) #to help resize
 
     def _draw_panel(self, x, y, w, h):
         # create borders, so can still see background
@@ -90,7 +90,7 @@ class Leaderboard:
             fill="", outline=styles.AMBER_DIM, width=1
         )
 
-    def _draw_winners(self, panel_x, start_y, panel_w):
+    def _draw_winners(self, panel_x, start_y, panel_w, h=600):
         sessions = self._load()
 
         # column x positions
@@ -127,6 +127,9 @@ class Leaderboard:
             )
             return
 
+        row_h = int(h * 0.063)  # ~38px
+        fs = max(9, int(13 * h / 600))
+        
         row_h = 38
         for i, s in enumerate(sessions[:10]):
             y = start_y + 28 + i * row_h
@@ -151,7 +154,7 @@ class Leaderboard:
             self.canvas.create_text(
                 bx, y,
                 text=str(i + 1),
-                font=("Cinzel", 9, "bold"),
+                font=("Cinzel", fs, "bold"),
                 fill=badge_text if i < 3 else styles.TEXT_DIM
             )
 
@@ -170,7 +173,7 @@ class Leaderboard:
                 self.canvas.create_text(
                     col_x[key], y,
                     text=val,
-                    font=("Cinzel", 13),
+                    font=("Cinzel", fs),
                     fill=styles.AMBER_DIM if key == "score" and i < 3 else color,
                     anchor="center"
                 )
@@ -234,10 +237,19 @@ class Leaderboard:
             lambda e: self.canvas.itemconfig(ref, fill=styles.AMBER_DIM))
 
     def _refresh(self):
+    if self.window and self.window.winfo_exists():
+        for item in self.canvas.find_withtag("session_item"):
+            self.canvas.delete(item)
+        h = getattr(self, '_h', 600)
+        self._draw_current_session(self._rc, self._right_y + int(h * 0.117))
+
+    def _start_session_ticker(self):
         if self.window and self.window.winfo_exists():
             for item in self.canvas.find_withtag("session_item"):
                 self.canvas.delete(item)
-            self._draw_current_session(self._rc, self._right_y + 70)
+            h = getattr(self, '_h', 600)
+            self._draw_current_session(self._rc, self._right_y + int(h * 0.117))
+            self.root.after(1000, self._start_session_ticker)
 
     def _load(self):
         if not os.path.exists(SESSIONS_FILE):
@@ -245,9 +257,64 @@ class Leaderboard:
         with open(SESSIONS_FILE, "r") as f:
             return json.load(f)
 
-    def _start_session_ticker(self):
-        if self.window and self.window.winfo_exists():
-            for item in self.canvas.find_withtag("session_item"):
-                self.canvas.delete(item)
-            self._draw_current_session(self._rc, self._right_y + 70)
-            self.root.after(1000, self._start_session_ticker)
+    # Resize ---------------------------------------------------------
+    def _on_resize(self, event):
+        if event.widget != self.window:
+            return
+        if hasattr(self, '_resize_id') and self._resize_id:
+            self.window.after_cancel(self._resize_id)
+        self._resize_id = self.window.after(80, self._redraw)
+
+    def _redraw(self):
+        self.canvas.delete("all")
+        w = self.window.winfo_width()
+        h = self.window.winfo_height()
+    
+        # redraw background
+        bg_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leaderboard.webp")
+        bg_img = Image.open(bg_path).resize((w, h), Image.Resampling.LANCZOS)
+        self.bg_image = ImageTk.PhotoImage(bg_img)
+        self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+    
+        # layout — all relative to current w, h
+        pad     = int(w * 0.022)
+        left_w  = int(w * 0.27)   # ~300px at 1100
+        right_w = int(w * 0.255)  # ~280px at 1100
+        left_x  = pad
+        right_x = int(w * 0.7)
+        top_y   = int(h * 0.1)
+        right_y = int(h * 0.15)
+        panel_h = int(h * 0.75)
+        right_h = int(h * 0.633)  # ~380px at 600
+    
+        self._draw_panel(left_x,  top_y,   left_w,  panel_h)
+        self._draw_panel(right_x, right_y, right_w, right_h)
+    
+        # winners title + content
+        lc = left_x + left_w // 2
+        fs = max(12, int(20 * h / 600))
+        self.canvas.create_text(lc, top_y + int(h * 0.05),
+            text="✦  Winner's Circle  ✦",
+            font=("Cinzel", fs, "bold"), fill=styles.AMBER_DIM)
+        self.canvas.create_line(
+            left_x + 40, top_y + int(h * 0.087),
+            left_x + left_w - 40, top_y + int(h * 0.087),
+            fill=styles.AMBER_DIM, width=1)
+        self._draw_winners(left_x, top_y + int(h * 0.108), left_w, h)
+    
+        # current session title + content
+        rc = right_x + right_w // 2
+        fs2 = max(10, int(14 * h / 600))
+        self.canvas.create_text(rc, right_y + int(h * 0.05),
+            text="✦  Current Session  ✦",
+            font=("Cinzel", fs2, "bold"), fill=styles.AMBER_DIM)
+        self.canvas.create_line(
+            right_x + 24, right_y + int(h * 0.087),
+            right_x + right_w - 24, right_y + int(h * 0.087),
+            fill=styles.AMBER_DIM, width=1)
+    
+        self._rc = rc
+        self._right_w = right_w
+        self._right_y = right_y
+        self._h = h
+        self._draw_current_session(rc, right_y + int(h * 0.117))
