@@ -253,8 +253,8 @@ class FlowApp:
         self.canvas.coords(self.task_desc_title, int(w * 0.73), int(h * 0.68))
         
         desc_scale = h / 650
-        self.canvas.itemconfig(self.time_desc_title, font=("Cinzel", max(12, int(15 * desc_scale)), "italic"))
-        self.canvas.itemconfig(self.task_desc_title, font=("Cinzel", max(12, int(15 * desc_scale)), "italic"))
+        self.canvas.itemconfig(self.time_desc_title, font=("Cinzel", max(12, int(15 * desc_scale)), "bold"))
+        self.canvas.itemconfig(self.task_desc_title, font=("Cinzel", max(12, int(15 * desc_scale)), "bold"))
 
         # descr pt 2
         self.canvas.coords(self.time_desc_2, int(w * 0.27), int(h * 0.72))
