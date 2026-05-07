@@ -82,35 +82,15 @@ class Leaderboard:
         self._start_session_ticker()
 
     def _draw_panel(self, x, y, w, h):
-        """
-        Draw a dark rounded-rectangle panel with amber border.
-        """
-        r = 18
-        # filled rounded rect via polygon approximation
-        for rect in [
-            (x + r, y, x + w - r, y + h),
-            (x, y + r, x + w, y + h - r),
-        ]:
-            self.canvas.create_rectangle(
-                *rect, fill=styles.PANEL_BG, outline="", stipple="gray50"  # transparency 50%
-            )
-        # corners
-        for cx2, cy2, start in [
-            (x + r,     y + r,     180),
-            (x + w - r, y + r,      90),
-            (x + w - r, y + h - r,   0),
-            (x + r,     y + h - r, 270),
-        ]:
-            self.canvas.create_arc(
-                cx2 - r, cy2 - r, cx2 + r, cy2 + r,
-                start=start, extent=90,
-                fill=styles.PANEL_BG, outline=""
-            )
-        # border
+        # create borders, so can still see background
         self.canvas.create_rectangle(
-            x + 1, y + 1, x + w - 1, y + h - 1,
-            fill="", outline=styles.PANEL_BORDER, width=1
+            x, y, x + w, y + h,
+            fill="", outline=styles.GOLD, width=1
         )
+
+        # shadow + text on top
+        self.canvas.create_text(x + 1, y + 1, text=text, font=font, fill="#000000")
+        self.canvas.create_text(x, y, text=text, font=font, fill=color)
 
     def _draw_winners(self, panel_x, start_y, panel_w):
         sessions = self._load()
