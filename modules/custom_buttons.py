@@ -4,6 +4,9 @@ from PIL import Image, ImageTk
 from visuals import styles
 
 def create_mode_button(canvas, x, y, text, command, width, height):
+    """
+    When hovering your cursor over buttons, they switch to the alternate button graphic for visual difference.
+    """
     visuals_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "visuals", "images")
 
     active_pil  = Image.open(os.path.join(visuals_dir, "active.png")).convert("RGBA")
