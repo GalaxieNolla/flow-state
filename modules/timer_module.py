@@ -214,7 +214,7 @@ class StudyTimer:
         lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
         lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
         lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
-        self._place(lb_btn, x=int(w * 0.92), y=int(h * 0.12))
+        self._place(lb_btn, x=int(w * 0.88), y=int(h * 0.07))
 
     def _draw_setup_controls(self):
         w, h = self._wh()
@@ -250,7 +250,7 @@ class StudyTimer:
             self._preset_btns[mins] = btn
         for mins, btn in self._preset_btns.items():
             btn.bind("<Button-1>", lambda e, m=mins: self._select_time(m))
-        self._place(preset_frame, x=cx, y=int(h * 0.38))
+        self._place(preset_frame, x=cx, y=int(h * 0.4))
     
         rounds_label = tk.Label(
             self.canvas, text="ROUNDS",
@@ -287,7 +287,7 @@ class StudyTimer:
         self._break_info = tk.Label(
             self.canvas,
             text=f"Breaks: 5 min per round (short)  ·  15 min after {self.rounds_goal} rounds (long)",
-            font=("Cinzel", 10, "italic"),
+            font=("Georgia", 10, "bold italic"),
             fg="#3d2b56", bg="#0a0514"
         )
         self._place(self._break_info, x=cx, y=int(h * 0.61))
