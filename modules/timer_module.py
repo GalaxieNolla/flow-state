@@ -203,7 +203,7 @@ class StudyTimer:
         menu_btn.bind("<Enter>", lambda e: menu_btn.config(fg=styles.PURPLE_GLOW))
         menu_btn.bind("<Leave>", lambda e: menu_btn.config(fg="#6b4c8a"))
         menu_btn.bind("<Button-1>", lambda e: self.app.return_to_menu())
-        self._place(menu_btn, x=int(w * 0.08), y=int(h * 0.07))
+        self._place(menu_btn, x=int(w * 0.08), y=int(h * 0.15))
     
         lb_btn = tk.Label(
             self.canvas, text="Leaderboard →",
@@ -214,7 +214,7 @@ class StudyTimer:
         lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
         lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
         lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
-        self._place(lb_btn, x=int(w * 0.88), y=int(h * 0.07))
+        self._place(lb_btn, x=int(w * 0.88), y=int(h * 0.15))
 
     def _draw_setup_controls(self):
         w, h = self._wh()
@@ -422,7 +422,7 @@ class StudyTimer:
         )
         skip_btn.pack(side="left")
         skip_btn.bind("<Button-1>", lambda e: self._skip())
-        self._place(ctrl_frame, x=cx, y=int(h * 0.65))
+        self._place(ctrl_frame, x=cx, y=int(h * 0.80))
     
         tasks_btn = tk.Label(
             self.root, text="📋 Tasks",
@@ -433,7 +433,7 @@ class StudyTimer:
         tasks_btn.bind("<Enter>", lambda e: tasks_btn.config(fg=styles.PURPLE_GLOW))
         tasks_btn.bind("<Leave>", lambda e: tasks_btn.config(fg="#6b4c8a"))
         tasks_btn.bind("<Button-1>", lambda e: self.app.task_manager.open())
-        self._place(tasks_btn, x=cx, y=int(h * 0.72))
+        self._place(tasks_btn, x=cx, y=int(h * 0.87))
     
     def _toggle_pause(self):
         if self.is_paused:
