@@ -31,7 +31,7 @@ class Leaderboard:
         self.window.configure(bg=styles.PANEL_BG)
 
         # ── Background ────────────────────────────────────────────────────────
-        bg_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leader background.png")
+        bg_path = os.path.join(os.path.dirname(__file__), "..", "visuals", "leaderboard.webp")
         bg_img = Image.open(bg_path).resize((W, H), Image.Resampling.LANCZOS)
         self.bg_image = ImageTk.PhotoImage(bg_img)
 
