@@ -399,11 +399,12 @@ class StudyTimer:
     
         w, h = self._wh()
         cx = w // 2
+        s = self._scale()
     
         ctrl_frame = tk.Frame(self.root, bg="#0a0514")
         self.pause_btn = tk.Label(
             ctrl_frame, text="⏸",
-            font=("Courier New", 22),
+            font=("Courier New", max(14, int(22 * s))),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=12
         )
@@ -411,7 +412,7 @@ class StudyTimer:
         self.pause_btn.bind("<Button-1>", lambda e: self._toggle_pause())
         reset_btn = tk.Label(
             ctrl_frame, text="↺",
-            font=("Courier New", 22),
+            font=("Courier New", max(14, int(22 * s))),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=12
         )
@@ -419,7 +420,7 @@ class StudyTimer:
         reset_btn.bind("<Button-1>", lambda e: self.show_setup())
         skip_btn = tk.Label(
             ctrl_frame, text="⏭",
-            font=("Courier New", 22),
+            font=("Courier New", max(14, int(22 * s))),
             fg="#a78bfa", bg="#0a0514",
             cursor="hand2", padx=12
         )
@@ -429,7 +430,7 @@ class StudyTimer:
     
         tasks_btn = tk.Label(
             self.root, text="[Open Tasks List]",
-            font=("Cinzel", 10),
+            font=("Cinzel", max(8, int(10 * s))),
             fg="#6b4c8a", bg="#0a0514",
             cursor="hand2", padx=6
         )
@@ -462,7 +463,6 @@ class StudyTimer:
             self._begin_study()
 
     # ── Visuals ───────────────────────────────────────────────────────────────
-
     def _draw_timer_visuals(self):
         self.canvas.delete("timer_bg")
         w = self.canvas.winfo_width() or 512
@@ -472,8 +472,8 @@ class StudyTimer:
     
         # Scale fonts
         self.canvas.itemconfig(self.session_label_id, font=("Cinzel", max(8, int(11 * s)), "bold"))
-        self.canvas.itemconfig(self.clock_display,    font=("Courier New", max(24, int(52 * s)), "bold"))
-        self.canvas.itemconfig(self.round_label_id,   font=("Cinzel", max(8, int(11 * s))))
+        self.canvas.itemconfig(self.clock_display, font=("Courier New", max(24, int(52 * s)), "bold"))
+        self.canvas.itemconfig(self.round_label_id, font=("Cinzel", max(8, int(11 * s))))
     
         # Scale oval :3
         r = int(91 * s)
@@ -485,7 +485,6 @@ class StudyTimer:
     
         # Scale image
         if not self.center_image or self._last_scale != s:
-            self._last_scale = s
             self._load_monkey(size=int(200 * s))
         if self.center_image:
             self.canvas.create_image(
@@ -505,7 +504,7 @@ class StudyTimer:
     def _load_monkey(self, size=200):
         try:
             img = Image.open("visuals/images/monkey.jpg").convert("RGBA")
-            img = img.resize((200, 200), Image.Resampling.LANCZOS)
+            img = img.resize((size, size), Image.Resampling.LANCZOS)
             datas = img.getdata()
             newData = []
             for item in datas:
@@ -522,15 +521,16 @@ class StudyTimer:
         w = self.canvas.winfo_width() or 512
         h = self.canvas.winfo_height() or 512
         cx, cy = w // 2, h // 2
-        r = 100
-
+        s = self._scale()
+        r = int(100 * s)
+    
         extent = (self.seconds_left / self.total_seconds) * 359.9 if self.total_seconds > 0 else 0
         color = "#00cccc" if self.is_break else styles.PURPLE_GLOW
         self.canvas.delete("timer_ring")
         self.canvas.create_arc(
             cx - r, cy - r, cx + r, cy + r,
             start=90, extent=extent,
-            outline=color, width=8,
+            outline=color, width=max(4, int(8 * s)),
             style="arc",
             tags=("timer_ring", "timer_elements")
         )
