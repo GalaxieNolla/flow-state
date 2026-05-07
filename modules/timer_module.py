@@ -203,7 +203,7 @@ class StudyTimer:
         menu_btn.bind("<Enter>", lambda e: menu_btn.config(fg=styles.PURPLE_GLOW))
         menu_btn.bind("<Leave>", lambda e: menu_btn.config(fg="#6b4c8a"))
         menu_btn.bind("<Button-1>", lambda e: self.app.return_to_menu())
-        self._place(menu_btn, x=int(w * 0.08), y=int(h * 0.15))
+        self._place(menu_btn, x=int(w * 0.08), y=int(h * 0.11))
     
         lb_btn = tk.Label(
             self.canvas, text="Leaderboard →",
@@ -214,7 +214,7 @@ class StudyTimer:
         lb_btn.bind("<Enter>", lambda e: lb_btn.config(fg=styles.PURPLE_GLOW))
         lb_btn.bind("<Leave>", lambda e: lb_btn.config(fg="#6b4c8a"))
         lb_btn.bind("<Button-1>", lambda e: self.app.leaderboard.open())
-        self._place(lb_btn, x=int(w * 0.88), y=int(h * 0.15))
+        self._place(lb_btn, x=int(w * 0.88), y=int(h * 0.11))
 
     def _draw_setup_controls(self):
         w, h = self._wh()
@@ -425,7 +425,7 @@ class StudyTimer:
         self._place(ctrl_frame, x=cx, y=int(h * 0.80))
     
         tasks_btn = tk.Label(
-            self.root, text="📋 Tasks",
+            self.root, text="[Open Tasks List]",
             font=("Cinzel", 10),
             fg="#6b4c8a", bg="#0a0514",
             cursor="hand2", padx=6
