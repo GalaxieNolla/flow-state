@@ -18,7 +18,9 @@ H = 120
 
 class Nudge:
     """
-    Sends a pop-up on top right corner of screen to users, nudging them to focus. Options to: 1) stop distractions, 2) breathing (stress), 3) take a 5 min break
+    Sends a pop-up on top right corner of screen to users, nudging them to focus. 
+    Options to: 1) stop distractions, 2) breathing (stress), 3) take a 5 min break.
+    Once an option is selected, a random message from the associated option (stressed or break) will appear as a pop-up below the original nudge.
     """
     COUNTDOWN_SECS = 30
 
@@ -37,7 +39,7 @@ class Nudge:
         "Vander: 'You've got a good heart. Don't ever lose it. No matter how the world tries to break you.'"
         "Ekko: 'In case I don't remember to tell you tomorrow, you've always meant the world to me.'"
         "Jayce: 'There is beauty in imperfections. They made you who you are.' 💛"
-        ""Vi: 'Be honest. Be patient.'"
+        "Vi: 'Be honest. Be patient.'"
     ]
 
     BREAK_MESSAGES = [
@@ -65,7 +67,7 @@ class Nudge:
         self._breathing_mode = False
         self._last_breathe_remind = 0
 
-    # ── public api ────────────────────────────────────────────────────────────
+    # PUBLIC API
 
     def show(self, site_name=""):
         self.is_distracted = True
@@ -92,12 +94,12 @@ class Nudge:
         if self.window is not None:
             self.window.orderOut_(None)
             self.window = None
-        # streak NOT reset here — only on full timeout
+        # NOTE: streak NOT reset — only on full timeout (once countdown hits 0)
 
     def reset_streak(self):
         self.streak_start = time.time()
 
-    # ── window creation ───────────────────────────────────────────────────────
+    # WINDOW CREATION
 
     def _create_window(self, site_name):
         screen = AppKit.NSScreen.mainScreen()
@@ -194,8 +196,7 @@ class Nudge:
         self._tick()
         self._start_click_polling()
 
-    # ── helpers ───────────────────────────────────────────────────────────────
-
+    # HELPER FUNCTIONS
     def _make_italic_font(self, size):
         base = NSFont.systemFontOfSize_(size)
         fm = NSFontManager.sharedFontManager()
@@ -253,8 +254,7 @@ class Nudge:
         except:
             return None
 
-    # ── countdown ─────────────────────────────────────────────────────────────
-
+    # COUNTDOWN
     def _tick(self):
         if self.window is None:
             return
@@ -277,8 +277,7 @@ class Nudge:
             self.window.orderOut_(None)
             self.window = None
 
-    # ── click polling ─────────────────────────────────────────────────────────
-
+    # CLICK / USER INPUT
     def _start_click_polling(self):
         if self.window is None:
             return
@@ -300,8 +299,7 @@ class Nudge:
             print(f"click poll error: {e}")
         self.countdown_job_click = self.root.after(100, self._start_click_polling)
 
-    # ── button handlers ───────────────────────────────────────────────────────
-
+    # BUTTON HANDLERS
     def _on_stressed(self):
         webbrowser.open("https://www.calm.com/breathe")
         self._show_message_popup(
@@ -330,8 +328,7 @@ class Nudge:
     def _end_break(self):
         self._last_shown = 0
 
-    # ── breathing mode ────────────────────────────────────────────────────────
-
+    # REDIRECT TO BREATHING
     def _poll_breathing(self):
         if not self._breathing_mode:
             return
@@ -348,8 +345,7 @@ class Nudge:
     def _stop_breathing_mode(self):
         self._breathing_mode = False
 
-    # ── message popup ─────────────────────────────────────────────────────────
-
+    # MESSAGE POP-UP
     def _show_message_popup(self, message, color=(1, 1, 1)):
         screen = AppKit.NSScreen.mainScreen()
         sw = screen.frame().size.width
