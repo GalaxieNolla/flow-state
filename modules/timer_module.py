@@ -465,17 +465,16 @@ class StudyTimer:
     # ── Visuals ───────────────────────────────────────────────────────────────
     def _draw_timer_visuals(self):
         self.canvas.delete("timer_bg")
+        self.root.update_idletasks()
         w = self.canvas.winfo_width() or 512
         h = self.canvas.winfo_height() or 512
         cx, cy = w // 2, h // 2
         s = self._scale()
     
-        # Scale fonts
         self.canvas.itemconfig(self.session_label_id, font=("Cinzel", max(8, int(11 * s)), "bold"))
         self.canvas.itemconfig(self.clock_display, font=("Courier New", max(24, int(52 * s)), "bold"))
         self.canvas.itemconfig(self.round_label_id, font=("Cinzel", max(8, int(11 * s))))
     
-        # Scale oval :3
         r = int(91 * s)
         self.canvas.create_oval(
             cx - r, cy - r, cx + r, cy + r,
@@ -483,16 +482,11 @@ class StudyTimer:
             tags=("timer_bg", "timer_elements")
         )
     
-        # Scale image
-        if not self.center_image or self._last_scale != s:
-            self._load_monkey(size=int(200 * s))
+        self._load_monkey(size=int(200 * s))
         if self.center_image:
-            self.canvas.create_image(
-                cx, cy, image=self.center_image,
-                tags=("timer_bg", "timer_elements")
-            )
+            self.canvas.create_image(cx, cy, image=self.center_image,
+                tags=("timer_bg", "timer_elements"))
     
-        # Scale text positions
         self.canvas.coords(self.session_label_id, cx, cy - int(65 * s))
         self.canvas.coords(self.clock_display,    cx, cy - int(10 * s))
         self.canvas.coords(self.round_label_id,   cx, cy + int(55 * s))
