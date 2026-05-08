@@ -62,27 +62,32 @@ In monitor.py there are list of distractions and exceptions. Update based on wha
 - Option to connect phone / other devices
 
 ## Limitations & Known Issues
-(1) Monitoring / nudging
+(1) Monitoring / Nudging
 
 The browser monitoring only works on macOS currently. A user is also able to bypass nudging system by interacting with distractions on mobile devices or second devices. a further expansion may be to connect other devices to allow comprehensiveness. 
 MacOS additionally needs to manually grant permissions to FLow State in System Preferences (similar to apps such as Zoom) to allow monitor.py to work correctly. 
 Monitoring also relies on exact URL/site name matching, so variations may bypass the system, and 'exceptions list' may not be comprehensive enough. For instance, if a user wants music that isn't in exceptions but they are using it to study, it will be marked as a distraction unless they manually add it to a list of allowed exceptions. Idea for improvement: add a temporary list that will delete upon the termination of the app/session and checks in the monitor.py.
 
 (2) Leaderboard
+
 Local, as intention was to compete with oneself. However, there is not an option to study with friends or compete with others. 
 The leaderboard additionally has weighting based on 'points'. Later iterations could use session length, number of distractions, and/or tasks complete to determine final points rather than arbitrary points score.
 Leaderboard has a min size for the screen under the open() function -- may not be compatible for all devices.
 
 (2.5) Session Tracker
+
 Session tracking for idle has a few bugs; when laptop is shut then the countdown contines until the app is terminated. Need to update.
 
 (3) Timer
+
 No persistence; if a user mistakenly presses the reset button, closes the app, or the app crashes, then the timer isn't saved. Break times are fixed and study times are preset, so there is limited flexibility in time selection.
 
 (4) General
+
 In order for the nudge system to work, the app is placed *above* other layers on the device. However, this means that other apps cannot be dragged in front of flow-app while open. This cannot be toggled yet, which means users either accept or have to close the app to temporarily disable this behavior. 
 
 (5) Accessibility
+
 App has been screened via color filters from mac System Preferences; Greyscale, Red/Green filter for deuteranopia, green/red filter for protanopia, and blue/yellow for tritanopia were tested to ensure instructions and visuals remained accessible. 
 
 ## Acknowledgements
