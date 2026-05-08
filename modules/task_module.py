@@ -284,6 +284,16 @@ class TaskSticky:
         if self.input_frame:
             self.input_frame.pack(fill="x", side="top", pady=5)
 
+        # Re-apply colors after repack bc tkinter resents styles during pack_forget 
+        for r in other_rows:
+            colors = self.priority_colors[r.priority]
+            for child in r.winfo_children():
+                if isinstance(child, tk.Entry):
+                    child.config(bg=colors["bg"], fg=colors["entry_fg"])
+                elif isinstance(child, tk.Label):
+                    child.config(bg=colors["bg"])
+            r.config(bg=colors["bg"])
+
         return "break"
 
     def end_drag_global(self, event):
