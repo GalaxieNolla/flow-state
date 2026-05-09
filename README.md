@@ -92,10 +92,12 @@ App has been screened via color filters from mac System Preferences; Greyscale, 
 
 ## Acknowledgements
 **Inspiration**
-- Arcane (2021) — created by Riot Games, produced by Fortiche, distributed by Netflix
-  Arcane's visual art, arcane/hextech/rune designs, and character colors/references are heavily inspired by the series!
-  Used for non-commercial, fan purposes only <see licensing below>
-  This app is not affiliated with or endorsed by Riot Games or Netflix.
+Arcane (2021) — created by Riot Games, produced by Fortiche, distributed by Netflix
+Arcane's visual art, arcane/hextech/rune designs, and character colors/references are heavily inspired by the series!
+Used for non-commercial, fan purposes only <see licensing below>
+This app is not affiliated with or endorsed by Riot Games or Netflix.
+
+Flow-State was created under Riot Games' "Legal Jibber Jabber" policy using assets owned by Riot Games. Riot Games does not endorse or sponsor this project.
 
 **Visuals / Backgrounds**
 - Main background — AI-generated in Arcane art style via prompti.ai at:
